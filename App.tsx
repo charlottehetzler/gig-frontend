@@ -1,21 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, ScrollView, Button, Alert, TouchableOpacity } from 'react-native';
+import {DefaultHeader} from './src/components/Header/DefaultHeader';
+import AppNavigator from './src/navigation/AppNavigator';
 
-export default function App() {
+export default function App () {
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View>
+        <DefaultHeader title={'my messages'}/>
+      </View>
+
+      {/* <AppNavigator/> */}
+
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: StatusBar.currentHeight || 0,
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    
   },
+  wrapper: {
+    // marginHorizontal: 10,
+    // flex: 1,
+  },
+  h4Style: {
+    marginTop: 15,
+    fontSize: 24,
+    textAlign: 'center',
+  },
+  gigWrapper: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
+
 });
