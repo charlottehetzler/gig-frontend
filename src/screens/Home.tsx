@@ -1,50 +1,49 @@
-import React, { Props } from 'react';
-import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text } from 'react-native';
+import React from 'react';
+import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
-import { Tile } from '../components/Card/Tile';
+import { SearchBar } from 'react-native-elements';
+import { GET_All_JOBS } from '../lib/job';
+import { useQuery } from '@apollo/client';
+import { ScrollView } from 'react-native-gesture-handler';
 
+export default function HomeScreen (props: any) {
 
-const randomGigs = [
-  {id: "1", title: "Dog Food Tester"}, {id: "2", title: "Window Cleaner"}, {id: "3", title: "Don't know"}, 
-  {id: "4", title: "Food Cooker"}, {id: "5", title: "Blablabla"}, {id: "6", title: "Blibalblub"},
-  {id: "7", title: "Food Cooker"}, {id: "8", title: "Blablabla"}, {id: "9", title: "vvv"},
-];
-  
-const allGigs = [
-  {id: "1", title: "Babysitting"}, {id: "2", title: "House Cleaning"}, {id: "3", title: "Water my plants"}, 
-  {id: "4", title: "Don't know 1"}, {id: "5", title: "Don't know 2"}, {id: "6", title: "Don't know 3"},
-  {id: "7", title: "Food Don't know 4"}, {id: "8", title: "Don't know 5"}, {id: "9", title: "Don't know 6"},
-];
+  const { data, loading, error } = useQuery(GET_All_JOBS);
 
-export default function HomeScreen() {
+  const jobs = data?.getAllJobs || [];
 
   const renderItem = ({ item } : any ) => (
-    <Tile title={item.title} />
+    <View >
+      <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Producers', {jobId: item.id})} >
+        <Text style={styles.title}>{item.name} </Text>
+      </TouchableOpacity>
+    </View>
   );
     
   return (
+    
     <SafeAreaView style={styles.container}>
       <View>
         <DefaultHeader title={'Home'}/>
       </View>
-      <Text style={styles.h4Style}> Browse random gigs:</Text>
-    
-      <FlatList
-        data={randomGigs}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        horizontal
-        style={styles.flatListHorizontal}
-      />
-    
-      <Text style={styles.h4Style}> All gigs:</Text>
-
-      <FlatList
-        data={allGigs}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />  
-
+      <SearchBar lightTheme containerStyle={{backgroundColor: '#FFFFFF'}} style={{backgroundColor: '#FFFFFF'}} inputContainerStyle={{backgroundColor: '#FFFFFF'}}></SearchBar>
+      <ScrollView>
+        <Text style={styles.h4Style}> Browse random gigs:</Text>
+          <FlatList
+            data={jobs}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            horizontal
+            style={styles.flatListHorizontal}
+            />
+      
+          <Text style={styles.h4Style}> All gigs:</Text>
+          <FlatList
+            data={jobs}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+          />  
+      </ScrollView>
     </SafeAreaView>
   )
     
@@ -56,7 +55,7 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 0,
   },
   flatListHorizontal: {
-    height: 200
+    height: 125
   },
   h4Style: {
     marginTop: 25,
@@ -67,5 +66,20 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent:'center',
     backgroundColor: 'grey'
-  }
+  },
+  item: {
+    backgroundColor: '#C4C4C4',
+    borderRadius: 4,
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+},
+title: {
+    fontSize: 20,
+    textAlign: 'center',
+    textTransform: 'uppercase'
+}
 });

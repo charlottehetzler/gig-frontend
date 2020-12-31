@@ -5,11 +5,10 @@ import { useNavigation } from '@react-navigation/native';
 type Props = { title: string }
 
 export function Tile ({title} : Props) {
-    // const navigation = useNavigation();
     return (
         <View >
             <TouchableOpacity style={styles.item}  >
-                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.title}>{title} </Text>
             </TouchableOpacity>
         </View>
     );

@@ -1,19 +1,22 @@
 import React from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, ScrollView, Button, Alert, TouchableOpacity } from 'react-native';
-import {DefaultHeader} from './src/components/Header/DefaultHeader';
+import { StyleSheet, StatusBar} from 'react-native';
 import AppNavigator from './src/navigation/AppNavigator';
+import { enableScreens } from 'react-native-screens'
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+enableScreens();
+
+const client = new ApolloClient({
+  uri: 'http://localhost:3000/graphql',
+  cache: new InMemoryCache()
+});
 
 export default function App () {
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <DefaultHeader title={'my messages'}/>
-      </View>
-
-      {/* <AppNavigator/> */}
-
-    </SafeAreaView>
+    <ApolloProvider client={client}>
+      <AppNavigator/>
+    </ApolloProvider>
   );
 }
 

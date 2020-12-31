@@ -1,17 +1,20 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Avatar, Rating } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-type Props = { firstName: string, lastName: string, rating: number, lastGig: string }
+type Props = { firstName: string, lastName: string, rating: number, lastGig: string, userId: number, navigation: any }
 
-export function Producer ({firstName, lastName, rating, lastGig} : Props) {
+export function Producer ({firstName, lastName, rating, lastGig, userId, navigation} : Props) {
     const getInitials = (firstName : string, lastName : string) => {
         let first = firstName.charAt(0).toUpperCase();
         let last = lastName.charAt(0).toUpperCase();
         return first + last;
     }
+    const { navigate } = navigation;
+    
     return (
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={() => navigate('Profile', {userId: userId})}>
             <Avatar title={getInitials(firstName, lastName)} containerStyle={styles.avatar} size={60} />
         
             <View style={styles.text}>
@@ -23,7 +26,8 @@ export function Producer ({firstName, lastName, rating, lastGig} : Props) {
                 <Text style={styles.date}>Last Gig:</Text>
                 <Text style={styles.date}> {lastGig}</Text>
             </View>
-      </View>
+
+        </TouchableOpacity>
     )
 }
 
@@ -32,12 +36,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderRadius: 4,
         paddingVertical: 20,
-        marginHorizontal: 16,
+        paddingHorizontal: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomColor: '#C4C4C4',
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
     },
     avatar: {
         backgroundColor: 'grey', 
