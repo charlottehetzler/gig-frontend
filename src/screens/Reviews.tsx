@@ -20,7 +20,7 @@ export default function ReviewsScreen(props: any) {
   return (
     <SafeAreaView style={styles.container}>
         <View>
-            <DefaultHeader title={firstName + "'s reviews"}/>
+            <DefaultHeader title={firstName + "'s reviews"} navData={props.navigation}/>
         </View> 
             <ScrollView>
             {reviews.map((review : any) => { return (

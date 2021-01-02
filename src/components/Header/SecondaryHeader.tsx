@@ -11,11 +11,11 @@ export function SecondaryHeader ({title, navigation} : Props) {
     <View >
         <View style={styles.headerWrapper}>
             <TouchableOpacity style={styles.iconWrapper} onPress={() => navigation.goBack()}>
-                <Icon type={'material'} name='keyboard-backspace' style={styles.icon}/>
-                <Text style={styles.iconText}>back</Text>
+                <Icon type={'material'} name='keyboard-backspace' color={'#FFFFFF'}/>
+                {/* <Text style={styles.iconText}>back</Text> */}
             </TouchableOpacity>
             <Text style={styles.headerTitle}>{title}</Text>
-            <Icon name='add' style={styles.icon}/>
+            <Icon name='add' color={'#FFFFFF'}/>
         </View>
     </View>
     )
@@ -42,9 +42,5 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         color: GigColors.White,
-        marginLeft: -30
     },
-    icon: {
-        color: GigColors.White
-    }
 });

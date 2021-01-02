@@ -1,30 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
-import { Message } from '../components/Card/Message';
-
-
-const messages = [
-  {id: "1", firstName: "Charly", lastName: "Hetzler", message: "Lorem ipsum lorem ipsum lorem i..."},
-  {id: "2", firstName: "Isaac", lastName: "Hirsch", message: "Lorem ipsum lorem ipsum lorem i..."},
-  {id: "3", firstName: "Joe", lastName: "Doe", message: "Lorem ipsum lorem ipsum lorem i..."}
-];
+import { Message } from '../components/Messages/Message';
+import { useQuery } from '@apollo/client';
+import { GET_CHAT_ROOMS_FOR_USER } from '../lib/chat';
 
 export default function MessagesScreen (props: any) {
+  const { data, loading, error } = useQuery(GET_CHAT_ROOMS_FOR_USER, {variables: {query: {userId: 3 }}});
+  
+  const [chatRooms, setChatRooms] = useState([]);
+
+  useEffect(() => {
+    const fetchChatRooms = async () => {
+      try {
+        if (data && data?.getChatRoomsForUser) {
+          const roomData = data?.getChatRoomsForUser;
+          setChatRooms(roomData)
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    fetchChatRooms();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
         <DefaultHeader title={'my messages'} navData={props.navigation}/>
       </View>
-      <View style={styles.wrapper}>
+      <View>
+        {chatRooms && 
         <ScrollView>
-          {messages.map((message) => { return (
+          {chatRooms.map((chatRoom:any) => { return (
             <View style={styles.gigWrapper}>
-              <Message firstName={message.firstName} lastName={message.lastName} message={message.message}/>
+              <Message chatRoom={chatRoom} currentUserId={3} navigation={props.navigation}/>
             </View>
-          )})}
+          )})
+          }
         </ScrollView>
+        }
       </View>
     </SafeAreaView>
   );
@@ -36,10 +51,6 @@ const styles = StyleSheet.create({
     flex: 1,
     
   },
-  wrapper: {
-    // marginHorizontal: 10,
-    // flex: 1,
-  },
   h4Style: {
     marginTop: 15,
     fontSize: 24,
@@ -48,6 +59,5 @@ const styles = StyleSheet.create({
   gigWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-  },
-
+  }
 });
