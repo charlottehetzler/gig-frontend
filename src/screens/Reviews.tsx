@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Review } from '../components/Card/Review';
 import { useQuery } from '@apollo/client';
 import { GET_REVIEWS_FOR_USER } from '../lib/review';
+import { GigColors } from '../constants/colors';
 
 export default function ReviewsScreen(props: any) {
   
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
     height: 75, 
     alignItems: 'center', 
     justifyContent:'center',
-    backgroundColor: 'grey'
+    backgroundColor: GigColors.DarkGrey
   },
   gigWrapper: {
     flexDirection: 'row',

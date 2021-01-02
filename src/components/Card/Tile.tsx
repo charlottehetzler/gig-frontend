@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { GigColors } from '../../constants/colors';
 
 type Props = { title: string }
 
@@ -16,7 +16,7 @@ export function Tile ({title} : Props) {
 
 const styles = StyleSheet.create({
     item: {
-        backgroundColor: '#C4C4C4',
+        backgroundColor: GigColors.Grey,
         borderRadius: 4,
         padding: 20,
         marginVertical: 8,

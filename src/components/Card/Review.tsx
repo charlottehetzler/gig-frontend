@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Rating } from 'react-native-elements';
+import { GigColors } from '../../constants/colors';
 
 type Props = { comment: string, rating: number, firstName: string, lastName: string, date: string}
 
@@ -25,13 +26,13 @@ export function Review ({comment, rating, firstName, lastName, date} : Props) {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: GigColors.White,
         borderRadius: 4,
         padding: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottomColor: '#C4C4C4',
+        borderBottomColor: GigColors.Grey,
         borderBottomWidth: 1,
         flex: 1
     },
@@ -39,16 +40,16 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'left',
         fontWeight: '600',
-        color: '#000000',
+        color: GigColors.Black,
         marginBottom: 5
     },
     comment: {
         fontSize: 16,
-        color: '#7F7F7F',
+        color: GigColors.DarkGrey,
     },
     smallText: {
         fontSize: 14,
-        color: '#000000',
+        color: GigColors.Black,
         marginTop: 10
     },
     rating: {
@@ -58,6 +59,6 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: 'right',
         fontWeight: '300',
-        color: '#7F7F7F'
+        color: GigColors.DarkGrey
     }
 });

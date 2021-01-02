@@ -1,21 +1,58 @@
-import React from 'react';
-import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, TextInput } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
-import { SearchBar } from 'react-native-elements';
 import { GET_All_JOBS } from '../lib/job';
 import { useQuery } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
+import { GET_All_CATEGORIES } from '../lib/category';
+import { GigColors } from '../constants/colors';
 
 export default function HomeScreen (props: any) {
 
-  const { data, loading, error } = useQuery(GET_All_JOBS);
+  const { data, error, loading } = useQuery(GET_All_JOBS);
 
-  const jobs = data?.getAllJobs || [];
+  const jobs = useMemo(() => {
+    if (data?.getAllJobs) {
+      const allJobs = (data.getAllJobs as any[]).map(job => {
+        const { id, name } = job
+        return {id: id, name: name};
+      });
+    return allJobs;
+    } else {
+      return [];
+    }
+  }, [data]);
+
+  const [filtered, setFiltered] = useState()
+  const [searching, setSearching] = useState(false)
+
+  const onSearch = (text: any) => {
+    if (text) {
+      setSearching(true);
+      const temp = text.toLowerCase();
+      let jobNames = [];
+      for (const job of jobs) {
+        const jobItem = [];
+        jobItem.push(job.id);
+        jobItem.push(job.name);
+        jobNames.push(jobItem)
+      }
+      const tempList = jobNames.filter((item: any) => {
+        if (item[1].toLowerCase().includes(temp)) {
+          return item
+        }
+      })
+      setFiltered(tempList);
+    } else {
+      setSearching(false)
+      setFiltered(jobs)
+    }
+  }
 
   const renderItem = ({ item } : any ) => (
     <View >
-      <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Producers', {jobId: item.id})} >
-        <Text style={styles.title}>{item.name} </Text>
+      <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Producers', {jobId: item['id']})} >
+        <Text style={styles.title}>{item['name']} </Text>
       </TouchableOpacity>
     </View>
   );
@@ -24,9 +61,36 @@ export default function HomeScreen (props: any) {
     
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={'Home'}/>
+        <DefaultHeader title={'Home'} navData={props.navigation}/>
       </View>
-      <SearchBar lightTheme containerStyle={{backgroundColor: '#FFFFFF'}} style={{backgroundColor: '#FFFFFF'}} inputContainerStyle={{backgroundColor: '#FFFFFF'}}></SearchBar>
+      <TextInput 
+        style={styles.textInput}
+        placeholder="Search"
+        placeholderTextColor='#C4C4C4'
+        onChangeText={onSearch}
+
+      />
+      {searching &&
+        <View style={styles.subContainer}>
+        {
+          filtered.length ?
+            filtered.map((item: any) => {
+              return (
+                <View style={styles.itemView}>
+                  <TouchableOpacity onPress={() => props.navigation.navigate('Producers', {jobId: item[0]})} >
+                    <Text style={styles.itemText}>{item[1]}</Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            })
+            :
+            <View style={styles.noResultView}>
+                <Text style={styles.noResultText}>No search items matched</Text>
+            </View>
+          }
+          </View>
+      }
+
       <ScrollView>
         <Text style={styles.h4Style}> Browse random gigs:</Text>
           <FlatList
@@ -44,9 +108,9 @@ export default function HomeScreen (props: any) {
             keyExtractor={item => item.id}
           />  
       </ScrollView>
+      
     </SafeAreaView>
-  )
-    
+  ) 
 }
 
 const styles = StyleSheet.create({
@@ -65,10 +129,10 @@ const styles = StyleSheet.create({
     height: 75, 
     alignItems: 'center', 
     justifyContent:'center',
-    backgroundColor: 'grey'
+    backgroundColor: GigColors.DarkGrey
   },
   item: {
-    backgroundColor: '#C4C4C4',
+    backgroundColor: GigColors.Grey,
     borderRadius: 4,
     padding: 20,
     marginVertical: 8,
@@ -77,9 +141,53 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
 },
-title: {
+  title: {
     fontSize: 20,
     textAlign: 'center',
-    textTransform: 'uppercase'
-}
+    textTransform: 'uppercase',
+    color: GigColors.Black
+  },
+  textInput: {
+    backgroundColor: GigColors.White,
+    width: '100%',
+    borderRadius: 5,
+    height: 50,
+    fontSize: 20,
+    paddingHorizontal: 10,
+  },
+  subContainer: {
+    backgroundColor: GigColors.White,
+    paddingTop: 10,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center'
+  },
+  itemView: {
+    backgroundColor: GigColors.White,
+    height: 30,
+    width: '90%',
+    marginBottom: 10,
+    justifyContent: 'center',
+    borderRadius: 4,
+  },
+  itemText: {
+    color: GigColors.Black,
+    paddingHorizontal: 10,
+    fontSize: 16
+  },
+  noResultView: {
+    alignSelf: 'center',
+    height: 75,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center'
+  },
+  noResultText: {
+    fontSize: 18,
+    color: GigColors.Black
+  }
 });

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Avatar, Rating } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { GigColors } from '../../constants/colors';
 
 type Props = { firstName: string, lastName: string, rating: number, lastGig: string, userId: number, navigation: any }
 
@@ -33,18 +34,18 @@ export function Producer ({firstName, lastName, rating, lastGig, userId, navigat
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: GigColors.White,
         borderRadius: 4,
         paddingVertical: 20,
         paddingHorizontal: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottomColor: '#C4C4C4',
+        borderBottomColor: GigColors.Grey,
         borderBottomWidth: 1,
     },
     avatar: {
-        backgroundColor: 'grey', 
+        backgroundColor: GigColors.DarkGrey, 
         borderRadius: 50, 
         marginRight: 10
     },
@@ -56,13 +57,13 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'left',
         fontWeight: '600',
-        color: '#000000',
+        color: GigColors.Black,
         marginBottom: 5
     },
     date: {
         fontSize: 12,
         textAlign: 'right',
         fontWeight: '300',
-        color: '#C4C4C4'
+        color: GigColors.Grey
     }
 });

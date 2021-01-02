@@ -10,12 +10,12 @@ const messages = [
   {id: "3", firstName: "Joe", lastName: "Doe", message: "Lorem ipsum lorem ipsum lorem i..."}
 ];
 
-export default function MessagesScreen () {
+export default function MessagesScreen (props: any) {
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={'my messages'}/>
+        <DefaultHeader title={'my messages'} navData={props.navigation}/>
       </View>
       <View style={styles.wrapper}>
         <ScrollView>

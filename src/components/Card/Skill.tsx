@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import { GigColors } from '../../constants/colors';
 
 type Props = { name: string }
 
@@ -14,11 +15,11 @@ export function Skill ({name} : Props) {
 const styles = StyleSheet.create({
     skill: {
         borderWidth: 1,
-        borderColor: '#7F7F7F',
+        borderColor: GigColors.DarkGrey,
         textTransform: 'uppercase',
         padding: 5,
         borderRadius: 4,
-        color: '#7F7F7F',
+        color: GigColors.DarkGrey,
         marginBottom: 10,
         marginHorizontal: 1,
     }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createAppContainer } from 'react-navigation'
 import HomeScreen from '../screens/Home'
 import GigsScreen from '../screens/Gigs'
@@ -10,6 +11,7 @@ import ProfileScreen from '../screens/Profile'
 import ProducersScreen from '../screens/Producers';
 import ReviewsScreen from '../screens/Reviews';
 import { Icon } from 'react-native-elements';
+import { GigColors } from '../constants/colors';
 
 
 const AppNavigator = createStackNavigator({
@@ -73,7 +75,7 @@ const TabNavigator = createBottomTabNavigator({
     }}
 }, {
     tabBarOptions: {
-        activeTintColor: '#000000',
+        activeTintColor: GigColors.Black,
         tabStyle: {
             alignItems: 'center'
         },
@@ -81,4 +83,25 @@ const TabNavigator = createBottomTabNavigator({
     }
 });
 
-export default createAppContainer(TabNavigator);
+const SideNavigator = createDrawerNavigator({
+    Home: TabNavigator,
+    Account: MessagesScreen,
+    History: GigsScreen,
+    Settings: GigsScreen,
+    Logout: GigsScreen
+}, {
+    contentOptions: {
+        labelStyle: {
+            textTransform: 'uppercase',
+            color: '#C4C4C4',
+            fontSize: 18,
+            letterSpacing: 2,
+            marginLeft: 25
+        },
+        activeLabelStyle: {
+            color: GigColors.Black
+        }
+    }
+})
+
+export default createAppContainer(SideNavigator);

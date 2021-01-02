@@ -10,18 +10,18 @@ const gigs = [
     {id: "3", title: "Dog Walker", userFirstName: "Joe", userLastName: "Doe", date: "2021/01/10"}
 ];
 
-export default function GigsScreen() {
+export default function GigsScreen(props: any) {
     
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={'my live gigs'}/>
+        <DefaultHeader title={'my live gigs'} navData={props.navigation}/>
       </View>
       <View>
         <ScrollView>
           {gigs.map((gig) => { return (
             <View style={styles.gigWrapper}>
-              <Gig title={gig.title} firstName={gig.userFirstName} lastName={gig.userLastName} date={gig.date}/>
+              <Gig title={gig.title} firstName={gig.userFirstName} lastName={gig.userLastName} date={gig.date} />
             </View>
           )})}
         </ScrollView>

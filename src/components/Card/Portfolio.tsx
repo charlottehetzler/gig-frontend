@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import { GigColors } from '../../constants/colors';
 
 type Props = { name: string }
 
@@ -14,7 +15,7 @@ export function Portfolio ({name} : Props) {
 const styles = StyleSheet.create({
     portfolio: {
         textTransform: 'uppercase',
-        backgroundColor: '#7F7F7F',
+        backgroundColor: GigColors.DarkGrey,
         padding: 20,
         borderRadius: 10,
         marginBottom: 10,
@@ -26,6 +27,6 @@ const styles = StyleSheet.create({
         flex: 1
     }, 
     portfolioText: {
-        color: '#FFFFFF' 
+        color: GigColors.White
     }
 });

@@ -1,10 +1,11 @@
 import React, { Props, useState, useMemo } from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity } from 'react-native';
 import { Producer } from '../components/Card/Producer';
-import { DefaultHeader } from '../components/Header/DefaultHeader';
+import { SecondaryHeader } from '../components/Header/SecondaryHeader';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCERS_FOR_JOB } from '../lib/producer';
 import { GET_ONE_JOB } from '../lib/job';
+import { GigColors } from '../constants/colors';
 
 
 export default function ProducersScreen(props: any) {
@@ -48,7 +49,7 @@ export default function ProducersScreen(props: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={'your producers'}/>
+        <SecondaryHeader title={'your producers'} navigation={props.navigation}/>
       </View> 
         {jobData && <>
           <Text style={styles.h4Style}>{job.name}</Text>
@@ -78,6 +79,6 @@ const styles = StyleSheet.create({
     height: 75, 
     alignItems: 'center', 
     justifyContent:'center',
-    backgroundColor: 'grey'
+    backgroundColor: GigColors.DarkGrey
   }
 });

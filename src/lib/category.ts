@@ -5,12 +5,9 @@ query {
     getAllCategories {
         id,
         name,
-        jobs {
+        categoryJobs {
             id, 
-            name,
-            producer {
-                id
-            }
+            name
         }
     }
 }

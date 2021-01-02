@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, ScrollView, TouchableOpacity } from 'react-native';
-import { DefaultHeader } from '../components/Header/DefaultHeader';
+import { SafeAreaView, View, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Avatar, Icon } from 'react-native-elements';
 import { Rating } from 'react-native-ratings';
 import { Skill } from '../components/Card/Skill';
@@ -10,19 +9,18 @@ import { useQuery } from '@apollo/client';
 import { GET_USER } from '../lib/user';
 import { GET_All_JOBS_FOR_PRODUCER } from '../lib/job';
 import { GET_LAST_REVIEW_FOR_USER } from '../lib/review';
+import { SecondaryHeader } from '../components/Header/SecondaryHeader';
+import { GigColors } from '../constants/colors';
 
 const portfolio = [
   {id: "1", title: "PF 1"}, {id: "2", title: "PF 2"}, {id: "3", title: "PF 3"}
 ];
 
-const reviews = [
-  {id: "1", comment: "great Job", rating: 5, fromUser: "Charley Hetzler", date: "2020/12/01"},
-]
 export default function ProfileScreen(props: any) {
   const userId = props.navigation.getParam('userId');
 
-  const { data, loading, error } = useQuery(GET_USER, {variables: {query: {userId: userId} } });
-  const user = data?.getUser || [];
+  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {variables: {query: {userId: userId} } });
+  const user = userData?.getUser || [];
   
   const { data: jobData, loading: jobLoading, error: jobError } = useQuery(GET_All_JOBS_FOR_PRODUCER, {variables: {query: {userId: userId} } });
   const jobs = jobData?.getAllJobsForProducer || [];
@@ -31,8 +29,13 @@ export default function ProfileScreen(props: any) {
   let [lastReview, setLastReview] = useState<any>()
   const review = reviewData?.getLastReviewForUser || [];
 
-  console.log(review)
-  
+  const loading = useMemo(() => {
+    return userLoading || jobLoading || reviewLoading;
+  }, [userLoading, jobLoading, reviewLoading]);
+
+  const error = useMemo(() => {
+    return userError || jobError || reviewError;
+  }, [userError, jobError, reviewError]);
 
   const getFullName = (user : any) => {
     return user["firstName"] + " " + user["lastName"]
@@ -48,7 +51,7 @@ export default function ProfileScreen(props: any) {
     <SafeAreaView style={styles.container}>
     {user && <>
     <View>
-      <DefaultHeader title={getFullName(user)}/>
+      <SecondaryHeader title={getFullName(user)} navigation={props.navigation}/>
     </View>
       <ScrollView>
         <View style={styles.profile}>
@@ -116,7 +119,6 @@ export default function ProfileScreen(props: any) {
             </View>
           </View>
         </View>
-        {review && <>
         <View style={styles.overview}>
           <Review 
             comment={review["comment"]} 
@@ -127,7 +129,6 @@ export default function ProfileScreen(props: any) {
             key={review.id}
           />
         </View>
-        </>}
       </ScrollView>
     </>}
   </SafeAreaView>
@@ -149,12 +150,12 @@ const styles = StyleSheet.create({
     profile: {
       alignItems: 'center',
       paddingVertical: 15,
-      borderBottomColor: '#C4C4C4',
+      borderBottomColor: GigColors.Grey,
       borderBottomWidth: 1,
-      backgroundColor: '#FFFFFF'
+      backgroundColor: GigColors.White
     },
     avatar: {
-      backgroundColor: 'grey', 
+      backgroundColor: GigColors.DarkGrey, 
       borderRadius: 50
     },
     infos: {
@@ -164,16 +165,15 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       marginVertical: 5,
-      // width: 200
     },
     infoText: {
-      color: '#7F7F7F',
+      color: GigColors.DarkGrey,
       marginLeft: 10
     },
     divider: {
-      backgroundColor: '#C4C4C4',
+      backgroundColor: GigColors.Grey,
       height: 2,
-      color: '#C4C4C4'
+      color: GigColors.Grey
     },
     rating: {
       marginVertical: 15
@@ -189,10 +189,10 @@ const styles = StyleSheet.create({
       marginTop: 10
     },
     moreButton: {
-      backgroundColor: '#FFFFFF',
-      color: '#000000',
+      backgroundColor: GigColors.White,
+      color: GigColors.Black,
       borderWidth: 1,
-      borderColor: '#000000',
+      borderColor: GigColors.Black,
       paddingVertical: 3,
       paddingHorizontal: 5,
       borderRadius: 5,

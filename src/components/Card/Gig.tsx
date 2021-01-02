@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, Platform } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { GigColors } from '../../constants/colors';
 
 type Props = { title: string, firstName: string, lastName: string, date: string }
 
@@ -32,19 +33,19 @@ export function Gig ({title, firstName, lastName, date} : Props) {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: GigColors.White,
         borderRadius: 4,
-        paddingVertical: 20,
-        marginHorizontal: 16,
+        padding: 20,
+        // marginHorizontal: 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottomColor: '#C4C4C4',
+        borderBottomColor: GigColors.Grey,
         borderBottomWidth: 1,
         flex: 1
     },
     avatar: {
-        backgroundColor: 'grey', 
+        backgroundColor: GigColors.DarkGrey, 
         borderRadius: 50, 
         marginRight: 10
     },
@@ -56,17 +57,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'left',
         fontWeight: '600',
-        color: '#000000',
+        color: GigColors.Black,
         marginBottom: 5
     },
     date: {
         fontSize: 12,
         textAlign: 'right',
         fontWeight: '300',
-        color: '#C4C4C4'
+        color: GigColors.Grey
     },
     smallText: {
         fontSize: 14,
-        color: '#000000',
+        color: GigColors.Black,
     }
 });
