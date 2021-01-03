@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, StyleSheet, StatusBar, ScrollView } from 'react-native';
-import { DefaultHeader } from '../components/Header/DefaultHeader';
-import { Message } from '../components/Messages/Message';
+import { DefaultHeader } from '../../components/Header/DefaultHeader';
+import { Message } from '../../components/Messages/Message';
 import { useQuery } from '@apollo/client';
-import { GET_USER } from '../lib/chat';
+import { GET_USER } from '../../lib/chat';
 
 const currentUser = {id: 4, firstName: "Charly", lastName: "Hetzler"}
 

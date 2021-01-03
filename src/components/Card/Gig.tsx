@@ -1,33 +1,68 @@
-import React from 'react';
-import { View, StyleSheet, Text, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, Platform, TouchableWithoutFeedback } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { GigColors } from '../../constants/colors';
 
-type Props = { title: string, firstName: string, lastName: string, date: string }
+type Props = { gig: any, navigation: any, currentUserId: number }
 
-export function Gig ({title, firstName, lastName, date} : Props) {
+export function Gig (props: any) {
+    
+    // const [ otherUser, setOtherUser] = useState();
+    
+    // const getOtherUser = async () => {
+    //     if (props.gig.members[0]['id'] === props.currentUserId) {
+    //     setOtherUser(props.gig.members[1]);
+    //     } else {
+    //     setOtherUser(props.gig.members[0]);
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     getOtherUser();
+    // }, [])
+
+    const isMe = () => {
+        return props.gig.members[0] === props.currentUserId;
+    }
+
+    const otherUser = () => {
+        if (isMe()) {
+            return props.gig.members[1]
+        } else {
+            return props.gig.members[0]
+        }
+    }   
+
+
     return (
-        <View style={styles.card}>        
-            <View style={styles.text}>
-                <Text style={styles.name}>{title}</Text>
-                <Text style={styles.smallText}>{firstName + " " + lastName}</Text>
-            </View>
+        <TouchableWithoutFeedback onPress={() => props.navigation.navigate('Gig', {gig: props.gig, otherUser: otherUser()})}>
+            <View style={styles.card}>
+                <View style={styles.text}>
+                    <Text style={styles.name}>{props.gig.title}</Text>
+                    {isMe() ? 
+                        <Text style={styles.smallText}>{props.gig.members[1].firstName + " " + props.gig.members[1].lastName}</Text>
+                    :
+                        <Text style={styles.smallText}>{props.gig.members[0].firstName + " " + props.gig.members[0].lastName}</Text>
+                    }
+                </View>
 
-            <View>
-                <Text style={styles.date}> {date}</Text>
-            </View>
+                <View>
+                    <Text style={styles.date}> {props.gig.date}</Text>
+                </View>
 
-            <Icon
-                type={Platform.OS === 'ios' ? 'ionicon' : 'material'}
-                color="#D1D1D6"
-                name={
-                    Platform.OS === 'ios'
-                    ? 'chevron-forward-outline'
-                    : 'keyboard-arrow-right'
-                }
-                size={16}
-            />
-      </View>
+                <Icon
+                    type={Platform.OS === 'ios' ? 'ionicon' : 'material'}
+                    color="#D1D1D6"
+                    name={
+                        Platform.OS === 'ios'
+                        ? 'chevron-forward-outline'
+                        : 'keyboard-arrow-right'
+                    }
+                    size={16}
+                />
+
+            </View>
+        </TouchableWithoutFeedback>
     )
 }
 
@@ -36,7 +71,6 @@ const styles = StyleSheet.create({
         backgroundColor: GigColors.White,
         borderRadius: 4,
         padding: 20,
-        // marginHorizontal: 16,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

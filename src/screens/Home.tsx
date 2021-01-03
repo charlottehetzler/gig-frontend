@@ -4,12 +4,15 @@ import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { GET_All_JOBS } from '../lib/job';
 import { useQuery } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
-import { GET_All_CATEGORIES } from '../lib/category';
 import { GigColors } from '../constants/colors';
 
 export default function HomeScreen (props: any) {
 
   const { data, error, loading } = useQuery(GET_All_JOBS);
+
+  const [filtered, setFiltered] = useState();
+
+  const [searching, setSearching] = useState(false);
 
   const jobs = useMemo(() => {
     if (data?.getAllJobs) {
@@ -23,8 +26,6 @@ export default function HomeScreen (props: any) {
     }
   }, [data]);
 
-  const [filtered, setFiltered] = useState()
-  const [searching, setSearching] = useState(false)
 
   const onSearch = (text: any) => {
     if (text) {

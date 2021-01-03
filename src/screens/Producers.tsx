@@ -1,5 +1,5 @@
-import React, { Props, useState, useMemo } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar } from 'react-native';
 import { Producer } from '../components/Card/Producer';
 import { SecondaryHeader } from '../components/Header/SecondaryHeader';
 import { useQuery } from '@apollo/client';

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, Platform, KeyboardAvoidingView, TouchableOpacity, TextInput } from 'react-native';
 import { GigColors } from '../../constants/colors';
-import moment from "moment";
 import { Icon } from 'react-native-elements';
 import { CREATE_MESSAGE, UPDATE_CHAT_ROOM_LAST_MESSAGE } from '../../lib/chat';
 import { useMutation } from '@apollo/client';
