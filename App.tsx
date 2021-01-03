@@ -3,12 +3,20 @@ import { StyleSheet, StatusBar} from 'react-native';
 import AppNavigator from './src/navigation/AppNavigator';
 import { enableScreens } from 'react-native-screens'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { WebSocketLink } from '@apollo/client/link/ws';
+
 
 enableScreens();
 
 const client = new ApolloClient({
   uri: 'http://localhost:3000/graphql',
-  cache: new InMemoryCache()
+  // link: new WebSocketLink({
+  //   uri: `ws://localhost:3000/`,
+  //   options: {
+  //     reconnect: true
+  //   }
+  // }),
+  cache: new InMemoryCache(), 
 });
 
 export default function App () {
@@ -18,26 +26,5 @@ export default function App () {
       <AppNavigator/>
     </ApolloProvider>
   );
+  
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: StatusBar.currentHeight || 0,
-    flex: 1,
-    
-  },
-  wrapper: {
-    // marginHorizontal: 10,
-    // flex: 1,
-  },
-  h4Style: {
-    marginTop: 15,
-    fontSize: 24,
-    textAlign: 'center',
-  },
-  gigWrapper: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-  },
-
-});

@@ -7,6 +7,7 @@ import { createAppContainer } from 'react-navigation'
 import HomeScreen from '../screens/Home'
 import GigsScreen from '../screens/Gigs'
 import MessagesScreen from '../screens/Messages'
+import ChatScreen from '../screens/Chat'
 import ProfileScreen from '../screens/Profile'
 import ProducersScreen from '../screens/Producers';
 import ReviewsScreen from '../screens/Reviews';
@@ -20,6 +21,11 @@ const AppNavigator = createStackNavigator({
     Producers: {screen: ProducersScreen, navigationOptions: {headerShown: false}},
     Reviews: {screen: ReviewsScreen, navigationOptions: {headerShown: false}}
 });
+
+const MessageNavigator = createStackNavigator({
+    Messages: {screen: MessagesScreen, navigationOptions: {headerShown: false}},
+    Chat: {screen: ChatScreen, navigationOptions: {headerShown: false, tabBarVisible: false }},
+})
 
 const TabNavigator = createBottomTabNavigator({
     Home: {screen: AppNavigator, navigationOptions: {
@@ -52,7 +58,7 @@ const TabNavigator = createBottomTabNavigator({
             />
         }
     }},
-    Messages: {screen: MessagesScreen, navigationOptions: {
+    Messages: {screen: MessageNavigator, navigationOptions: {
         tabBarIcon: (tabInfo) => {
             return <Icon
                 type={Platform.OS === 'ios' ? 'ionicon' : 'material'}

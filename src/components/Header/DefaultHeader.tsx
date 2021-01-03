@@ -11,10 +11,10 @@ export function DefaultHeader ({title, navData} : Props) {
         <View >
             <View style={styles.headerWrapper}>
                 <TouchableOpacity onPress={() => navData.toggleDrawer()}>
-                    <Icon name='menu' style={styles.icon}/>
+                    <Icon name='menu' color={'#FFFFFF'}/>
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>{title}</Text>
-                <Icon name='add' style={styles.icon}/>
+                <Icon name='add' color={'#FFFFFF'}/>
             </View>
         </View>
     )
