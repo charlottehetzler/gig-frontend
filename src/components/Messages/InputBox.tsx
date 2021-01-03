@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Platform, KeyboardAvoidingView, TouchableOpacit
 import { GigColors } from '../../constants/colors';
 import moment from "moment";
 import { Icon } from 'react-native-elements';
-import { CREATE_MESSAGE } from '../../lib/chat';
+import { CREATE_MESSAGE, UPDATE_CHAT_ROOM_LAST_MESSAGE } from '../../lib/chat';
 import { useMutation } from '@apollo/client';
 
 type Props = { chatRoomId: number, myId: number}
@@ -12,31 +12,36 @@ export function InputBox ({chatRoomId, myId} : Props) {
 
     const [ doSaveMessage, { loading: saveMessageLoading } ] = useMutation(CREATE_MESSAGE);
     
+    const [ doUpdateChatRoom, { loading: updateChatRoomLoading } ] = useMutation(UPDATE_CHAT_ROOM_LAST_MESSAGE);
+    
     const [message, setMessage] = useState('');
+
+    const updateChatRoomLastMessage = async (messageId: number) => {
+        try {
+            const updateRoom = await doUpdateChatRoom({
+                variables: {input: {chatRoomId: chatRoomId, lastMessageId: messageId }}
+            });
+        } catch (e) {
+          console.log(e);
+        }
+    }
+
     
     const onSendPress = async () => {
         try {
             const { data, errors } = await doSaveMessage({
                 variables: { input: {content: message, chatRoomId: chatRoomId, userId: myId} }
             });
-            // const newMessage = useMutation(CREATE_MESSAGE, {
-            //     variables: { input: {
-            //         content: message,
-            //         chatRoomId: chatRoomId, 
-            //         userId: myId
-            //     }}
-            // });
             let newMessage;
             if (data?.createMessage) {
                 newMessage = data.createMessage;
+                await updateChatRoomLastMessage(newMessage.id)
             }
-            console.log(newMessage)
         } catch (e) {
           console.log(e);
         }
         setMessage('');
     }
-
 
     return (
         <KeyboardAvoidingView

@@ -3,26 +3,32 @@ import { SafeAreaView, View, StyleSheet, StatusBar, ScrollView } from 'react-nat
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { Message } from '../components/Messages/Message';
 import { useQuery } from '@apollo/client';
-import { GET_CHAT_ROOMS_FOR_USER } from '../lib/chat';
+import { GET_USER } from '../lib/chat';
+
+const currentUser = {id: 4, firstName: "Charly", lastName: "Hetzler"}
 
 export default function MessagesScreen (props: any) {
-  const { data, loading, error } = useQuery(GET_CHAT_ROOMS_FOR_USER, {variables: {query: {userId: 3 }}});
+
+  const { data, refetch } = useQuery(GET_USER, {variables: {query: {userId: currentUser.id }}});
   
   const [chatRooms, setChatRooms] = useState([]);
 
-  useEffect(() => {
-    const fetchChatRooms = async () => {
-      try {
-        if (data && data?.getChatRoomsForUser) {
-          const roomData = data?.getChatRoomsForUser;
-          setChatRooms(roomData)
-        }
-      } catch (e) {
-        console.log(e);
-      }
+  const isFocused = props.navigation.isFocused();
+
+  useEffect(() => { 
+      console.log("called");
+      fetchChatRooms(); 
+       
+  }, [isFocused]);
+
+  const fetchChatRooms = async () => {
+    try {
+      const rooms = await refetch();
+      setChatRooms(rooms.data['getUser']['allChatRooms']);
+    } catch (e) {
+      console.log(e);
     }
-    fetchChatRooms();
-  }, []);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,9 +38,9 @@ export default function MessagesScreen (props: any) {
       <View>
         {chatRooms && 
         <ScrollView>
-          {chatRooms.map((chatRoom:any) => { return (
+          {chatRooms.map((chatRoom: any) => { return (
             <View style={styles.gigWrapper}>
-              <Message chatRoom={chatRoom} currentUserId={3} navigation={props.navigation}/>
+              <Message chatRoom={chatRoom} currentUser={currentUser} navigation={props.navigation}/>
             </View>
           )})
           }

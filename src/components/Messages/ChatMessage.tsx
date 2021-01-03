@@ -21,10 +21,10 @@ export function ChatMessage ({myId, message} : Props) {
                 marginRight: isMyMessage() ? 0 : 50,
                 }
             ]}>
-       
                 <Text style={styles.name}>{isMyMessage() ? `You` : message.user.firstName}</Text>
                 <Text style={styles.message}>{message.content}</Text>
-                <Text style={styles.time}>{moment(message.createdAt).fromNow()}</Text>
+                
+                <Text style={styles.time}>{moment(message.createdAt).format('LT')}</Text>
             </View>
         </View>
     );
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
       alignSelf: "flex-end",
       color: 'grey'
     }
-  });
+ });
