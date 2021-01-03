@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Platform } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { GigColors } from '../../constants/colors';
 import moment from "moment";
@@ -63,7 +63,6 @@ export function Message (props: any) {
             </View>
 
         </TouchableWithoutFeedback>
-
     )
 }
 

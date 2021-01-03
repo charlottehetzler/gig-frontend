@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery, useSubscription, useMutation} from '@apollo/client';
-import { GET_MESSAGES_BY_CHAT_ROOM, ON_CREATE_MESSAGE, CREATE_MESSAGE, UPDATE_CHAT_ROOM_LAST_MESSAGE } from '../lib/chat';
+import { useQuery, useMutation} from '@apollo/client';
+import { GET_MESSAGES_BY_CHAT_ROOM, CREATE_MESSAGE, UPDATE_CHAT_ROOM_LAST_MESSAGE } from '../../lib/chat';
 import { View, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, Platform } from 'react-native';
-import { ChatMessage } from '../components/Messages/ChatMessage';
-import { InputBox } from '../components/Messages/InputBox';
-import { SecondaryHeader } from '../components/Header/SecondaryHeader';import { Icon } from 'react-native-elements';
-import { GigColors } from '../constants/colors';
+import { ChatMessage } from '../../components/Messages/ChatMessage';
+import { SecondaryHeader } from '../../components/Header/SecondaryHeader';import { Icon } from 'react-native-elements';
+import { GigColors } from '../../constants/colors';
 ;
 
 export default function ChatScreen (props: any) {

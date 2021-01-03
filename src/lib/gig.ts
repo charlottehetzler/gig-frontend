@@ -3,26 +3,50 @@ import { gql } from "@apollo/client";
 export const GET_All_GIGS_FOR_USER = gql`
 query getAllGigsForUser($query: GigUserQuery!) {
     getAllGigsForUser(query: $query) {
-        id, 
+        id,
+        createdAt,
         title,
+        description,
         price,
-        job {
+        currency,
+        date,
+        time,
+        address {
             id, 
-            name
+            streetRoadName, 
+            houseNumber, 
+            stateCounty
+        }
+        members {
+            id, 
+            firstName, 
+            lastName,
         }
     }
 }
 `;
 
 export const GET_All_ACTIVE_GIGS_FOR_USER = gql`
-query getAllGigsForUser($query: GigUserQuery!) {
-    getAllGigsForUser(query: $query) {
-        id, 
+query getAllActiveGigsForUser($query: GigUserQuery!) {
+    getAllActiveGigsForUser(query: $query) {
+        id,
+        createdAt,
         title,
+        description,
         price,
-        job {
+        currency,
+        date,
+        time,
+        address {
             id, 
-            name
+            streetRoadName, 
+            houseNumber, 
+            stateCounty
+        }
+        members {
+            id, 
+            firstName, 
+            lastName,
         }
     }
 }

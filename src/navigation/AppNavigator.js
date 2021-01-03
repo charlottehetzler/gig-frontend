@@ -5,9 +5,10 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createAppContainer } from 'react-navigation'
 import HomeScreen from '../screens/Home'
-import GigsScreen from '../screens/Gigs'
-import MessagesScreen from '../screens/Messages'
-import ChatScreen from '../screens/Chat'
+import GigsScreen from '../screens/Gig/Gigs'
+import GigScreen from '../screens/Gig/Gig'
+import MessagesScreen from '../screens/Message/Messages'
+import ChatScreen from '../screens/Message/Chat'
 import ProfileScreen from '../screens/Profile'
 import ProducersScreen from '../screens/Producers';
 import ReviewsScreen from '../screens/Reviews';
@@ -25,7 +26,12 @@ const AppNavigator = createStackNavigator({
 const MessageNavigator = createStackNavigator({
     Messages: {screen: MessagesScreen, navigationOptions: {headerShown: false}},
     Chat: {screen: ChatScreen, navigationOptions: {headerShown: false, tabBarVisible: false }},
-})
+});
+
+const GigNavigator = createStackNavigator({
+    Gigs: {screen: GigsScreen, navigationOptions: {headerShown: false}},
+    Gig: {screen: GigScreen, navigationOptions: {headerShown: false}},
+});
 
 const TabNavigator = createBottomTabNavigator({
     Home: {screen: AppNavigator, navigationOptions: {
@@ -38,7 +44,7 @@ const TabNavigator = createBottomTabNavigator({
             />
         }
     }},
-    Gigs: {screen: GigsScreen, navigationOptions: {
+    Gigs: {screen: GigNavigator, navigationOptions: {
         tabBarIcon: (tabInfo) => {
             return <Icon
                 type={Platform.OS === 'ios' ? 'ionicon' : 'material'}
