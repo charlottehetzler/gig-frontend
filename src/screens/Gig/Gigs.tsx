@@ -25,6 +25,10 @@ export default function GigsScreen(props: any) {
           currency: item.currency,
           updatedAt: item.updatedAt,
           members: item.members,
+          jobId: item.job.id,
+          jobName: item.job.name,
+          categoryId: item.job.gigCategory.id,
+          categoryName: item.job.gigCategory.name
           // addressId: item.address.id,
           // streetRoadName: item.address.streetRoadName,
           // stateCountry: item.address.stateCounty,
@@ -33,8 +37,6 @@ export default function GigsScreen(props: any) {
       }));
     }
   }, [data]);
-
-
   return (
     <SafeAreaView style={styles.container}>
       <View>

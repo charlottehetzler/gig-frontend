@@ -7,13 +7,21 @@ query getAllGigsForUser($query: GigUserQuery!) {
         createdAt,
         title,
         description,
-        price,
-        currency,
         date,
+        price,
+        currency, 
+        job {
+            id,
+            name,
+            gigCategory {
+                id,
+                name
+            }
+        }
         members {
-            id, 
-            firstName, 
-            lastName,
+            id,
+            firstName,
+            lastName
         }
     }
 }
@@ -29,6 +37,41 @@ query getAllActiveGigsForUser($query: GigUserQuery!) {
         date,
         price,
         currency, 
+        job {
+            id,
+            name,
+            gigCategory {
+                id,
+                name
+            }
+        }
+        members {
+            id,
+            firstName,
+            lastName
+        }
+    }
+}
+`;
+
+export const GET_ONE_GIG = gql`
+query getOneGig($query: GigUserQuery!) {
+    getOneGig(query: $query) {
+        id,
+        createdAt,
+        title,
+        description,
+        date,
+        price,
+        currency, 
+        job {
+            id,
+            name,
+            gigCategory {
+                id,
+                name
+            }
+        }
         members {
             id,
             firstName,
@@ -39,16 +82,27 @@ query getAllActiveGigsForUser($query: GigUserQuery!) {
 `;
 
 export const CREATE_GIG = gql`
-mutation createGig($input: GigQuery!) {
+mutation updateGig($input: GigQuery!) {
     createGig(input: $input) {
         id,
+        createdAt,
         title,
-        price, 
-        status,
-        description, 
+        description,
+        date,
+        price,
+        currency, 
         job {
-            id, 
-            name
+            id,
+            name,
+            gigCategory {
+                id,
+                name
+            }
+        }
+        members {
+            id,
+            firstName,
+            lastName
         }
     }
 }
@@ -58,20 +112,25 @@ export const UPDATE_GIG = gql`
 mutation updateGig($input: GigQuery!) {
     updateGig(input: $input) {
         id,
+        createdAt,
         title,
-        price, 
-        description, 
-        status,
+        description,
+        date,
+        price,
+        currency, 
         job {
-            id, 
-            name
-        },
-        producer {
-            id
-        },
-        consumer {
-            id
-        } 
+            id,
+            name,
+            gigCategory {
+                id,
+                name
+            }
+        }
+        members {
+            id,
+            firstName,
+            lastName
+        }
     }
 }
 `;

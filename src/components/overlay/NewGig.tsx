@@ -1,9 +1,9 @@
-import React, { useState, useMemo, isValidElement } from 'react';
-import { View, Modal, TextInput, Platform, Button, TouchableOpacity } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, Modal, TextInput, Platform, ActivityIndicator } from 'react-native';
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../../constants/colors';
 import { Icon } from 'react-native-elements';
-import { DefaultButton, DisabledDefaultButton } from '../Button/DefaultButton';
+import { DefaultButton, DisabledDefaultButton, WhiteDefaultButton } from '../Button/DefaultButton';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_All_JOBS } from '../../lib/job';
@@ -11,18 +11,21 @@ import { GET_All_CATEGORIES } from '../../lib/category';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import { CREATE_GIG } from '../../lib/gig';
+import { UPDATE_GIG } from '../../lib/gig';
 
 const currentUserId = 4
 
-export function NewGig (props:any) {
+export function NewGig ( props: any ) {
 
     const { data: catData, error: catError, loading: catLoading } = useQuery(GET_All_CATEGORIES);
     
     const { data: jobData, error: jobError, loading: jobLoading } = useQuery(GET_All_JOBS);
-
-    const [ doSaveGig, { loading: saveGigLoading } ] = useMutation(CREATE_GIG);
-    const [ newGig, setNewGig] = useState();
+        
+    const [ doSaveGig, { loading: saveGigLoading } ] = useMutation(UPDATE_GIG);
+        
+    const [ jobs, setJobs] = useState();
+    
+    const [ categories, setCategories] = useState()
 
     const [title, setTitle] = useState();
     const [titleIsValid, setTitleIsValid] = useState(false);
@@ -30,16 +33,13 @@ export function NewGig (props:any) {
     const [date, setDate] = useState(new Date());
     const [dateIsValid, setDateIsValid] = useState(false);
     
-    const [time, setTime] = useState();
-    const [timeIsValid, setTimeIsValid] = useState(false);
-    
     const [category, setCategory] = useState();
     const [categoryIsValid, setCategoryIsValid] = useState(false);
     
     const [job, setJob] = useState();
     const [jobIsValid, setJobIsValid] = useState(false);
     
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState();
     const [priceIsValid, setPriceIsValid] = useState(false);
     
     const [description, setDescription] = useState();
@@ -47,10 +47,13 @@ export function NewGig (props:any) {
     const [address, setAddress] = useState();
     
     const [mode, setMode] = useState();
-
+    
     const [show, setShow] = useState(false);
 
-
+    const [header, setHeader] = useState('Add a new Gig');
+    
+    const [buttonText, setButtonText] = useState('Publish Gig');
+    
     const onChange = (event: any, selectedDate: any) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
@@ -81,71 +84,74 @@ export function NewGig (props:any) {
     }
 
     const priceChangeHandler = (price: any) => {
-        if (price === 0) {
-            setPriceIsValid(false);
-        } else {
+        if (price) {
             setPriceIsValid(true);
+        } else {
+            setPriceIsValid(false);
         }
         setPriceIsValid(price);
     }
 
-    const categories = useMemo(() => {
-        if (catData?.getAllCategories) {
-          const allCategories = (catData.getAllCategories as any[]).map(category => {
-            return {label: category.name, value: category.id};
-          });
-        return allCategories;
-        } else {
-          return [];
-        }
-    }, [catData]);
 
-    const jobs = useMemo(() => {
-        if (jobData?.getAllJobs) {
-          const allJobs = (jobData.getAllJobs as any[]).map(job => {
-            return {label: job.name, value: job.id};
-          });
-        return allJobs;
-        } else {
-          return [];
+    useMemo(() => {
+        if (jobData && jobData?.getAllJobs) {
+            const allJobs = (jobData.getAllJobs as any[]).map(job => {
+                return {label: job.name, value: job.id};
+              });
+            setJobs(allJobs)
+        } 
+        if (catData && catData?.getAllCategories){
+            const allCategories = (catData.getAllCategories as any[]).map(category => {
+                return {label: category.name, value: category.id};
+              });
+            setCategories(allCategories);
         }
-    }, [jobData]);
+        if (props.gig) {
+            setTitle(props.gig.title);
+            setPrice(props.gig.price);
+            setDate(props.gig.date);
+            setDescription(props.gig.description);
+            setJob({value: props.gig.jobId, label: props.gig.jobName});
+            setCategory({value: props.gig.categoryId, label: props.gig.categoryName});
+            setHeader('Modify your Gig');
+            setButtonText('Modify Gig');
+        }
+    }, [jobData, catData]);
+
 
     const categoryChange = (item: any) => {
-        categories.map((cat) => {
+        categories.map((cat: any) => {
             if (item.value === cat.value) {
                 setCategory(cat);
             }
         });
     }
-    
+
     const jobChange = (item: any) => {
-        jobs.map((j) => {
+        jobs.map((j: any) => {
             if (item.value === j.value) { 
                 setJob(j);
             }
         });
     }
 
-    const isValid = () => {
-        return titleIsValid && priceIsValid;
-    }
+    const isValid = () => { return titleIsValid && priceIsValid;}
 
     const handleSubmit = async () => {
         try {
             const { data, errors } = await doSaveGig({
                 variables: { input: {
-                    title: title, price: price, userId: currentUserId, 
+                    gigId: props.gig.gigId, title: title, price: price, userId: currentUserId, 
                     date: date, jobId: job.value, description: description
                 }}
             });
-            if (data.createGig) {
+            if (data.update) {
                 props.navigation.navigate('Gigs');
                 props.onCancel();
                 setTitle('');
-                setCategory('Select');
-                setJob('Select');
-                setDate(new Date(1598051730000));
+                setCategory({value: 0, label: "SELECT"});
+                setJob({value: 0, label: "SELECT"});
+                setDate(new Date());
                 setPrice(0);
                 setDescription('');
                 setAddress('');
@@ -155,19 +161,23 @@ export function NewGig (props:any) {
         }
     }
 
-    const onNavigate = () => {
-        
-        () => props.navigation.navigate('Gigs')
-    }
+    const loading = useMemo(() => {
+        return catLoading || jobLoading || saveGigLoading;
+    }, [jobLoading, catLoading, saveGigLoading]);
+      
+    const error = useMemo(() => {
+        return catError || jobError ;
+    }, [catError, jobError]);
 
     return (
         <Modal visible={props.visible} animationType='slide'>
+        {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
             <View style={styles.inputContainer}>
                 <View style={styles.headerWrapper}>
                     <TouchableWithoutFeedback onPress={props.onCancel}>
                         <Icon type='material' name='close' style={styles.icon} size={25}/>
                     </TouchableWithoutFeedback>
-                    <Text style={styles.title}>Add a new gig</Text>
+                    <Text style={styles.title}>{header}</Text>
                 </View>
                 <View style={styles.container}>
                     <TextInput
@@ -182,8 +192,8 @@ export function NewGig (props:any) {
                         <DropDownPicker
                             items={categories}
                             placeholder="Select an area"
-                            containerStyle={{height: 50}}
                             onChangeItem={item => categoryChange(item)}
+                            containerStyle={{height: 50}}
                             dropDownStyle={{backgroundColor: '#FFFFFF'}}
                             itemStyle={{backgroundColor: '#FFFFFF', borderBottomColor: '#C4C4C4', borderBottomWidth: 1, paddingVertical:20}}
                             zIndex={5000}
@@ -197,9 +207,9 @@ export function NewGig (props:any) {
                         <Text style={styles.inputLabel}>select your job</Text>
                         <DropDownPicker
                             items={jobs}
-                            placeholder="Select you job"
-                            containerStyle={{height: 50}}
+                            placeholder="Select your job"
                             onChangeItem={item => jobChange(item)}
+                            containerStyle={{height: 50}}
                             dropDownStyle={{backgroundColor: '#FFFFFF'}}
                             itemStyle={{backgroundColor: '#FFFFFF', borderBottomColor: '#C4C4C4', borderBottomWidth: 1, paddingVertical:20}}
                             zIndex={4000}
@@ -243,7 +253,7 @@ export function NewGig (props:any) {
                         <TextInput
                             placeholder={"add your price"}
                             style={styles.textInput}
-                            value={address}
+                            value={price}
                             onChangeText={priceChangeHandler}
                             keyboardType={'decimal-pad'}
                         />
@@ -270,10 +280,11 @@ export function NewGig (props:any) {
                     </View>
                     <View style={styles.button}>
                         {isValid() ? 
-                            <DefaultButton title={'publish gig'} onPress={handleSubmit} />
+                            <DefaultButton title={buttonText} onPress={handleSubmit} />
                         :
-                            <DisabledDefaultButton title={'publish gig'}/>
+                            <DisabledDefaultButton title={buttonText}/>
                         }
+                        {props.gig && <WhiteDefaultButton title={buttonText}/>}
                     </View>
                 </View>
             </View>
@@ -336,7 +347,6 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'space-between',
         marginVertical: 15,
-
     },
     date: {
         flex: 1

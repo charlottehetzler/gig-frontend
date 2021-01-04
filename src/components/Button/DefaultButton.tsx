@@ -20,6 +20,14 @@ export function DisabledDefaultButton (props: any) {
     )
 }
 
+export function WhiteDefaultButton (props: any) {
+    return (
+        <View style={styles.white}>
+            <Text style={styles.buttonTextBlack}>{props.title}</Text>
+        </View>
+    )
+}
+
 const styles = StyleSheet.create({
     button: {
         alignItems: 'center', 
@@ -35,10 +43,25 @@ const styles = StyleSheet.create({
         borderRadius: 10, 
         marginVertical: 5
     },
+    white:{
+        alignItems: 'center', 
+        paddingVertical: 15,
+        backgroundColor: GigColors.White,
+        borderRadius: 10, 
+        marginVertical: 5,
+        borderColor: GigColors.DarkGrey,
+        borderWidth: 1
+    },
     buttonText: {
         fontSize: 20,
         textAlign: 'center',
         color: GigColors.White, 
         textTransform: 'uppercase'
     },
+    buttonTextBlack: {
+        fontSize: 20,
+        textAlign: 'center',
+        color: GigColors.Black, 
+        textTransform: 'uppercase'
+    }
 });

@@ -142,17 +142,19 @@ export default function ProfileScreen(props: any) {
                 <Text>See all</Text>
               </TouchableOpacity>
             </View>
+            { lastReview &&
+              <View style={styles.overview}>
+                <Review 
+                  comment={lastReview.comment} 
+                  rating={lastReview.rating} 
+                  date={lastReview.createdAt} 
+                  firstName={lastReview.fromUser.firstName} 
+                  lastName={lastReview.fromUser.lastName} 
+                  key={lastReview.id}
+                />
+              </View>
+            }
           </View>
-        </View>
-        <View style={styles.overview}>
-          <Review 
-            comment={lastReview.comment} 
-            rating={lastReview.rating} 
-            date={lastReview.createdAt} 
-            firstName={lastReview.fromUser.firstName} 
-            lastName={lastReview.fromUser.lastName} 
-            key={lastReview.id}
-          />
         </View>
       </ScrollView>
     </>}
@@ -205,6 +207,7 @@ const styles = StyleSheet.create({
     },
     profileSection: {
       alignItems: 'flex-start',
+      marginVertical: 5
     },
     overview: {
       flexDirection: 'row',

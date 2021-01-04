@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: GigColors.White,
         borderRadius: 4,
-        padding: 20,
+        paddingVertical: 15,
+        paddingHorizontal: 5,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
