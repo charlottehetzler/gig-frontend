@@ -10,13 +10,6 @@ query getAllGigsForUser($query: GigUserQuery!) {
         price,
         currency,
         date,
-        time,
-        address {
-            id, 
-            streetRoadName, 
-            houseNumber, 
-            stateCounty
-        }
         members {
             id, 
             firstName, 
@@ -33,20 +26,13 @@ query getAllActiveGigsForUser($query: GigUserQuery!) {
         createdAt,
         title,
         description,
-        price,
-        currency,
         date,
-        time,
-        address {
-            id, 
-            streetRoadName, 
-            houseNumber, 
-            stateCounty
-        }
+        price,
+        currency, 
         members {
-            id, 
-            firstName, 
-            lastName,
+            id,
+            firstName,
+            lastName
         }
     }
 }
@@ -58,17 +44,11 @@ mutation createGig($input: GigQuery!) {
         id,
         title,
         price, 
-        description, 
         status,
+        description, 
         job {
             id, 
             name
-        },
-        producer {
-            id
-        },
-        consumer {
-            id
         }
     }
 }

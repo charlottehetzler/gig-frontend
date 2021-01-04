@@ -47,7 +47,7 @@ export function Gig (props: any) {
                 </View>
 
                 <View>
-                    <Text style={styles.date}> {props.gig.date}</Text>
+                    <Text style={styles.date}> {props.gig.date.split('T')[0]}</Text>
                 </View>
 
                 <Icon

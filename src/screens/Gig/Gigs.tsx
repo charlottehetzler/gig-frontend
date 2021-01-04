@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { StyleSheet, View, SafeAreaView, StatusBar, ScrollView } from 'react-native';
+import { StyleSheet, View, SafeAreaView, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
 import { Gig } from '../../components/Card/Gig';
 import { DefaultHeader } from '../../components/Header/DefaultHeader';
 import { useQuery } from '@apollo/client';
@@ -21,31 +21,32 @@ export default function GigsScreen(props: any) {
           description: item.description,
           title: item.title,
           date: item.date,
-          time: item.time,
           price: item.price,
           currency: item.currency,
           updatedAt: item.updatedAt,
           members: item.members,
-          addressId: item.address.id,
-          streetRoadName: item.address.streetRoadName,
-          stateCountry: item.address.stateCounty,
-          houseNumber: item.address.houseNumber,
+          // addressId: item.address.id,
+          // streetRoadName: item.address.streetRoadName,
+          // stateCountry: item.address.stateCounty,
+          // houseNumber: item.address.houseNumber,
         }
       }));
     }
   }, [data]);
+
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
         <DefaultHeader title={'my live gigs'} navData={props.navigation}/>
       </View>
+      {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       <View>
         {activeGigs && 
         <ScrollView>
           {activeGigs.map((gig: any) => { return (
-            <View style={styles.gigWrapper}>
-              <Gig gig={gig} navigation={props.navigation} currentUserId={currentUserId} key={gig.gigId}/>
+            <View style={styles.gigWrapper} key={gig.gigId}>
+              <Gig gig={gig} navigation={props.navigation} currentUserId={currentUserId} />
             </View>
           )})}
         </ScrollView>

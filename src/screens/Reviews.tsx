@@ -1,11 +1,12 @@
 import React from 'react';
-import { SafeAreaView, View, StyleSheet, StatusBar } from 'react-native';
+import { SafeAreaView, View, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Review } from '../components/Card/Review';
 import { useQuery } from '@apollo/client';
 import { GET_REVIEWS_FOR_USER } from '../lib/review';
 import { GigColors } from '../constants/colors';
+import { SecondaryHeader } from '../components/Header/SecondaryHeader';
 
 export default function ReviewsScreen(props: any) {
   
@@ -19,23 +20,24 @@ export default function ReviewsScreen(props: any) {
 
   return (
     <SafeAreaView style={styles.container}>
-        <View>
-            <DefaultHeader title={firstName + "'s reviews"} navData={props.navigation}/>
-        </View> 
-            <ScrollView>
-            {reviews.map((review : any) => { return (
-            <View style={styles.gigWrapper}>
-                <Review 
-                comment={review["comment"]} 
-                rating={review["rating"]} 
-                date={review["createdAt"]} 
-                firstName={review["fromUser"]["firstName"]} 
-                lastName={review["fromUser"]["lastName"]} 
-                key={review.id}
+      <View>
+        <SecondaryHeader title={`${firstName}'s Reviews`} navigation={props.navigation}/>
+      </View>
+      {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+      <ScrollView>
+        {reviews.map((review : any) => { return (
+          <View style={styles.gigWrapper}>
+            <Review 
+              comment={review["comment"]} 
+              rating={review["rating"]} 
+              date={review["createdAt"]} 
+              firstName={review["fromUser"]["firstName"]} 
+              lastName={review["fromUser"]["lastName"]} 
+              key={review.id}
             />
-            </View>
-          )})}
-            </ScrollView>
+          </View>
+        )})}
+      </ScrollView>
     </SafeAreaView>
   );
 }

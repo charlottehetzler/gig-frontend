@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createAppContainer } from 'react-navigation'
 import HomeScreen from '../screens/Home'
+import CalendarScreen from '../screens/Calendar'
 import GigsScreen from '../screens/Gig/Gigs'
 import GigScreen from '../screens/Gig/Gig'
 import MessagesScreen from '../screens/Message/Messages'
@@ -54,7 +55,7 @@ const TabNavigator = createBottomTabNavigator({
             />
         }
     }},
-    Calendar: {screen: GigsScreen, navigationOptions: {
+    Calendar: {screen: CalendarScreen, navigationOptions: {
         tabBarIcon: (tabInfo) => {
             return <Icon
                 type={Platform.OS === 'ios' ? 'ionicon' : 'material'}

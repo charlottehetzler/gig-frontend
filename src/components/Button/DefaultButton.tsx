@@ -3,13 +3,20 @@ import {StyleSheet, View, Text} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
 
-type Props = { title: string, navigation: any }
 
-export function DefaultButtom ({title, navigation} : Props) {
+export function DefaultButton (props: any) {
     return (
-        <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>{title}</Text>
+        <TouchableOpacity style={styles.button} onPress={props.onPress} >
+            <Text style={styles.buttonText}>{props.title}</Text>
         </TouchableOpacity>
+    )
+}
+
+export function DisabledDefaultButton (props: any) {
+    return (
+        <View style={styles.disabled}>
+            <Text style={styles.buttonText}>{props.title}</Text>
+        </View>
     )
 }
 
@@ -18,6 +25,13 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         paddingVertical: 15,
         backgroundColor: GigColors.Black,
+        borderRadius: 10, 
+        marginVertical: 5
+    },
+    disabled: {
+        alignItems: 'center', 
+        paddingVertical: 15,
+        backgroundColor: GigColors.DarkGrey,
         borderRadius: 10, 
         marginVertical: 5
     },

@@ -3,7 +3,7 @@ import { View, SafeAreaView, StatusBar, StyleSheet, Text } from 'react-native';
 import { WhiteHeader } from '../../components/Header/WhiteHeader';
 import { Avatar } from 'react-native-elements';
 import { GigColors } from '../../constants/colors';
-import { DefaultButtom } from '../../components/Button/DefaultButton';
+import { DefaultButton } from '../../components/Button/DefaultButton';
 
 export default function GigScreen (props: any) {
     const gig = props.navigation.getParam('gig');
@@ -33,16 +33,16 @@ export default function GigScreen (props: any) {
                     <Text style={styles.user}>{otherUser.firstName + " " + otherUser.lastName}</Text>
                 </View>
                 <View style={styles.dateWrapper}>
-                    <Text style={styles.info}>{gig.date}</Text>
-                    <Text style={styles.info}>{gig.time}</Text>
+                    <Text style={styles.info}>{gig.date.split('T')[0]}</Text>
+                    <Text style={styles.info}>{gig.date.split('T')[1]}</Text>
                 </View>
-                <Text style={styles.info}>{gig.streetRoadName + " " + gig.houseNumber + ", " + gig.stateCountry}</Text>
-                <Text style={styles.price}>{gig.price + gig.currency}</Text>
+                {/* <Text style={styles.info}>{gig.streetRoadName + " " + gig.houseNumber + ", " + gig.stateCountry}</Text>
+                <Text style={styles.price}>{gig.price + gig.currency}</Text> */}
             </View>
             <View style={styles.buttonWrapper}>
-                <DefaultButtom title={'Modify gig'} navigation={props.navigation}/>
-                <DefaultButtom title={'claim an expense'} navigation={props.navigation}/>
-                <DefaultButtom title={'Gig completed'} navigation={props.navigation}/>
+                <DefaultButton title={'Modify gig'} navigation={props.navigation}/>
+                <DefaultButton title={'claim an expense'} navigation={props.navigation}/>
+                <DefaultButton title={'Gig completed'} navigation={props.navigation}/>
             </View>
         </SafeAreaView >
     );

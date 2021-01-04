@@ -24,7 +24,6 @@ export function InputBox ({chatRoomId, myId} : Props) {
           console.log(e);
         }
     }
-
     
     const onSendPress = async () => {
         try {
@@ -57,6 +56,7 @@ export function InputBox ({chatRoomId, myId} : Props) {
                     multiline
                     value={message}
                     onChangeText={setMessage}
+                    textAlign='center'
                 />
                 <TouchableOpacity style={styles.sendButton} onPress={onSendPress}>
                     <Text style={[styles.sendButton, {color: message === '' ? '#C4C4C4' : '#000000'}]}>Send</Text>

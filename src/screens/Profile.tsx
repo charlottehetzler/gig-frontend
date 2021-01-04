@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Avatar, Icon } from 'react-native-elements';
 import { Rating } from 'react-native-ratings';
 import { Skill } from '../components/Card/Skill';
@@ -11,6 +11,7 @@ import { GET_All_JOBS_FOR_PRODUCER } from '../lib/job';
 import { GET_LAST_REVIEW_FOR_USER } from '../lib/review';
 import { SecondaryHeader } from '../components/Header/SecondaryHeader';
 import { GigColors } from '../constants/colors';
+import moment from 'moment';
 
 const portfolio = [
   {id: "1", title: "PF 1"}, {id: "2", title: "PF 2"}, {id: "3", title: "PF 3"}
@@ -18,57 +19,75 @@ const portfolio = [
 
 export default function ProfileScreen(props: any) {
   const userId = props.navigation.getParam('userId');
+  const currentUserId = 4
 
-  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {variables: {query: {userId: userId} } });
-  const user = userData?.getUser || [];
+  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {variables: {query: {userId: currentUserId} } });
   
   const { data: jobData, loading: jobLoading, error: jobError } = useQuery(GET_All_JOBS_FOR_PRODUCER, {variables: {query: {userId: userId} } });
-  const jobs = jobData?.getAllJobsForProducer || [];
 
   const { data: reviewData, loading: reviewLoading, error: reviewError } = useQuery(GET_LAST_REVIEW_FOR_USER, {variables: {query: {userId: userId}}});
-  let [lastReview, setLastReview] = useState<any>()
-  const review = reviewData?.getLastReviewForUser || [];
+  
+  const [lastReview, setLastReview] = useState();
 
+  const [user, setUser] = useState();
+
+  const [jobs, setJobs] = useState([]);
+ 
+  const [fullName, setFullName] = useState();
+  
+  const [initials, setInitials] = useState();
+  
   const loading = useMemo(() => {
     return userLoading || jobLoading || reviewLoading;
   }, [userLoading, jobLoading, reviewLoading]);
-
+  
   const error = useMemo(() => {
     return userError || jobError || reviewError;
   }, [userError, jobError, reviewError]);
 
-  const getFullName = (user : any) => {
-    return user["firstName"] + " " + user["lastName"]
-  }
+  useMemo(() => {
+    if (jobData && jobData.getAllJobsForProducer) {
+      setJobs(jobData.getAllJobsForProducer)
+    }
+    if (userData && userData.getUser) {
+      setUser(userData.getUser)
+      setFullName(userData.getUser.firstName + " " + userData.getUser.lastName);
+      setInitials(userData.getUser.firstName.charAt(0).toUpperCase() + userData.getUser.lastName.charAt(0).toUpperCase());
 
-  const getInitials = (firstName : string, lastName: string) => {
-    let first = firstName.charAt(0).toUpperCase();
-    let last = lastName.charAt(0).toUpperCase();
-    return first + last;
+    }
+    if (reviewData && reviewData.getLastReviewForUser) {
+      setLastReview(reviewData.getLastReviewForUser)
+    }
+  }, [jobData, userData, reviewData])
+
+  const hasJobs = () => {
+    return jobs.length > 1
   }
 
   return ( 
     <SafeAreaView style={styles.container}>
-    {user && <>
     <View>
-      <SecondaryHeader title={getFullName(user)} navigation={props.navigation}/>
+      <SecondaryHeader title={fullName} navigation={props.navigation}/>
     </View>
+    {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+
+    {user && <>
       <ScrollView>
         <View style={styles.profile}>
     
-          <Avatar containerStyle={styles.avatar} size={75} />
-          <Text style={styles.h4Style}>{user["firstName"] + " " + user["lastName"]}</Text>
+          <Avatar containerStyle={styles.avatar} size={75} title={initials}/>
+          <Text style={styles.h4Style}>{fullName}</Text>
           
           <View style={styles.infos}>
 
             <View style={styles.info}>
               <Icon name="email" color="#7F7F7F"/>
-              <Text style={styles.infoText}>{user["email"]}</Text>
+              <Text style={styles.infoText}>{user.email}</Text>
             </View>
 
             <View style={styles.info}>
               <Icon name="calendar-today" color="#7F7F7F"/>
-              <Text style={styles.infoText}>{user["birthday"]}</Text>
+              <Text style={styles.infoText}>{moment(user.birthday).format('LL')}</Text>
             </View>
 
             {/* <View style={styles.info}>
@@ -87,11 +106,17 @@ export default function ProfileScreen(props: any) {
           <View style={styles.profileSection}>
             <Text style={styles.h4Style}>{user["firstName"]}'s skills</Text>
             {jobs && <>
-            <View style={styles.overview}>
-              {jobs.map((job: { name: string; id: number }) => { return (
-                <Skill name={job.name} key={job.id}/>
-                )})}
-            </View>
+              {hasJobs() ?
+                <View style={styles.overview}>
+                  {jobs.map((job: { name: string; id: number }) => { return (
+                    <Skill name={job.name} key={job.id}/>
+                  )})}
+                </View>
+              :
+                <View>
+                  <Text style={styles.noItems}>no skills added yet. </Text>
+                </View>
+              }
           </>}
           </View>
 
@@ -121,12 +146,12 @@ export default function ProfileScreen(props: any) {
         </View>
         <View style={styles.overview}>
           <Review 
-            comment={review["comment"]} 
-            rating={review["rating"]} 
-            date={review["createdAt"]} 
-            firstName={review["fromUser"]["firstName"]} 
-            lastName={review["fromUser"]["lastName"]} 
-            key={review.id}
+            comment={lastReview.comment} 
+            rating={lastReview.rating} 
+            date={lastReview.createdAt} 
+            firstName={lastReview.fromUser.firstName} 
+            lastName={lastReview.fromUser.lastName} 
+            key={lastReview.id}
           />
         </View>
       </ScrollView>
@@ -204,5 +229,9 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-end',
+    },
+    noItems: {
+      marginTop: 10,
+      color: GigColors.DarkGrey
     }
   });

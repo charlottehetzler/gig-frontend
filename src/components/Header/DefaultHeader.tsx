@@ -1,20 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
+import { NewGig } from '../overlay/NewGig';
 
-type Props = { title: string, navData: any }
+export function DefaultHeader (props: any) {
 
-export function DefaultHeader ({title, navData} : Props) {
+    const [ isAddMode, setIsAddMode ] = useState(false);
+
+    const closeModal = () => {
+        setIsAddMode(false)
+    }
+
     return (
         <View >
             <View style={styles.headerWrapper}>
-                <TouchableOpacity onPress={() => navData.toggleDrawer()}>
+                <TouchableOpacity onPress={() => props.navData.toggleDrawer()}>
                     <Icon name='menu' color={'#FFFFFF'}/>
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>{title}</Text>
-                <Icon name='add' color={'#FFFFFF'}/>
+                <Text style={styles.headerTitle}>{props.title}</Text>
+                <TouchableOpacity onPress={() => setIsAddMode(true)}>
+                    <Icon name='add' color={'#FFFFFF'} />
+                    <NewGig visible={isAddMode} onCancel={closeModal} navigation={props.navData}/>
+                </TouchableOpacity>
             </View>
         </View>
     )

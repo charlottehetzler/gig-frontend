@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { GET_All_JOBS } from '../lib/job';
 import { useQuery } from '@apollo/client';
@@ -64,20 +64,23 @@ export default function HomeScreen (props: any) {
       <View>
         <DefaultHeader title={'Home'} navData={props.navigation}/>
       </View>
+      {loading && 
+        <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>
+      }
+      {!loading &&  <>
       <TextInput 
         style={styles.textInput}
         placeholder="Search"
         placeholderTextColor='#C4C4C4'
         onChangeText={onSearch}
-
       />
       {searching &&
         <View style={styles.subContainer}>
         {
           filtered.length ?
-            filtered.map((item: any) => {
-              return (
-                <View style={styles.itemView}>
+          filtered.map((item: any) => {
+            return (
+              <View style={styles.itemView} key={item.id}>
                   <TouchableOpacity onPress={() => props.navigation.navigate('Producers', {jobId: item[0]})} >
                     <Text style={styles.itemText}>{item[1]}</Text>
                   </TouchableOpacity>
@@ -107,9 +110,10 @@ export default function HomeScreen (props: any) {
             data={jobs}
             renderItem={renderItem}
             keyExtractor={item => item.id}
-          />  
+            />  
       </ScrollView>
       
+      </>}
     </SafeAreaView>
   ) 
 }

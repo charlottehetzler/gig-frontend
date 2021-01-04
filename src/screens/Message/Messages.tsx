@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, StyleSheet, StatusBar, ScrollView } from 'react-native';
+import { SafeAreaView, View, StyleSheet, StatusBar, ScrollView, ActivityIndicator } from 'react-native';
 import { DefaultHeader } from '../../components/Header/DefaultHeader';
 import { Message } from '../../components/Messages/Message';
 import { useQuery } from '@apollo/client';
@@ -9,7 +9,7 @@ const currentUser = {id: 4, firstName: "Charly", lastName: "Hetzler"}
 
 export default function MessagesScreen (props: any) {
 
-  const { data, refetch } = useQuery(GET_USER, {variables: {query: {userId: currentUser.id }}});
+  const { data, loading, refetch } = useQuery(GET_USER, {variables: {query: {userId: currentUser.id }}});
   
   const [chatRooms, setChatRooms] = useState([]);
 
@@ -29,23 +29,26 @@ export default function MessagesScreen (props: any) {
       console.log(e);
     }
   }
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <View>
         <DefaultHeader title={'my messages'} navData={props.navigation}/>
       </View>
+      {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       <View>
+      {!loading &&  <> 
         {chatRooms && 
         <ScrollView>
           {chatRooms.map((chatRoom: any) => { return (
-            <View style={styles.gigWrapper}>
+            <View style={styles.gigWrapper} key={chatRoom.id}>
               <Message chatRoom={chatRoom} currentUser={currentUser} navigation={props.navigation}/>
             </View>
           )})
           }
         </ScrollView>
         }
+      </>}
       </View>
     </SafeAreaView>
   );
