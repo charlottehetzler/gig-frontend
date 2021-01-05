@@ -8,9 +8,11 @@ import moment from 'moment';
 import { NewGig } from '../../components/overlay/NewGig';
 
 export default function GigScreen (props: any) {
-    const gig = props.navigation.getParam('gig');
+    // const gig = props.navigation.getParam('gig');
 
-    const otherUser = props.navigation.getParam('otherUser');
+    // const otherUser = props.navigation.getParam('otherUser');
+
+    const { gig, otherUser } = props.route.params;
 
     const [ isAddMode, setIsAddMode ] = useState(false);
 

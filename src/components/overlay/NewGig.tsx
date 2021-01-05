@@ -1,10 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { View, Modal, TextInput, Platform, ActivityIndicator } from 'react-native';
+import { View, Modal, TextInput, Platform, ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../../constants/colors';
 import { Icon } from 'react-native-elements';
 import { DefaultButton, DisabledDefaultButton, WhiteDefaultButton } from '../Button/DefaultButton';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_All_JOBS } from '../../lib/job';
 import { GET_All_CATEGORIES } from '../../lib/category';

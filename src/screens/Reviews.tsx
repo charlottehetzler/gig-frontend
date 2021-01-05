@@ -10,9 +10,11 @@ import { SecondaryHeader } from '../components/Header/SecondaryHeader';
 
 export default function ReviewsScreen(props: any) {
   
-  const userId = props.navigation.getParam('userId');
-  const firstName = props.navigation.getParam('firstName');
-  const lastName = props.navigation.getParam('lastName');
+  // const userId = props.navigation.getParam('userId');
+  // const firstName = props.navigation.getParam('firstName');
+  // const lastName = props.navigation.getParam('lastName');
+  const { userId, firstName, lastName } = props.route.params;
+
   
   const { data, loading, error } = useQuery(GET_REVIEWS_FOR_USER, {variables: {query: {userId: userId} } });
   const reviews = data?.getReviewsForUser || [];

@@ -10,7 +10,9 @@ import { GigColors } from '../constants/colors';
 
 export default function ProducersScreen(props: any) {
   
-  const jobId = props.navigation.getParam('jobId');
+  // const jobId = props.navigation.getParam('jobId');
+  
+  const { jobId } = props.route.params;
   
   const { data, loading, error } = useQuery(GET_PRODUCERS_FOR_JOB, {variables: {query: {jobId: jobId}}});
 

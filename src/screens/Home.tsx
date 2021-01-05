@@ -25,6 +25,7 @@ export default function HomeScreen (props: any) {
       return [];
     }
   }, [data]);
+  console.log(data)
 
 
   const onSearch = (text: any) => {
