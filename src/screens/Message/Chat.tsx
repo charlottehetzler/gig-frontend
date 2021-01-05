@@ -8,9 +8,12 @@ import { GigColors } from '../../constants/colors';
 ;
 
 export default function ChatScreen (props: any) {
-    const chatRoomId = props.navigation.getParam('chatRoomId');
-    const firstName = props.navigation.getParam('firstName');
-    const lastName = props.navigation.getParam('lastName')
+    // const chatRoomId = props.navigation.getParam('chatRoomId');
+    // const firstName = props.navigation.getParam('firstName');
+    // const lastName = props.navigation.getParam('lastName');
+
+    const { chatRoomId, firstName, lastName } = props.route.params;
+
 
     const { data, loading, error, refetch } = useQuery(GET_MESSAGES_BY_CHAT_ROOM, {variables: {query: {chatRoomId: chatRoomId }}, pollInterval: 500,});
 

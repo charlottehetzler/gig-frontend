@@ -18,10 +18,14 @@ const portfolio = [
 ];
 
 export default function ProfileScreen(props: any) {
-  const userId = props.navigation.getParam('userId');
+  // const userId = props.navigation.getParam('userId');
+  // let { userId } = props.route.params;
+
   const currentUserId = 4
 
-  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {variables: {query: {userId: currentUserId} } });
+  let userId = props.route.params ? props.route.params : currentUserId;
+  
+  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {variables: {query: {userId: userId} } });
   
   const { data: jobData, loading: jobLoading, error: jobError } = useQuery(GET_All_JOBS_FOR_PRODUCER, {variables: {query: {userId: userId} } });
 
@@ -63,6 +67,7 @@ export default function ProfileScreen(props: any) {
   const hasJobs = () => {
     return jobs.length > 1
   }
+
 
   return ( 
     <SafeAreaView style={styles.container}>
