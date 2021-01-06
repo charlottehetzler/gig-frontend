@@ -9,7 +9,8 @@ query getAllGigsForUser($query: GigUserQuery!) {
         description,
         date,
         price,
-        currency, 
+        currency,
+        status, 
         job {
             id,
             name,
@@ -36,7 +37,36 @@ query getAllActiveGigsForUser($query: GigUserQuery!) {
         description,
         date,
         price,
+        status,
         currency, 
+        job {
+            id,
+            name,
+            gigCategory {
+                id,
+                name
+            }
+        }
+        members {
+            id,
+            firstName,
+            lastName
+        }
+    }
+}
+`;
+
+export const GET_GIG_HISTORY = gql`
+query getGigHistory($query: GigUserQuery!) {
+    getGigHistory(query: $query) {
+        id,
+        createdAt,
+        title,
+        description,
+        date,
+        price,
+        currency,
+        status,
         job {
             id,
             name,

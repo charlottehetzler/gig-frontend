@@ -5,8 +5,12 @@ import { GET_All_JOBS } from '../lib/job';
 import { useQuery } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GigColors } from '../constants/colors';
+import { useSelector } from 'react-redux';
+import AuthPlaceholder from '../components/Placeholder/AuthPlaceholder';
 
 export default function HomeScreen (props: any) {
+
+  const isLoggedIn = useSelector( (state: any) => state.user.isLoggedIn);
 
   const { data, error, loading } = useQuery(GET_All_JOBS);
 
@@ -25,7 +29,6 @@ export default function HomeScreen (props: any) {
       return [];
     }
   }, [data]);
-  console.log(data)
 
 
   const onSearch = (text: any) => {
@@ -63,25 +66,23 @@ export default function HomeScreen (props: any) {
     
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={'Home'} navData={props.navigation}/>
+        <DefaultHeader title={'Home'} navigation={props.navigation} goBack={false}/>
       </View>
-      {loading && 
-        <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>
-      }
+      {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       {!loading &&  <>
-      <TextInput 
+        <TextInput 
         style={styles.textInput}
         placeholder="Search"
         placeholderTextColor='#C4C4C4'
         onChangeText={onSearch}
-      />
-      {searching &&
-        <View style={styles.subContainer}>
-        {
-          filtered.length ?
-          filtered.map((item: any) => {
-            return (
-              <View style={styles.itemView} key={item.id}>
+        />
+        {searching &&
+          <View style={styles.subContainer}>
+          {
+            filtered.length ?
+            filtered.map((item: any) => {
+              return (
+                <View style={styles.itemView} key={item.id}>
                   <TouchableOpacity onPress={() => props.navigation.navigate('Producers', {jobId: item[0]})} >
                     <Text style={styles.itemText}>{item[1]}</Text>
                   </TouchableOpacity>
@@ -95,7 +96,6 @@ export default function HomeScreen (props: any) {
           }
           </View>
       }
-
       <ScrollView>
         <Text style={styles.h4Style}> Browse random gigs:</Text>
           <FlatList
@@ -114,10 +114,13 @@ export default function HomeScreen (props: any) {
             />  
       </ScrollView>
       
+      
       </>}
     </SafeAreaView>
   ) 
 }
+
+
 
 const styles = StyleSheet.create({
   container: {

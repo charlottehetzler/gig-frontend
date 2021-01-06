@@ -6,24 +6,19 @@ import { Review } from '../components/Card/Review';
 import { useQuery } from '@apollo/client';
 import { GET_REVIEWS_FOR_USER } from '../lib/review';
 import { GigColors } from '../constants/colors';
-import { SecondaryHeader } from '../components/Header/SecondaryHeader';
 
 export default function ReviewsScreen(props: any) {
   
-  // const userId = props.navigation.getParam('userId');
-  // const firstName = props.navigation.getParam('firstName');
-  // const lastName = props.navigation.getParam('lastName');
-  const { userId, firstName, lastName } = props.route.params;
+  const { userId, firstName } = props.route.params;
 
-  
   const { data, loading, error } = useQuery(GET_REVIEWS_FOR_USER, {variables: {query: {userId: userId} } });
+  
   const reviews = data?.getReviewsForUser || [];
   
-
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <SecondaryHeader title={`${firstName}'s Reviews`} navigation={props.navigation}/>
+        <DefaultHeader title={`${firstName} Reviews`} navigation={props.navigation} goBack={true}/>
       </View>
       {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       <ScrollView>

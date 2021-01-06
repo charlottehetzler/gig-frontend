@@ -29,7 +29,7 @@ export function NewGig ( props: any ) {
     const [title, setTitle] = useState();
     const [titleIsValid, setTitleIsValid] = useState(false);
 
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(new Date() || props.gig.date);
     const [dateIsValid, setDateIsValid] = useState(false);
     
     const [category, setCategory] = useState();
@@ -144,7 +144,7 @@ export function NewGig ( props: any ) {
                     date: date, jobId: job.value, description: description
                 }}
             });
-            if (data.update) {
+            if (data.updateGig) {
                 props.navigation.navigate('Gigs');
                 props.onCancel();
                 setTitle('');
@@ -200,6 +200,7 @@ export function NewGig ( props: any ) {
                             labelStyle={{color: '#7F7F7F', textTransform:'uppercase'}}
                             activeLabelStyle={{color: '#000000'}}
                             dropDownMaxHeight={600}
+                            searchable={true}
                         />
                     </View>
                     <View style={[styles.input, {zIndex: 999}]}>
@@ -216,24 +217,21 @@ export function NewGig ( props: any ) {
                             labelStyle={{color: '#7F7F7F', textTransform:'uppercase'}}
                             activeLabelStyle={{color: '#000000'}}
                             dropDownMaxHeight={600}
+                            searchable={true}
                         />
                     </View>
                     <View style={styles.dateWrapper}>
                         <View style={[styles.date, {marginRight: 7}]} >
                             <Text style={styles.inputLabel}>add date</Text>
                             <TouchableWithoutFeedback onPress={showDatepicker} style={styles.datePicker}>
-                                <View>
-                                    <Text>{moment(date).format('LL')}</Text>
-                                </View>
+                                <Text>{moment(date).format('LL')}</Text>
                             </TouchableWithoutFeedback >
                             
                         </View>
                         <View style={[styles.date, {marginLeft: 7}]}>
                             <Text style={styles.inputLabel}>add time</Text>
-                            <TouchableWithoutFeedback onPress={showTimepicker} style={styles.datePicker}>
-                                <View>
-                                    <Text>{moment(date).format('LT')}</Text>
-                                </View>
+                            <TouchableWithoutFeedback onPress={showTimepicker} style={{borderWidth: 1, borderColor:'red'}}>
+                                <Text>{moment(date).format('LT')}</Text>
                             </TouchableWithoutFeedback >
                         </View>
                     </View>

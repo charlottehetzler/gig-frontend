@@ -3,21 +3,16 @@ import { useQuery, useMutation} from '@apollo/client';
 import { GET_MESSAGES_BY_CHAT_ROOM, CREATE_MESSAGE, UPDATE_CHAT_ROOM_LAST_MESSAGE } from '../../lib/chat';
 import { View, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { ChatMessage } from '../../components/Messages/ChatMessage';
-import { SecondaryHeader } from '../../components/Header/SecondaryHeader';import { Icon } from 'react-native-elements';
 import { GigColors } from '../../constants/colors';
-;
+import { DefaultHeader } from '../../components/Header/DefaultHeader';
+import { Icon } from 'react-native-elements';
+
 
 export default function ChatScreen (props: any) {
-    // const chatRoomId = props.navigation.getParam('chatRoomId');
-    // const firstName = props.navigation.getParam('firstName');
-    // const lastName = props.navigation.getParam('lastName');
 
     const { chatRoomId, firstName, lastName } = props.route.params;
 
-
     const { data, loading, error, refetch } = useQuery(GET_MESSAGES_BY_CHAT_ROOM, {variables: {query: {chatRoomId: chatRoomId }}, pollInterval: 500,});
-
-    // const { data: newMessage, error: newMessageError, loading: newMessageLoading } = useSubscription(ON_CREATE_MESSAGE);
 
     const [messages, setMessages] = useState([]);
     
@@ -70,7 +65,7 @@ export default function ChatScreen (props: any) {
     return (
       <SafeAreaView style={styles.chatContainer}>
         <View>
-          <SecondaryHeader  title={firstName + " " + lastName} navigation={props.navigation}/>
+          <DefaultHeader title={firstName + " " + lastName} navigation={props.navigation} goBack={true}/>
         </View> 
         <FlatList
           data={messages}

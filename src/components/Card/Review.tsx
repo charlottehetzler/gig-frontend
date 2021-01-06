@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         backgroundColor: GigColors.White,
         borderRadius: 4,
         paddingVertical: 15,
-        paddingHorizontal: 5,
+        paddingHorizontal: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

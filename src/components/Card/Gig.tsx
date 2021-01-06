@@ -14,20 +14,6 @@ export function Gig (props: any) {
     
     const [ date, setDate ] = useState();
 
-    // const [ otherUser, setOtherUser] = useState();
-    
-    // const getOtherUser = async () => {
-    //     if (props.gig.members[0]['id'] === props.currentUserId) {
-    //     setOtherUser(props.gig.members[1]);
-    //     } else {
-    //     setOtherUser(props.gig.members[0]);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     getOtherUser();
-    // }, [])
-
     useMemo(() => {
         if (props && props.gig) {
             setGig(props.gig);
@@ -65,6 +51,16 @@ export function Gig (props: any) {
         }
     }
 
+    const renderStatus = (status:any) => {
+        if(status === "cancelled"){
+            return <Text style={[styles.status, {color: 'red'}]}>{gig.status}</Text>
+        } else if (status === "closed"){
+            return <Text style={[styles.status, {color: GigColors.Blue}]}>{gig.status}</Text>
+        } else {
+            return <Text style={[styles.status, {color: GigColors.Green}]}>{gig.status}</Text>
+        }
+    }    
+
     return (
         <TouchableWithoutFeedback onPress={() => props.navigation.navigate('Gig', {gig: props.gig, otherUser: otherUser()})}>
             <View style={styles.card}>
@@ -80,6 +76,7 @@ export function Gig (props: any) {
                 </View>
 
                 <View>
+                    {renderStatus(gig.status)} 
                     {isToday() && <Text style={styles.date}> {moment(gig.date).endOf('day').fromNow()}</Text>}
                     {isTomorrow() && <Text style={styles.date}> {moment(gig.date).add(1, 'days').calendar()}</Text>}
                     {!isToday() && !isTomorrow() && <Text style={styles.date}> {gig.date.split('T')[0]}</Text>}
@@ -139,5 +136,13 @@ const styles = StyleSheet.create({
     smallText: {
         fontSize: 14,
         color: GigColors.Black,
+    },
+    status: {
+        marginBottom: 5,
+        marginLeft: 3,
+        fontSize: 12,
+        textAlign: 'left',
+        fontWeight: '300',
+        color: GigColors.DarkGrey
     }
 });

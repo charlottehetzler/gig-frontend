@@ -8,9 +8,6 @@ import moment from 'moment';
 import { NewGig } from '../../components/overlay/NewGig';
 
 export default function GigScreen (props: any) {
-    // const gig = props.navigation.getParam('gig');
-
-    // const otherUser = props.navigation.getParam('otherUser');
 
     const { gig, otherUser } = props.route.params;
 
@@ -53,7 +50,7 @@ export default function GigScreen (props: any) {
                 <DefaultButton title={'Modify gig'} navigation={props.navigation} onPress={() => setIsAddMode(true)}/>
                 <DefaultButton title={'claim an expense'} navigation={props.navigation}/>
                 <DefaultButton title={'Gig completed'} navigation={props.navigation}/>
-                <NewGig visible={isAddMode} onCancel={closeModal} navigation={props.navData} gig={gig}/>
+                <NewGig visible={isAddMode} onCancel={closeModal} navigation={props.navigation} gig={gig}/>
 
             </View>
         </SafeAreaView >

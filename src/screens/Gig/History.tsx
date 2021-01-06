@@ -3,25 +3,23 @@ import { StyleSheet, View, SafeAreaView, StatusBar, ScrollView, ActivityIndicato
 import { Gig } from '../../components/Card/Gig';
 import { DefaultHeader } from '../../components/Header/DefaultHeader';
 import { useQuery } from '@apollo/client';
-import { GET_All_ACTIVE_GIGS_FOR_USER } from '../../lib/gig';
+import { GET_GIG_HISTORY } from '../../lib/gig';
 import { useSelector } from 'react-redux';
 import AuthPlaceholder from '../../components/Placeholder/AuthPlaceholder';
 
-export default function GigsScreen(props: any) {
+export default function GigHistoryScreen(props: any) {
 
   const isLoggedIn = useSelector( (state: any) => state.user.isLoggedIn);
 
   const currentUserId = useSelector( (state: any) => state.user.userId);
 
-  const { data, loading, error, refetch } = useQuery(GET_All_ACTIVE_GIGS_FOR_USER, {variables: {query: {userId: currentUserId }}});
+  const { data, loading, error, refetch } = useQuery(GET_GIG_HISTORY, {variables: {query: {userId: currentUserId }}});
 
   let [activeGigs, setActiveGigs] = useState<any>();
   
-  let [lastGig, setLastGig] = useState<any>();
-  
   useMemo(() => {
-    if (data && data.getAllActiveGigsForUser) {
-      setActiveGigs(data.getAllActiveGigsForUser.map((item: any) => {
+    if (data && data.getGigHistory) {
+      setActiveGigs(data.getGigHistory.map((item: any) => {
         return {
           gigId: item.id,
           description: item.description,
@@ -45,29 +43,26 @@ export default function GigsScreen(props: any) {
     }
   }, [data]);
 
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <DefaultHeader title={'my live gigs'} navigation={props.navigation}/>
-      </View>
-      {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
-      {!isLoggedIn? 
-      <AuthPlaceholder title={'You have not registered any gigs yet. Signup or login to get started!'}/>
-      :
-      activeGigs && 
-      <View>
-        <ScrollView>
-          {activeGigs.map((gig: any) => { return (
-            <View style={styles.gigWrapper} key={gig.gigId}>
-              <Gig gig={gig} navigation={props.navigation} currentUserId={currentUserId} />
+    return (
+        <SafeAreaView style={styles.container}>
+            <View>
+                <DefaultHeader title={'my gig history'} navigation={props.navigation}/>
             </View>
-          )})}
-        </ScrollView>
-      </View>
-      }
-    </SafeAreaView>
-  )
+            {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+            {!isLoggedIn && <AuthPlaceholder title={'You have not registered any gigs yet. Signup or login to get started!'}/>}
+            {activeGigs &&
+            <View>
+                <ScrollView>
+                {activeGigs.map((gig: any) => { return (
+                    <View style={styles.gigWrapper} key={gig.gigId}>
+                        <Gig gig={gig} navigation={props.navigation} currentUserId={currentUserId} />
+                    </View>
+                )})}
+                </ScrollView>
+            </View>
+            }
+        </SafeAreaView>
+    )
     
 }
 
@@ -76,10 +71,6 @@ const styles = StyleSheet.create({
         marginTop: StatusBar.currentHeight || 0,
         flex: 1,
         
-    },
-    wrapper: {
-    // marginHorizontal: 10,
-    // flex: 1,
     },
     h4Style: {
         marginTop: 15,
