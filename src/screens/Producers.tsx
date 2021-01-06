@@ -1,17 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, ActivityIndicator } from 'react-native';
 import { Producer } from '../components/Card/Producer';
-import { SecondaryHeader } from '../components/Header/SecondaryHeader';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCERS_FOR_JOB } from '../lib/producer';
 import { GET_ONE_JOB } from '../lib/job';
 import { GigColors } from '../constants/colors';
+import { DefaultHeader } from '../components/Header/DefaultHeader';
 
 
 export default function ProducersScreen(props: any) {
-  
-  // const jobId = props.navigation.getParam('jobId');
-  
+    
   const { jobId } = props.route.params;
   
   const { data, loading, error } = useQuery(GET_PRODUCERS_FOR_JOB, {variables: {query: {jobId: jobId}}});
@@ -22,6 +20,8 @@ export default function ProducersScreen(props: any) {
   
   let [producers, setProducers] = useState<any>()
   
+  let [lastGig, setLastGig] = useState<any>()
+  
   useMemo(() => {
     if (data && data.getProducersForJob) {
       setProducers(data.getProducersForJob.map((item: { id: number; user: { firstName: string; lastName: string; avgRating: any; id: number; }; }) => {
@@ -31,11 +31,28 @@ export default function ProducersScreen(props: any) {
           producerLastName: item.user.lastName,
           producerAvgRating: item.user.avgRating,
           userId: item.user.id,
-          // producerLastGig: item.lastGig[0]["createdAt"]
         }
       }));
+      // data.getProducersForJob.map(function(producer:any) {
+      //   let current : any = []; 
+      //   let lastGig : any;
+      //   if (producer.gigs) {
+      //     for (const gig of producer.gigs) {
+      //       if (gig.date <= new Date()) {
+      //         current.push(gig.date);
+      //       }
+      //     }
+      //     console.log(current.length)
+      //     lastGig = new Date(Math.max.apply(null, current.map(function(gig: any) {
+      //       return new Date(gig.date);
+      //     })));
+      //     setLastGig(lastGig);
+      //   }
+      // });
     }
   }, [data]);
+
+
 
   const renderItem = ({ item } : any) => (
     <Producer 
@@ -51,8 +68,10 @@ export default function ProducersScreen(props: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <SecondaryHeader title={'your producers'} navigation={props.navigation}/>
+        <DefaultHeader title={'your producers'} navigation={props.navigation} goBack={true}/>
       </View> 
+      {loading &&  <ActivityIndicator size="small" color='#000000' style={{alignItems:'center', justifyContent:'center'}}/>}
+
         {jobData && <>
           <Text style={styles.h4Style}>{job.name}</Text>
         </>}
@@ -61,7 +80,6 @@ export default function ProducersScreen(props: any) {
             data={producers}
             renderItem={renderItem}
             keyExtractor={item => item.id}
-
           />
       </>}
     </SafeAreaView>

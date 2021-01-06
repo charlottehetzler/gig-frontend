@@ -1,40 +1,44 @@
 import React from 'react';
-import {AppNavigator} from './src/navigation/AppNavigator';
-import { MainScreen } from './src/navigation/MainScreen';
-// import { enableScreens } from 'react-native-screens'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import GigsScreen from './src/screens/Gig/Gigs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { GigColors } from './src/constants/colors';
+import GigsScreen from './src/screens/Gig/Gigs';
+import GigHistoryScreen from './src/screens/Gig/History';
+import { createStore, combineReducers } from 'redux'
+import { Provider } from 'react-redux';
+import { userReducer } from './src/redux/reducers/user';
+import { MainStackScreen } from './src/navigation/Main';
+import { registerRootComponent } from 'expo'
 
-// enableScreens();
-
-const client = new ApolloClient({
-  uri: 'http://localhost:3000/graphql',
-  cache: new InMemoryCache(), 
+const rootReducer = combineReducers({
+  user: userReducer
 });
 
-const Drawer = createDrawerNavigator();
+const store = createStore(rootReducer);
 
 export default function App () {
+  const client = new ApolloClient({
+    uri: 'http://localhost:3000/graphql',
+    cache: new InMemoryCache(), 
+  });
+  const Drawer = createDrawerNavigator();
 
   return (
     <ApolloProvider client={client}>
-      <NavigationContainer>
-        <Drawer.Navigator 
-            initialRouteName="Home" 
-            drawerContentOptions={{activeTintColor: GigColors.Black,  labelStyle: {texTransform: 'uppercase'}}}
-          >
-          <Drawer.Screen name="Home" component={MainScreen}/>
-          <Drawer.Screen name="Account" component={GigsScreen} />
-          <Drawer.Screen name="History" component={GigsScreen} />
-          <Drawer.Screen name="Settings" component={GigsScreen} />
-          <Drawer.Screen name="Logout" component={GigsScreen} />
-        </Drawer.Navigator>
-        {/* <AppNavigator/> */}
+      <Provider store={store}>
+        <NavigationContainer>
+          <Drawer.Navigator initialRouteName="Home" drawerContentOptions={{activeTintColor: GigColors.Black}}>
+            <Drawer.Screen name="Home" component={MainStackScreen}/>
+            <Drawer.Screen name="Account" component={GigsScreen} />
+            <Drawer.Screen name="GigHistory" component={GigHistoryScreen} />
+            <Drawer.Screen name="Settings" component={GigsScreen} />
+            {/* <Drawer.Screen name="Logout" component={AuthStackScreen} /> */}
+          </Drawer.Navigator> 
       </NavigationContainer>
+      </Provider>
     </ApolloProvider>
   );
-  
 }
+
+registerRootComponent(App);

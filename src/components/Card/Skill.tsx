@@ -21,6 +21,6 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         color: GigColors.DarkGrey,
         marginBottom: 10,
-        marginHorizontal: 1,
+        marginRight: 3,
     }
 });

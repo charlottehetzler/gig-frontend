@@ -7,6 +7,7 @@ import { GigColors } from '../../constants/colors';
 type Props = { firstName: string, lastName: string, rating: number, lastGig: string, userId: number, navigation: any }
 
 export function Producer ({firstName, lastName, rating, lastGig, userId, navigation} : Props) {
+    
     const getInitials = (firstName : string, lastName : string) => {
         let first = firstName.charAt(0).toUpperCase();
         let last = lastName.charAt(0).toUpperCase();
@@ -15,7 +16,7 @@ export function Producer ({firstName, lastName, rating, lastGig, userId, navigat
     const { navigate } = navigation;
     
     return (
-        <TouchableOpacity style={styles.card} onPress={() => navigate('Profile', {userId: userId})}>
+        <TouchableOpacity style={styles.card} onPress={() => navigate('Profile', {userId: userId, isMe: false})}>
             <Avatar title={getInitials(firstName, lastName)} containerStyle={styles.avatar} size={60} />
         
             <View style={styles.text}>

@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     disabled: {
         alignItems: 'center', 
         paddingVertical: 15,
-        backgroundColor: GigColors.DarkGrey,
+        backgroundColor: 'rgba(127, 127, 127, .4)',
         borderRadius: 10, 
         marginVertical: 5
     },
