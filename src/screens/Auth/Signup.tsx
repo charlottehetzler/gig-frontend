@@ -27,9 +27,9 @@ export default function SignupScreen ( props  : any ) {
     
     const [isEmailValid, setIsEmailValid] = useState(false);
     
-    const [isValidPassword, setIsValidPassword] = useState(true);
+    const [isValidPassword, setIsValidPassword] = useState(false);
 
-    const [secureTextEntry, setSecureTextEntry] = useState(true);
+    const [secureTextEntry, setSecureTextEntry] = useState(false);
 
     const [confirmSecureTextEntry, setConfirmSecureTextEntry] = useState(true);
     
