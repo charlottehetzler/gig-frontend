@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
-import { GET_All_JOBS } from '../lib/job';
+import { GET_All_SKILLS } from '../lib/skill';
 import { useQuery } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GigColors } from '../constants/colors';
@@ -12,19 +12,20 @@ export default function HomeScreen (props: any) {
 
   const isLoggedIn = useSelector( (state: any) => state.user.isLoggedIn);
 
-  const { data, error, loading } = useQuery(GET_All_JOBS);
+  const { data, error, loading } = useQuery(GET_All_SKILLS);
 
   const [filtered, setFiltered] = useState();
 
   const [searching, setSearching] = useState(false);
 
-  const jobs = useMemo(() => {
-    if (data?.getAllJobs) {
-      const allJobs = (data.getAllJobs as any[]).map(job => {
-        const { id, name } = job
+  const skills = useMemo(() => {
+    console.log(data)
+    if (data?.getAllSkills) {
+      const allSkills = (data.getAllSkills as any[]).map(skill => {
+        const { id, name } = skill
         return {id: id, name: name};
       });
-    return allJobs;
+    return allSkills;
     } else {
       return [];
     }
@@ -35,14 +36,14 @@ export default function HomeScreen (props: any) {
     if (text) {
       setSearching(true);
       const temp = text.toLowerCase();
-      let jobNames = [];
-      for (const job of jobs) {
-        const jobItem = [];
-        jobItem.push(job.id);
-        jobItem.push(job.name);
-        jobNames.push(jobItem)
+      let skillNames = [];
+      for (const skill of skills) {
+        const skillItem = [];
+        skillItem.push(skill.id);
+        skillItem.push(skill.name);
+        skillNames.push(skillItem)
       }
-      const tempList = jobNames.filter((item: any) => {
+      const tempList = skillNames.filter((item: any) => {
         if (item[1].toLowerCase().includes(temp)) {
           return item
         }
@@ -50,13 +51,13 @@ export default function HomeScreen (props: any) {
       setFiltered(tempList);
     } else {
       setSearching(false)
-      setFiltered(jobs)
+      setFiltered(skills)
     }
   }
 
   const renderItem = ({ item } : any ) => (
     <View >
-      <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Producers', {jobId: item['id']})} >
+      <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Producers', {skillId: item['id'], skillName: item['name']})} >
         <Text style={styles.title}>{item['name']} </Text>
       </TouchableOpacity>
     </View>
@@ -71,10 +72,10 @@ export default function HomeScreen (props: any) {
       {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       {!loading &&  <>
         <TextInput 
-        style={styles.textInput}
-        placeholder="Search"
-        placeholderTextColor='#C4C4C4'
-        onChangeText={onSearch}
+          style={styles.textInput}
+          placeholder="Search"
+          placeholderTextColor='#C4C4C4'
+          onChangeText={onSearch}
         />
         {searching &&
           <View style={styles.subContainer}>
@@ -99,7 +100,7 @@ export default function HomeScreen (props: any) {
       <ScrollView>
         <Text style={styles.h4Style}> Browse random gigs:</Text>
           <FlatList
-            data={jobs}
+            data={skills}
             renderItem={renderItem}
             keyExtractor={item => item.id}
             horizontal
@@ -108,7 +109,7 @@ export default function HomeScreen (props: any) {
       
           <Text style={styles.h4Style}> All gigs:</Text>
           <FlatList
-            data={jobs}
+            data={skills}
             renderItem={renderItem}
             keyExtractor={item => item.id}
             />  
@@ -126,9 +127,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
+    backgroundColor: GigColors.White
   },
   flatListHorizontal: {
-    height: 125
+    height: 100
   },
   h4Style: {
     marginTop: 25,
@@ -138,12 +140,14 @@ const styles = StyleSheet.create({
     height: 75, 
     alignItems: 'center', 
     justifyContent:'center',
-    backgroundColor: GigColors.DarkGrey
+    backgroundColor: GigColors.White
   },
   item: {
-    backgroundColor: GigColors.Grey,
+    backgroundColor: GigColors.White,
+    borderColor: GigColors.Black,
+    borderWidth: 1,
     borderRadius: 4,
-    padding: 20,
+    padding: 15,
     marginVertical: 8,
     marginHorizontal: 16,
     flex: 1,
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
 },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'center',
     textTransform: 'uppercase',
     color: GigColors.Black

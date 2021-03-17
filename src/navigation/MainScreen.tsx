@@ -4,8 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements';
 import { GigColors } from '../constants/colors';
 import HomeScreen from '../screens/Home';
-import GigsScreen from '../screens/Gig/Gigs';
-import CalendarScreen from '../screens/Calendar';
 import MessagesScreen from '../screens/Message/Messages';
 import MyProfileScreen from '../screens/Profile/MyProfile';
 
@@ -22,11 +20,6 @@ export function Tabs(props: any) {
 
                 if (route.name === 'Home') {
                     iconName = "home"
-                }
-                else if (route.name === 'Gigs') {
-                    iconName = 'list';
-                } else if (route.name === 'Calendar') {
-                    iconName = 'calendar';
                 } else if (route.name === 'Messages') {
                     iconName = 'mail'
                 } else {
@@ -44,8 +37,6 @@ export function Tabs(props: any) {
         }}>
 
             <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Gigs" component={GigsScreen} />
-            <Tab.Screen name="Calendar" component={CalendarScreen} />
             <Tab.Screen name="Messages" component={MessagesScreen} />
             <Tab.Screen name="MyProfile" component={MyProfileScreen} />
         </Tab.Navigator>

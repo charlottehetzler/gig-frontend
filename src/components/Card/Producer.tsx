@@ -4,9 +4,10 @@ import { Avatar, Rating } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
 
-type Props = { firstName: string, lastName: string, rating: number, lastGig: string, userId: number, navigation: any }
 
-export function Producer ({firstName, lastName, rating, lastGig, userId, navigation} : Props) {
+type Props = { firstName: string, lastName: string, rating: number, userId: number, navigation: any }
+
+export function Producer ({firstName, lastName, rating, userId, navigation} : Props) {
     
     const getInitials = (firstName : string, lastName : string) => {
         let first = firstName.charAt(0).toUpperCase();
@@ -21,14 +22,8 @@ export function Producer ({firstName, lastName, rating, lastGig, userId, navigat
         
             <View style={styles.text}>
                 <Text style={styles.name}>{firstName + " " + lastName}</Text>
-                <Rating imageSize={18} readonly startingValue={rating}/>
+                <Rating type='custom' ratingColor={GigColors.Black} imageSize={18} readonly startingValue={rating}/>
             </View>
-
-            <View>
-                <Text style={styles.date}>Last Gig:</Text>
-                <Text style={styles.date}> {lastGig}</Text>
-            </View>
-
         </TouchableOpacity>
     )
 }
@@ -40,7 +35,6 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 10,
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomColor: GigColors.Grey,
         borderBottomWidth: 1,
@@ -48,7 +42,7 @@ const styles = StyleSheet.create({
     avatar: {
         backgroundColor: GigColors.DarkGrey, 
         borderRadius: 50, 
-        marginRight: 10
+        marginRight: 20
     },
     text: {
         width: 200,

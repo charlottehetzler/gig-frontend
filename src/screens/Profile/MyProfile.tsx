@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import { SafeAreaView, View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Skill } from '../../components/Card/Skill';
 import { Profile } from '../../components/Card/Profile';
-import { PortfolioImage } from '../../components/Card/PortfolioImage';
 import { Review } from '../../components/Card/Review';
 import { GigColors } from '../../constants/colors';
 import { useSelector } from 'react-redux';
@@ -11,9 +10,6 @@ import useProfile from '../../helpers/user';
 import { DefaultHeader } from '../../components/Header/DefaultHeader';
 import { NoDataText } from '../../components/Placeholder/NoDataText';
 import { Icon } from 'react-native-elements';
-import { Portfolio } from '../../components/Card/Portfolio';
-
-const portfolio = [{id: "1", title: "PF 1"}, {id: "2", title: "PF 2"}, {id: "3", title: "PF 3"}];
 
 export default function MyProfileScreen(props: any) {
   
@@ -80,8 +76,6 @@ export default function MyProfileScreen(props: any) {
             }
           </View>
         }
-
-      <Portfolio portfolio={portfolio} name={'My'}/>
  
       </View>
         <View style={styles.profileSection}>

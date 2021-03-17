@@ -2,7 +2,6 @@ import React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
 import { Tabs } from "./MainScreen";
 import ProducersScreen from "../screens/Producers";
-import GigScreen from "../screens/Gig/Gig";
 import ChatScreen from "../screens/Message/Chat";
 import ReviewsScreen from "../screens/Reviews";
 import SigninScreen from "../screens/Auth/Signin";
@@ -17,7 +16,6 @@ export function MainStackScreen() {
         <MainStack.Navigator>
             <MainStack.Screen name="HomeScreen" component={Tabs} options={{ headerShown: false }}/>
             <MainStack.Screen name="Producers" component={ProducersScreen} options={{ headerShown: false }}/>
-            <MainStack.Screen name="Gig" component={GigScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Reviews" component={ReviewsScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }}/>

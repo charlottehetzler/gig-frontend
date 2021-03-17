@@ -5,9 +5,6 @@ import ProducersScreen from '../screens/Producers';
 import ProfileScreen from '../screens/Profile/Profile';
 import MessagesScreen from '../screens/Message/Messages';
 import ChatScreen from '../screens/Message/Chat';
-import CalendarScreen from '../screens/Calendar';
-import GigsScreen from '../screens/Gig/Gigs';
-import GigScreen from '../screens/Gig/Gig';
 import ReviewsScreen from '../screens/Reviews';
 import SigninScreen from '../screens/Auth/Signin';
 import SignupScreen from '../screens/Auth/Signup';
@@ -21,26 +18,6 @@ export function HomeStackScreen(loggedIn: boolean) {
             <HomeStack.Screen name="Producers" component={ProducersScreen} options={{ headerShown: false }}/>
             <HomeStack.Screen name="Profile" component={ProfileStackScreen} options={{ headerShown: false }}/>
         </HomeStack.Navigator>
-  );
-}
-
-const GigStack = createStackNavigator();
-export function GigStackScreen() {
-    return (
-        <GigStack.Navigator>
-            <GigStack.Screen name="Gigs" component={GigsScreen} options={{ headerShown: false }}/>
-            <GigStack.Screen name="Gig" component={GigScreen} options={{ headerShown: false }}/>
-            <GigStack.Screen name="Profile" component={ProfileStackScreen} options={{ headerShown: false }}/>
-        </GigStack.Navigator>
-  );
-}
-
-const CalendarStack = createStackNavigator();
-export function CalendarStackScreen() {
-    return (
-        <CalendarStack.Navigator>
-            <CalendarStack.Screen name="Calendars" component={CalendarScreen} options={{ headerShown: false }}/>
-        </CalendarStack.Navigator>
   );
 }
 
