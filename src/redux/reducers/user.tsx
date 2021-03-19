@@ -2,7 +2,7 @@ import {USER_SIGNUP, USER_LOGOUT, USER_UPDATE, AUTHENTICATE } from '../actions/u
 
 export const initialState = {
   token: '',
-  userId: 7,
+  userId: 4,
   isLoggedIn: true,
   firstName: 'Guest',
   lastName: 'User',
