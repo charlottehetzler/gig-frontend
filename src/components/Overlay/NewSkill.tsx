@@ -105,7 +105,7 @@ export function NewSkill ( props: any ) {
                             zIndex={5000}
                             arrowColor={'#7F7F7F'}
                             labelStyle={{color: '#7F7F7F', textTransform:'uppercase'}}
-                            activeLabelStyle={{color: '#000000'}}
+                            activeLabelStyle={{color: GigColors.Black}}
                             dropDownMaxHeight={600}
                             searchable={true}
                         />

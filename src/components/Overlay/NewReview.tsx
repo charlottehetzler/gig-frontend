@@ -70,7 +70,7 @@ export function NewReview ( props: any ) {
                         <Text style={styles.inputLabel}>add your rating</Text>
                         <AirbnbRating
                             count={5}
-                            selectedColor='#000000'
+                            selectedColor={GigColors.Black}
                             defaultRating={3}
                             size={30}
                             onFinishRating={completeRating}
