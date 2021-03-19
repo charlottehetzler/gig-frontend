@@ -5,7 +5,7 @@ query {
     getAllCategories {
         id,
         name,
-        categoryJobs {
+        categorySkills {
             id, 
             name
         }

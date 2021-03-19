@@ -3,7 +3,6 @@ import {StyleSheet, View, Text} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
-import { NewGig } from '../overlay/NewGig';
 import { useSelector } from 'react-redux';
 
 export function DefaultHeader (props: any) {
@@ -32,12 +31,12 @@ export function DefaultHeader (props: any) {
                 <View style={styles.headerWrapper}>
                     {props.goBack ? 
                         <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-                            <Icon name='menu' color={'#FFFFFF'}/>
+                            <Icon name='menu' color={'#000000'}/>
                         </TouchableOpacity>
 
                     :
                         <TouchableOpacity style={styles.iconWrapper} onPress={() => props.navigation.goBack()}>
-                            <Icon type={'material'} name='keyboard-backspace' color={'#FFFFFF'}/>
+                            <Icon type={'material'} name='keyboard-backspace' color={'#000000'}/>
                         </TouchableOpacity>
                     }
                     <Text style={styles.headerTitle}>{props.title}</Text>
@@ -50,23 +49,16 @@ export function DefaultHeader (props: any) {
                 <View style={styles.headerWrapper}>
                     {!props.goBack ? 
                         <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-                            <Icon name='menu' color={'#FFFFFF'}/>
+                            <Icon name='menu' color={'#000000'}/>
                         </TouchableOpacity>
 
                     :
                         <TouchableOpacity style={styles.iconWrapper} onPress={() => props.navigation.goBack()}>
-                            <Icon type={'material'} name='keyboard-backspace' color={'#FFFFFF'}/>
+                            <Icon type={'material'} name='keyboard-backspace' color={'#000000'}/>
                         </TouchableOpacity>
                     }
                     <Text style={styles.headerTitle}>{props.title}</Text>
-                    {isConsumer() ? 
-                        <TouchableOpacity onPress={() => setIsAddMode(true)}>
-                            <Icon name='add' color={'#FFFFFF'} />
-                            <NewGig visible={isAddMode} onCancel={closeModal} navigation={props.navigation}/>
-                        </TouchableOpacity>
-                    : 
-                        <View></View>
-                    }
+                    <View></View>
                 </View>
             }
         </View>
@@ -79,17 +71,20 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'space-between',
         height: 75,
-        backgroundColor: GigColors.DarkGrey,
-        paddingHorizontal: 7
+        backgroundColor: GigColors.White,
+        paddingHorizontal: 7,
+        borderBottomWidth: 2,
+        borderBottomColor: GigColors.Grey,
+        marginBottom: 10
     },
     headerTitle: {
         fontSize: 20,
         textAlign: 'center',
-        color: GigColors.White
+        color: GigColors.Black
     },
     login: {
         textAlign: 'right', 
-        color: GigColors.White
+        color: GigColors.Black
     },
     iconWrapper: {
         flexDirection: 'row',

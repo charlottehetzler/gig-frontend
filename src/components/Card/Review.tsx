@@ -11,14 +11,14 @@ export function Review ({comment, rating, firstName, lastName, date} : Props) {
         <View style={styles.card}>
             <View>
                 <Text style={styles.name}>{firstName + " " + lastName}</Text>
+                <View style={styles.rating}>
+                    <Rating type='custom' ratingColor={GigColors.Black} imageSize={16} readonly startingValue={rating}/>
+                </View>
                 <Text style={styles.comment}>{comment}</Text>
             </View>
         
             <View>
                 <Text style={styles.date}>{date.split('T')[0]}</Text>
-                <View style={styles.rating}>
-                    <Rating imageSize={16} readonly startingValue={rating}/>
-                </View>
             </View>
       </View>
     )
@@ -32,10 +32,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        borderBottomColor: GigColors.Grey,
-        borderBottomWidth: 1,
-        flex: 1
+        alignItems: 'flex-start',
+        flex: 1,
+        marginBottom: 5
     },
     name: {
         fontSize: 20,
@@ -54,7 +53,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     rating: {
-        marginTop: 10
+        marginBottom: 5
     },
     date: {
         fontSize: 12,
