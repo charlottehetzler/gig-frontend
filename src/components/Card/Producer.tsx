@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { Avatar, Rating } from 'react-native-elements';
+import { Avatar, Rating, AirbnbRating } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
 
@@ -22,7 +22,14 @@ export function Producer ({firstName, lastName, rating, userId, navigation} : Pr
         
             <View style={styles.text}>
                 <Text style={styles.name}>{firstName + " " + lastName}</Text>
-                <Rating type='custom' ratingColor={GigColors.Black} imageSize={18} readonly startingValue={rating}/>
+                <AirbnbRating
+                    count={5}
+                    selectedColor={GigColors.Black}
+                    defaultRating={rating}
+                    size={15}
+                    showRating={false}
+                    isDisabled={true}
+                />
             </View>
         </TouchableOpacity>
     )

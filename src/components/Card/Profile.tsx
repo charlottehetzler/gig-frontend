@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
 import { GigColors } from '../../constants/colors';
-import { Avatar, Icon, Rating } from 'react-native-elements';
+import { Avatar, Icon, Rating, AirbnbRating } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NewReview } from '../Overlay/NewReview';
 
@@ -28,7 +28,14 @@ export function Profile (props: any) {
         <Text style={styles.language}><Text style={styles.nativeLanguage}> {props.user.nativeLanguage}</Text> </Text>
         
         <View style={styles.rating}>
-          <Rating type='custom' ratingColor={GigColors.Black} imageSize={30} readonly startingValue={props.user.avgRating}/>
+          <AirbnbRating
+            count={5}
+            selectedColor={GigColors.Black}
+            defaultRating={props.user.avgRating}
+            size={25}
+            showRating={false}
+            isDisabled={true}
+          />
         </View>
       
         <View style={[styles.infos, {marginBottom: 20}]}>

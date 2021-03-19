@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { Rating } from 'react-native-elements';
+import { Rating, AirbnbRating } from 'react-native-elements';
 import { GigColors } from '../../constants/colors';
 
 type Props = { comment: string, rating: number, firstName: string, lastName: string, date: string}
@@ -12,7 +12,14 @@ export function Review ({comment, rating, firstName, lastName, date} : Props) {
             <View>
                 <Text style={styles.name}>{firstName + " " + lastName}</Text>
                 <View style={styles.rating}>
-                    <Rating type='custom' ratingColor={GigColors.Black} imageSize={16} readonly startingValue={rating}/>
+                    <AirbnbRating
+                        count={5}
+                        selectedColor={GigColors.Black}
+                        defaultRating={rating}
+                        size={15}
+                        showRating={false}
+                        isDisabled={true}
+                    />
                 </View>
                 <Text style={styles.comment}>{comment}</Text>
             </View>
@@ -28,7 +35,7 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: GigColors.White,
         borderRadius: 4,
-        paddingVertical: 15,
+        paddingVertical: 10,
         paddingHorizontal: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -53,7 +60,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     rating: {
-        marginBottom: 5
+        marginBottom: 5,
     },
     date: {
         fontSize: 12,
