@@ -14,6 +14,7 @@ export function NoDataText (props: any) {
 const styles = StyleSheet.create({
     noItems: {
         marginTop: 10,
-        color: GigColors.DarkGrey
+        color: GigColors.DarkGrey,
+        textAlign: 'center'
     }
 });

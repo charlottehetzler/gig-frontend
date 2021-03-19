@@ -9,13 +9,13 @@ export default function useProfile (userId: number) {
 
     const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {variables: {query: {userId: userId} } });
 
-    const { data: jobData, loading: jobLoading, error: jobError } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {variables: {query: {userId: userId} } });
+    const { data: skillData, loading: skillLoading, error: skillError } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {variables: {query: {userId: userId} } });
   
     const { data: reviewData, loading: reviewLoading, error: reviewError } = useQuery(GET_LAST_REVIEWS_FOR_USER, {variables: {query: {userId: userId}}});
 
     const [fullName, setFullName] = useState();
   
-    const [jobs, setJobs] = useState([]);
+    const [skills, setSkills] = useState([]);
   
     const [user, setUser] = useState();
   
@@ -26,8 +26,8 @@ export default function useProfile (userId: number) {
     const [firstName, setFirstName] = useState();
 
     useMemo(() => {
-        if (jobData && jobData.getAllJobsForProducer) {
-            setJobs(jobData.getAllJobsForProducer)
+        if (skillData && skillData.getAllJobsForProducer) {
+            setSkills(skillData.getAllJobsForProducer)
         }
         if (userData && userData.getUser) {
             setUser(userData.getUser)
@@ -38,18 +38,18 @@ export default function useProfile (userId: number) {
         if (reviewData && reviewData.getLastReviewsForUser) {
             setLastReviews(reviewData.getLastReviewsForUser)
         }
-    }, [ jobData, userData, reviewData ])
+    }, [ skillData, userData, reviewData ])
 
 
     const loading = useMemo(() => {
-        return userLoading || jobLoading || reviewLoading;
-    }, [ userLoading, jobLoading, reviewLoading ]);
+        return userLoading || skillLoading || reviewLoading;
+    }, [ userLoading, skillLoading, reviewLoading ]);
     
 
     const error = useMemo(() => {
-        return userError || jobError || reviewError;
-    }, [userError, jobError, reviewError]);
+        return userError || skillError || reviewError;
+    }, [userError, skillError, reviewError]);
 
 
-    return { user, jobs, lastReviews, loading, error, fullName, initials, firstName }
+    return { user, skills, lastReviews, loading, error, fullName, initials, firstName }
 }

@@ -5,6 +5,7 @@ import { GigColors } from '../../constants/colors';
 import useProfile from '../../helpers/user';
 import { Profile } from '../../components/Card/Profile';
 import { DefaultHeader } from '../../components/Header/DefaultHeader';
+import { NoDataText } from '../../components/Placeholder/NoDataText';
 
 export default function ProfileScreen(props: any) {
 
@@ -12,8 +13,12 @@ export default function ProfileScreen(props: any) {
 
   const { user, lastReviews, loading, error, fullName, firstName, initials } = useProfile(userId);
 
+  const hasLastReviews = () => {
+    return lastReviews.length > 0 
+  }
+  
   return ( 
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView >
       
       <View>
         <DefaultHeader title={fullName} navigation={props.navigation} goBack={true}/>
@@ -22,34 +27,36 @@ export default function ProfileScreen(props: any) {
       {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       
       <ScrollView>
-      {user && <>
+        {user && <>
         <Profile initials={initials} fullName={fullName} user={user} isMe={false} navigation={props.navigation}/>
         
         <View style={styles.profileSection}>
-          
           <View style={[styles.sectionHeader, {marginLeft: 10}]}>
-            <Text style={styles.h4Style}>{firstName} reviews</Text>
-            <TouchableOpacity style={styles.moreButton} onPress={() => props.navigation.navigate('Reviews', {userId: userId, firstName: user["firstName"] + "'s",})}>
-              <Text>See all</Text>
-            </TouchableOpacity>
+            <Text style={styles.h4Style}>{user.firstName}'s reviews</Text>
+            {lastReviews && hasLastReviews() &&
+              <TouchableOpacity style={styles.moreButton} onPress={() => props.navigation.navigate('Reviews', {userId: userId, firstName: 'My'})}>
+                <Text>See all</Text>
+              </TouchableOpacity>
+            }
           </View>
-
-      </View>
-          {lastReviews &&
-          <View>
-          {lastReviews.map((review : any) => { return (
-            <View>
-              <Review 
-                comment={review["comment"]} 
-                rating={review["rating"]} 
-                date={review["createdAt"]} 
-                firstName={review["fromUser"]["firstName"]} 
-                lastName={review["fromUser"]["lastName"]} 
-                key={review.id}
-              />
-            </View>
-          )})}
         </View>
+        {hasLastReviews() ? 
+          <View>
+            {lastReviews.map((review : any) => { return (
+              <View>
+                <Review 
+                  comment={review["comment"]} 
+                  rating={review["rating"]} 
+                  date={review["createdAt"]} 
+                  firstName={review["fromUser"]["firstName"]} 
+                  lastName={review["fromUser"]["lastName"]} 
+                  key={review.id}
+                />
+              </View>
+            )})}
+          </View>
+        : 
+          <NoDataText text={`${user.firstName} hasn\'t received any reviews yet.`}/>
         }
       </>}
     </ScrollView>
@@ -58,9 +65,6 @@ export default function ProfileScreen(props: any) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: GigColors.White
-  },
   profileSection: {
     alignItems: 'flex-start',
     marginVertical: 5,

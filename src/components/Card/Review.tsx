@@ -40,8 +40,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        flex: 1,
-        marginBottom: 5
+        borderBottomColor: GigColors.Grey,
+        borderBottomWidth:1,
+        marginBottom: 5,
+        flex:1
     },
     name: {
         fontSize: 20,
