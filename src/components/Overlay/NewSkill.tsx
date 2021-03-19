@@ -8,10 +8,12 @@ import { GET_All_CATEGORIES } from '../../lib/category';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useQuery, useMutation } from '@apollo/client';
 import { Icon } from 'react-native-elements';
+import { useSelector } from 'react-redux';
 
-const currentUserId = 4
 
 export function NewSkill ( props: any ) {
+
+    const currentUserId = useSelector((state: any) => state.user.userId);
 
     const { data: catData, error: catError, loading: catLoading } = useQuery(GET_All_CATEGORIES);
             

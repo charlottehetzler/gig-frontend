@@ -6,11 +6,11 @@ import { DefaultButton, DisabledDefaultButton, WhiteDefaultButton } from '../But
 import { ADD_REVIEW } from '../../lib/review';
 import { useMutation } from '@apollo/client';
 import { Icon, AirbnbRating } from 'react-native-elements';
-
-const currentUserId = 3
+import { useSelector } from 'react-redux';
 
 export function NewReview ( props: any ) {
     const userId = props.userId
+    const currentUserId = useSelector((state: any) => state.user.userId);
 
     const [ doSaveReview, { loading: saveReviewLoading } ] = useMutation(ADD_REVIEW);
     

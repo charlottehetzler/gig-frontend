@@ -1,15 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
 import { GigColors } from '../../constants/colors';
-import { Avatar, Icon, Rating, AirbnbRating } from 'react-native-elements';
+import { Avatar, Icon, AirbnbRating } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NewReview } from '../Overlay/NewReview';
+import { GET_COMMON_CHAT_ROOM } from '../../lib/chat';
+import { useQuery } from '@apollo/client';
+import { useSelector } from 'react-redux';
 
 
 export function Profile (props: any) {
   
+  const { navigate } = props.navigation;
+  
+  const currentUserId = useSelector((state: any) => state.user.userId);
+  const userId = props.user.id
+
+  const { data, loading, error } = useQuery(GET_COMMON_CHAT_ROOM, {variables: {currentUserId: currentUserId, userId: userId} });  
+
   const [ isAddMode, setIsAddMode ] = useState(false);
+
+  const [ chatRoomId, setChatRoomId ] = useState();
+  
   const closeModal = () => { setIsAddMode(false) }
+
+  useMemo(() => {
+    if (data && data?.getCommonChatRoom) {
+      setChatRoomId(data?.getCommonChatRoom.id)
+    }
+  }, [data]);
+
 
   return (
     <View style={{backgroundColor: GigColors.White}}>
@@ -46,16 +66,21 @@ export function Profile (props: any) {
               <Text>Call</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.profileAction]}>
+            <TouchableOpacity style={[styles.profileAction]} onPress={() => navigate('Chat', {
+              chatRoomId: chatRoomId, userId: userId,
+              firstName: props.user.firstName, lastName: props.user.lastName
+            })}>
               <Icon type='material' name='mail-outline' color={GigColors.Black} style={{marginRight: 10}}/>
               <Text>Message</Text>
             </TouchableOpacity>
           </View>
+
           <TouchableOpacity style={styles.profileAction} onPress={() => setIsAddMode(true)}>
             <Icon type='material' name='star-outline' color={GigColors.Black} style={{marginRight: 10}}/>
             <Text>Add review</Text>
             <NewReview visible={isAddMode} onCancel={closeModal} userId={props.user.id} firstName={props.user.firstName}/>
           </TouchableOpacity>
+
         </View>
       </View>
     </View>

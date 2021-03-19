@@ -60,7 +60,7 @@ query getUser($query: UserQuery!) {
 `;
 
 export const GET_MESSAGES_BY_CHAT_ROOM = gql`
-    query getMessagesByChatRoom($query: MessageQuery!) {
+query getMessagesByChatRoom($query: MessageQuery!) {
     getMessagesByChatRoom(query: $query) {
         id,
         content,
@@ -70,6 +70,14 @@ export const GET_MESSAGES_BY_CHAT_ROOM = gql`
             lastName
         }
 
+    }
+}
+`;
+
+export const GET_COMMON_CHAT_ROOM = gql`
+query getCommonChatRoom($currentUserId: Float!, $userId: Float!) {
+    getCommonChatRoom(currentUserId: $currentUserId, userId: $userId) {
+        id
     }
 }
 `;
@@ -85,6 +93,14 @@ mutation createMessage($input: MessageInput!) {
             lastName
         }
 
+    }
+}
+`;
+
+export const CREATE_CHAT_ROOM = gql`
+mutation createChatRoom($input: NewChatInput!) {
+    createChatRoom(input: $input) {
+        id,
     }
 }
 `;

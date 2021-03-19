@@ -19,7 +19,6 @@ export default function HomeScreen (props: any) {
   const [searching, setSearching] = useState(false);
 
   const skills = useMemo(() => {
-    console.log(data)
     if (data?.getAllSkills) {
       const allSkills = (data.getAllSkills as any[]).map(skill => {
         const { id, name } = skill
@@ -30,7 +29,6 @@ export default function HomeScreen (props: any) {
       return [];
     }
   }, [data]);
-
 
   const onSearch = (text: any) => {
     if (text) {
@@ -73,7 +71,7 @@ export default function HomeScreen (props: any) {
       {!loading &&  <>
         <TextInput 
           style={styles.textInput}
-          placeholder="Search"
+          placeholder="Searchh"
           placeholderTextColor='#C4C4C4'
           onChangeText={onSearch}
         />

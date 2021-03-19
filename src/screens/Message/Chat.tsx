@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation} from '@apollo/client';
-import { GET_MESSAGES_BY_CHAT_ROOM, CREATE_MESSAGE, UPDATE_CHAT_ROOM_LAST_MESSAGE } from '../../lib/chat';
+import { GET_MESSAGES_BY_CHAT_ROOM, CREATE_MESSAGE, UPDATE_CHAT_ROOM_LAST_MESSAGE, CREATE_CHAT_ROOM } from '../../lib/chat';
 import { View, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { ChatMessage } from '../../components/Messages/ChatMessage';
 import { GigColors } from '../../constants/colors';
 import { DefaultHeader } from '../../components/Header/DefaultHeader';
 import { Icon } from 'react-native-elements';
+import { useSelector } from 'react-redux';
 
 
 export default function ChatScreen (props: any) {
 
-    const { chatRoomId, firstName, lastName } = props.route.params;
+    const currentUserId = useSelector((state: any) => state.user.userId);
+
+    const { chatRoomId, firstName, lastName, userId } = props.route.params;
 
     const { data, loading, error, refetch } = useQuery(GET_MESSAGES_BY_CHAT_ROOM, {variables: {query: {chatRoomId: chatRoomId }}, pollInterval: 500,});
 
@@ -20,11 +23,14 @@ export default function ChatScreen (props: any) {
     
     const [ doUpdateChatRoom, { loading: updateChatRoomLoading } ] = useMutation(UPDATE_CHAT_ROOM_LAST_MESSAGE);
     
-    const [message, setMessage] = useState('');
+    const [ doCreateChatRoom, { loading: createChatRoom } ] = useMutation(CREATE_CHAT_ROOM);
     
+    const [message, setMessage] = useState('');
+
     useEffect(() => {
       fetchMessages();
     }, []);
+
 
     const fetchMessages = async () => {
       try {
@@ -35,10 +41,11 @@ export default function ChatScreen (props: any) {
       }
     }
 
+
     const updateChatRoomLastMessage = async (messageId: number) => {
       try {
         const updateRoom = await doUpdateChatRoom({
-          variables: {input: {chatRoomId: chatRoomId, lastMessageId: messageId }}
+          variables: {input: {lastMessageId: messageId} }
         });
       } catch (e) {
         console.log(e);
@@ -47,15 +54,28 @@ export default function ChatScreen (props: any) {
 
     const onSendPress = async () => {
       try {
+        let newChatRoomId;
+        if (messages.length === 0) {
+          const { data, errors } = await doCreateChatRoom({
+            variables: { input: { currentUserId: currentUserId, userId: userId }}
+          });
+
+          if (data && data?.createChatRoom) {
+            newChatRoomId = data.createChatRoom.id;
+          }
+        }
+
+        let chatRoomID = newChatRoomId ? newChatRoomId : chatRoomId;
+
         const { data, errors } = await doSaveMessage({
-          variables: { input: {content: message, chatRoomId: chatRoomId, userId: 4} }
+          variables: { input: {content: message, chatRoomId: chatRoomID, userId: currentUserId } }
         });
-        let newMessage;
+
         if (data?.createMessage) {
-          newMessage = data.createMessage;
-          await updateChatRoomLastMessage(newMessage.id);
+          await updateChatRoomLastMessage(data?.createMessage.id);
           fetchMessages()
         }
+
       } catch (e) {
         console.log(e);
       }
@@ -67,12 +87,15 @@ export default function ChatScreen (props: any) {
         <View>
           <DefaultHeader title={firstName + " " + lastName} navigation={props.navigation} goBack={true}/>
         </View> 
-        <FlatList
-          data={messages}
-          renderItem={({ item }) => <ChatMessage myId={4} message={item} />}
-          inverted
-        />
-        {/* <InputBox chatRoomId={chatRoomId} myId={4}/> */}
+        {messages ? 
+          <FlatList
+            data={messages}
+            renderItem={({ item }) => <ChatMessage myId={currentUserId} message={item} />}
+            inverted
+          />
+        :
+        <View></View>
+        }
         <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
             keyboardVerticalOffset={100}
