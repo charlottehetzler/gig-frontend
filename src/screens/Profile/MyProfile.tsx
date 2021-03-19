@@ -17,7 +17,7 @@ export default function MyProfileScreen(props: any) {
 
   const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
 
-  const { user, jobs, lastReview, loading, error, fullName, initials } = useProfile(myUserId);
+  const { user, jobs, lastReviews, loading, error, fullName, initials } = useProfile(myUserId);
 
   const guestFirstName = useSelector( (state: any) => state.user.firstName);
   
@@ -28,11 +28,11 @@ export default function MyProfileScreen(props: any) {
   const guestInitials = guestFirstName.charAt(0).toUpperCase() + " " + guestLastName.charAt(0).toUpperCase()
   
   const hasJobs = () => {
-    return jobs.length > 1
+    return jobs.length > 0
   }
 
   const hasLastReview = () => {
-    return lastReview ? true : false
+    return lastReviews ? true : false
   }
 
   const userType = useSelector( (state: any) => state.user.userType);
@@ -50,7 +50,7 @@ export default function MyProfileScreen(props: any) {
       {!isLoggedIn && <GuestProfile initials={guestInitials} fullName={guestFullName} firstName={guestFirstName}/>}
       {user && isLoggedIn && <>
 
-      <Profile initials={initials} fullName={fullName} email={user.email} birthday={user.birthday} avgRating={user.avgRating} isMe={true}/>
+      <Profile initials={initials} fullName={fullName} user={user} isMe={true} navigation={props.navigation}/>
       
       <View style={styles.sectionWrapper}>
         {isConsumer() ? 
@@ -78,7 +78,7 @@ export default function MyProfileScreen(props: any) {
         }
  
       </View>
-        <View style={styles.profileSection}>
+        {/* <View style={styles.profileSection}>
           <View style={[styles.sectionHeader, {marginLeft: 10}]}>
             <Text style={styles.h4Style}>My reviews</Text>
             {lastReview && 
@@ -101,7 +101,7 @@ export default function MyProfileScreen(props: any) {
           : 
             <NoDataText text={'You have not received any reviews yet'}/>
           }
-        </View>
+        </View> */}
       </>}
       </ScrollView>
     </SafeAreaView>

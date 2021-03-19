@@ -23,7 +23,7 @@ export default function ProfileScreen(props: any) {
       
       <ScrollView>
       {user && <>
-        <Profile initials={initials} fullName={fullName} user={user} isMe={false}/>
+        <Profile initials={initials} fullName={fullName} user={user} isMe={false} navigation={props.navigation}/>
         
         <View style={styles.profileSection}>
           
