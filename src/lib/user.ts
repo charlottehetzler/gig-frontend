@@ -9,7 +9,8 @@ query getUser($query: UserQuery!) {
         avgRating,
         email,
         birthday,
-        nativeLanguage
+        nativeLanguage,
+        phoneNumber
     }
 }
 `;

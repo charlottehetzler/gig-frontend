@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, Text, TouchableWithoutFeedback, Platform, Linking, Alert } from 'react-native';
 import { GigColors } from '../../constants/colors';
 import { Avatar, Icon, AirbnbRating } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -7,6 +7,7 @@ import { NewReview } from '../Overlay/NewReview';
 import { GET_COMMON_CHAT_ROOM } from '../../lib/chat';
 import { useQuery } from '@apollo/client';
 import { useSelector } from 'react-redux';
+import Communications from 'react-native-communications';
 
 
 export function Profile (props: any) {
@@ -29,7 +30,6 @@ export function Profile (props: any) {
       setChatRoomId(data?.getCommonChatRoom.id)
     }
   }, [data]);
-
 
   return (
     <View style={{backgroundColor: GigColors.White}}>
@@ -61,7 +61,7 @@ export function Profile (props: any) {
         <View style={[styles.infos, {marginBottom: 20}]}>
           
           <View style={styles.profileActions}>
-            <TouchableOpacity style={[styles.profileAction]}>
+            <TouchableOpacity style={[styles.profileAction]} onPress={() => Communications.phonecall(props.user.phoneNumber, true)}>
             <Icon type='material' name='call' color={GigColors.Black} style={{marginRight: 10}}/>
               <Text>Call</Text>
             </TouchableOpacity>
