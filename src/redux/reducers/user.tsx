@@ -6,7 +6,7 @@ export const initialState = {
   isLoggedIn: true,
   firstName: 'Guest',
   lastName: 'User',
-  userType: 'consumer'
+  userType: 'producer'
 };
 
 export const userReducer = (state = initialState, action) => {

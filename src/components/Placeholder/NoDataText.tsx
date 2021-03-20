@@ -15,6 +15,5 @@ const styles = StyleSheet.create({
     noItems: {
         marginTop: 10,
         color: GigColors.DarkGrey,
-        textAlign: 'center'
     }
 });

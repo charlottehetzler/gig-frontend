@@ -29,14 +29,14 @@ export default function useProfile (userId: number) {
         if (skillData && skillData.getAllJobsForProducer) {
             setSkills(skillData.getAllJobsForProducer)
         }
-        if (userData && userData.getUser) {
-            setUser(userData.getUser)
-            setFullName(userData.getUser.firstName + " " + userData.getUser.lastName);
-            setInitials(userData.getUser.firstName.charAt(0).toUpperCase() + " " + userData.getUser.lastName.charAt(0).toUpperCase());
-            setFirstName(userData.getUser.firstName + "'s");
+        if (userData && userData?.getUser) {
+            setUser(userData?.getUser)
+            setFullName(userData?.getUser.firstName + " " + userData?.getUser.lastName);
+            setInitials(userData?.getUser.firstName.charAt(0).toUpperCase() + " " + userData?.getUser.lastName.charAt(0).toUpperCase());
+            setFirstName(userData?.getUser.firstName + "'s");
         } 
-        if (reviewData && reviewData.getLastReviewsForUser) {
-            setLastReviews(reviewData.getLastReviewsForUser)
+        if (reviewData && reviewData?.getLastReviewsForUser) {
+            setLastReviews(reviewData?.getLastReviewsForUser);
         }
     }, [ skillData, userData, reviewData ])
 

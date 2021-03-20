@@ -18,8 +18,6 @@ export function NewReview ( props: any ) {
     
     const [comment, setComment] = useState();
     const [commentIsValid, setCommentIsValid] = useState(false);
-
-    const [isVisible, setIsVisible] = useState(props.visible)
     
     const completeRating = (rating: number) => {
         setRating(rating.toString());
