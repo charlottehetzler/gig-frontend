@@ -100,7 +100,7 @@ export default function HomeScreen (props: any) {
           <FlatList
             data={skills}
             renderItem={renderItem}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
             horizontal
             style={styles.flatListHorizontal}
             />
@@ -109,7 +109,7 @@ export default function HomeScreen (props: any) {
           <FlatList
             data={skills}
             renderItem={renderItem}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
             />  
       </ScrollView>
       

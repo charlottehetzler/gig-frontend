@@ -8,6 +8,7 @@ import { GET_COMMON_CHAT_ROOM } from '../../lib/chat';
 import { useQuery } from '@apollo/client';
 import { useSelector } from 'react-redux';
 import Communications from 'react-native-communications';
+import { EditProfile } from '../Overlay/EditProfile';
 
 
 export function Profile (props: any) {
@@ -15,15 +16,20 @@ export function Profile (props: any) {
   const { navigate } = props.navigation;
   
   const currentUserId = useSelector((state: any) => state.user.userId);
+  
   const userId = props.user.id
 
   const { data, loading, error } = useQuery(GET_COMMON_CHAT_ROOM, {variables: {currentUserId: currentUserId, userId: userId} });  
 
   const [ isAddMode, setIsAddMode ] = useState(false);
+  
+  const [ isEditMode, setIsEditMode ] = useState(false);
 
   const [ chatRoomId, setChatRoomId ] = useState();
   
   const closeModal = () => { setIsAddMode(false) }
+  
+  const closeEditModal = () => { setIsEditMode(false) }
 
   useMemo(() => {
     if (data && data?.getCommonChatRoom) {
@@ -35,10 +41,15 @@ export function Profile (props: any) {
     <View style={{backgroundColor: GigColors.White}}>
       <View style={styles.icon}>
         {props.isMe ? 
-        <TouchableWithoutFeedback >
-          <Icon type='material' name='edit' />
-        </TouchableWithoutFeedback>
-        : null}     
+          <TouchableWithoutFeedback onPress={() => setIsEditMode(true)}>
+            <View>
+              <Icon type='material' name='edit' color={GigColors.Black}/>
+              <EditProfile visible={isEditMode} onCancel={closeEditModal} user={props.user} initials={props.initials} />
+            </View>
+          </TouchableWithoutFeedback>
+        : 
+          null
+        }     
       </View>
 
       <View style={styles.profile}>

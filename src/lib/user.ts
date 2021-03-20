@@ -75,3 +75,16 @@ mutation userUpdate($input: UpdateInput!) {
     }
 }
 `;
+
+export const UPDATE_PROFILE = gql `
+mutation updateProfile($input: UserQuery!) {
+    updateProfile(input: $input) {
+        id,
+        firstName,
+        lastName, 
+        phoneNumber, 
+        nativeLanguage
+    }
+}
+`;
+

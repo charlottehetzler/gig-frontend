@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator, ViewPropTypes } from 'react-native';
 import { Skill } from '../../components/Card/Skill';
 import { Profile } from '../../components/Card/Profile';
 import { Review } from '../../components/Card/Review';
@@ -10,13 +10,15 @@ import useProfile from '../../helpers/user';
 import { DefaultHeader } from '../../components/Header/DefaultHeader';
 import { NoDataText } from '../../components/Placeholder/NoDataText';
 import { Icon } from 'react-native-elements';
+import { EditSkills } from '../../components/Overlay/EditSkills';
+
 
 export default function MyProfileScreen(props: any) {
   
   const myUserId = useSelector((state: any) => state.user.userId);
-
+  
   const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
-
+  
   const { user, skills, lastReviews, loading, error, fullName, initials } = useProfile(myUserId);
 
   const guestFirstName = useSelector( (state: any) => state.user.firstName);
@@ -25,20 +27,25 @@ export default function MyProfileScreen(props: any) {
 
   const guestFullName = guestFirstName + " " + guestLastName
 
-  const guestInitials = guestFirstName.charAt(0).toUpperCase() + " " + guestLastName.charAt(0).toUpperCase()
+  const guestInitials = guestFirstName.charAt(0).toUpperCase() + " " + guestLastName.charAt(0).toUpperCase();
+
+  const [ isAddMode, setIsAddMode ] = useState(false);
+  
+  const closeModal = () => { setIsAddMode(false) }
   
   const hasSkills = () => {
     return skills.length > 0
   }
 
   const hasLastReviews = () => {
-    return lastReviews.length > 0 
+    // return lastReviews.length > 0 ? true : false;
+    return false;
   }
 
   const userType = useSelector( (state: any) => state.user.userType);
-  const isConsumer = () => {
-    return userType === 'consumer'
-}
+  
+  const isConsumer = () => { return userType === 'consumer' }
+
 
   return ( 
     <SafeAreaView>
@@ -63,7 +70,8 @@ export default function MyProfileScreen(props: any) {
                 <Text style={styles.h4Style}>My skills</Text>
                 {skills && 
                   <TouchableOpacity style={{marginLeft: 10}} onPress={() => console.log('See all reviews pressed')}>
-                    <Icon type='material' name='add-circle-outline' />
+                    <Icon type='material' name='edit' />
+                    <EditSkills visible={isAddMode} onCancel={closeModal}/>
                   </TouchableOpacity>
                 }
               </View>
@@ -106,7 +114,9 @@ export default function MyProfileScreen(props: any) {
             )})}
           </View>
         : 
-          <NoDataText text={'You haven\'t received any reviews yet'}/>
+          <View style={{marginLeft: 10}}>
+            <NoDataText text={'You haven\'t received any reviews yet'}/>
+          </View>
         }
       </>}
       </ScrollView>
