@@ -54,7 +54,6 @@ export function EditProfile ( props: any ) {
                     userId: currentUserId, firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, nativeLanguage: nativeLanguage
                 }}
             });
-            console.log(errors)
             props.onCancel()
         } catch (e) {
           console.log(e);

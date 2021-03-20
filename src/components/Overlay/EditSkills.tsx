@@ -1,19 +1,28 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { View, Modal, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, TextInput } from 'react-native';
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../../constants/colors';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Icon } from 'react-native-elements';
 import { useSelector } from 'react-redux';
-import { UPDATE_PROFILE } from '../../lib/user';
+import { Skill } from '../Card/Skill';
+import { DELETE_SKILL} from '../../lib/skill';
+import { NoDataText } from '../Placeholder/NoDataText';
+import SearchBar from '../SearchBar';
 
 export function EditSkills ( props: any ) {
 
-    const user  = props.user;
+    const skills = props.skills;
+
+    const refetch = props.skillRefetch;
 
     const currentUserId = useSelector((state: any) => state.user.userId);
 
-    const [ doSaveProfile, { loading: saveProfileLoading } ] = useMutation(UPDATE_PROFILE);
+    // const { data, error, loading: skillLoading, refetch } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {variables: {query: {userId: currentUserId} }});
+
+    const [ currentSkills, setCurrentSkills ] = useState<any>();
+    
+    const [ doDeleteSkill, { loading: deleteSkillLoading } ] = useMutation(DELETE_SKILL);
 
     const [changesMade, setChangesMade] = useState(false);
 
@@ -21,47 +30,60 @@ export function EditSkills ( props: any ) {
 
     const [searching, setSearching] = useState(false);
 
-    const handleSubmit = async () => {
+    useMemo(() => {
+        setCurrentSkills(skills);
+    }, []);
+
+    const fetchCurrentSkills = async () => {
         try {
-            const { data, errors } = await doSaveProfile({
-                variables: { input: {
-                    
-                }}
+            const refetchData = await refetch();
+            if (refetchData && refetchData?.getAllSkillsForProducer) {
+                setCurrentSkills(refetchData?.getAllSkillsForProducer);
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const handleDelete = async (skillId: number) => {
+        try {
+            const { data, errors } = await doDeleteSkill({
+                variables: { input: { userId: currentUserId, skillId: skillId }}
             });
-            console.log(errors)
-            props.onCancel()
+            if (data && data?.deleteSkill) {
+                await fetchCurrentSkills();
+            }
         } catch (e) {
-          console.log(e);
+            console.log(e);
         }
     }
 
     const loading = useMemo(() => {
-        return saveProfileLoading;
-    }, [saveProfileLoading]);
+        return deleteSkillLoading;
+    }, [deleteSkillLoading]);
 
     const onSearch = (text: any) => {
-        // if (text) {
-        //   setSearching(true);
-        //   const temp = text.toLowerCase();
-        //   let skillNames = [];
-        //   for (const skill of skills) {
-        //     const skillItem = [];
-        //     skillItem.push(skill.id);
-        //     skillItem.push(skill.name);
-        //     skillNames.push(skillItem)
-        //   }
-        //   const tempList = skillNames.filter((item: any) => {
-        //     if (item[1].toLowerCase().includes(temp)) {
-        //       return item
-        //     }
-        //   })
-        //   setFiltered(tempList);
-        // } else {
-        //   setSearching(false)
-        //   setFiltered(skills)
-        // }
-      }
-      
+        if (text) {
+          setSearching(true);
+          const temp = text.toLowerCase();
+          let skillNames = [];
+          for (const skill of skills) {
+            const skillItem = [];
+            skillItem.push(skill.id);
+            skillItem.push(skill.name);
+            skillNames.push(skillItem)
+          }
+          const tempList = skillNames.filter((item: any) => {
+            if (item[1].toLowerCase().includes(temp)) {
+              return item
+            }
+          })
+          setFiltered(tempList);
+        } else {
+          setSearching(false)
+          setFiltered(skills)
+        }
+    }
 
     return (
         <Modal visible={props.visible} animationType='slide'>
@@ -71,7 +93,7 @@ export function EditSkills ( props: any ) {
                 
                 <View style={styles.headerWrapper}>
                     {changesMade ? 
-                        <TouchableOpacity onPress={handleSubmit}>
+                        <TouchableOpacity onPress={() => console.log("not there yet")}>
                             <Text style={styles.save}>save</Text>
                         </TouchableOpacity>
                     :
@@ -86,12 +108,28 @@ export function EditSkills ( props: any ) {
                 </View>
 
                 <View style={styles.container}>
-                <TextInput 
-                    style={styles.textInput}
-                    placeholder="Searchh"
-                    placeholderTextColor='#C4C4C4'
-                    onChangeText={onSearch}
-                />
+                    <SearchBar skills={skills} navigation={props.navigation}/>
+
+                    <View style={styles.skillSection}>
+                        <Text style={styles.smallSubheader}>Your current skills</Text>
+                        {currentSkills && currentSkills.length > 0 ?
+                            <View style={styles.overview}>
+                                {currentSkills.map((skill: { name: string; id: number }) => { return (
+                                    <TouchableOpacity >
+                                        <Skill name={skill.name} editMode={true} key={skill.id} darkMode={false} />
+                                    </TouchableOpacity>
+                                )})}
+                            </View>
+                        :
+                            <NoDataText text={'You haven\'t added any skills yet'}/>
+                        }
+                    </View>
+
+                    <View style={styles.skillSection}>
+                        <Text style={styles.smallSubheader}>Your added skills</Text>
+                        <View style={styles.overview}>
+                        </View>
+                    </View>
 
                 </View>
             </View>
@@ -135,22 +173,6 @@ const styles = StyleSheet.create({
     input: {
         marginVertical: 10,
     },
-    avatarWrapper: {
-        alignItems: 'flex-start',
-        marginBottom: 40,
-        flexDirection: 'row',
-        justifyContent: 'center'
-    },
-    avatar: {
-        backgroundColor: GigColors.DarkGrey, 
-        borderRadius: 50,
-    },
-    inputLabel: {
-        textTransform: 'uppercase',
-        fontWeight: '500',
-        marginBottom: 5,
-        fontSize: 14
-    },
     textInput: {
         paddingHorizontal: 10,
         paddingVertical: 15,
@@ -161,5 +183,52 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         color: GigColors.Black
     },
-
+    overview: {
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        marginTop: 10,
+        flexDirection: 'row'
+    },
+    smallSubheader: {
+        color: GigColors.DarkGrey,
+        fontSize: 14
+    },
+    skillSection: {
+        marginTop: 25,
+    },
+    subContainer: {
+        backgroundColor: GigColors.White,
+        paddingTop: 10,
+        borderTopLeftRadius: 4,
+        borderTopRightRadius: 4,
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center'
+    },
+    itemView: {
+        backgroundColor: GigColors.White,
+        height: 30,
+        width: '90%',
+        marginBottom: 10,
+        justifyContent: 'center',
+        borderRadius: 4,
+    },
+    noResultView: {
+        alignSelf: 'center',
+        height: 75,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center'
+    },
+    noResultText: {
+        fontSize: 18,
+        color: GigColors.Black
+    },
+    itemText: {
+        color: GigColors.Black,
+        paddingHorizontal: 10,
+        fontSize: 16
+    }
  });

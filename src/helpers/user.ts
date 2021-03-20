@@ -7,11 +7,11 @@ import { useMemo, useState } from "react";
 
 export default function useProfile (userId: number) {
 
-    const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {variables: {query: {userId: userId} } });
+    const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {variables: {query: {userId: userId} }});
 
-    const { data: skillData, loading: skillLoading, error: skillError } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {variables: {query: {userId: userId} } });
+    const { data: skillData, loading: skillLoading, error: skillError, refetch: skillRefetch } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {variables: {query: {userId: userId} }});
   
-    const { data: reviewData, loading: reviewLoading, error: reviewError } = useQuery(GET_LAST_REVIEWS_FOR_USER, {variables: {query: {userId: userId}}});
+    const { data: reviewData, loading: reviewLoading, error: reviewError } = useQuery(GET_LAST_REVIEWS_FOR_USER, {variables: {query: {userId: userId} }});
 
     const [fullName, setFullName] = useState();
   
@@ -26,20 +26,20 @@ export default function useProfile (userId: number) {
     const [firstName, setFirstName] = useState();
 
     useMemo(() => {
-        if (skillData && skillData.getAllJobsForProducer) {
-            setSkills(skillData.getAllJobsForProducer)
+        if (skillData && skillData?.getAllSkillsForProducer) {
+            setSkills(skillData?.getAllSkillsForProducer)
         }
         if (userData && userData?.getUser) {
-            setUser(userData?.getUser)
+            setUser(userData?.getUser);
             setFullName(userData?.getUser.firstName + " " + userData?.getUser.lastName);
             setInitials(userData?.getUser.firstName.charAt(0).toUpperCase() + " " + userData?.getUser.lastName.charAt(0).toUpperCase());
             setFirstName(userData?.getUser.firstName + "'s");
-        } 
+        }
+        console.log(reviewError)
         if (reviewData && reviewData?.getLastReviewsForUser) {
             setLastReviews(reviewData?.getLastReviewsForUser);
         }
     }, [ skillData, userData, reviewData ])
-
 
     const loading = useMemo(() => {
         return userLoading || skillLoading || reviewLoading;
@@ -51,5 +51,5 @@ export default function useProfile (userId: number) {
     }, [userError, skillError, reviewError]);
 
 
-    return { user, skills, lastReviews, loading, error, fullName, initials, firstName }
+    return { user, skills, lastReviews, loading, error, fullName, initials, firstName, skillRefetch }
 }

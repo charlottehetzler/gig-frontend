@@ -38,3 +38,11 @@ mutation addSkill($input: SkillQuery!) {
     }
 }
 `;
+
+export const DELETE_SKILL = gql`
+mutation deleteSkill($input: SkillQuery!) {
+    deleteSkill(input: $input) 
+}
+`;
+
+

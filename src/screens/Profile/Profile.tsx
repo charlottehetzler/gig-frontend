@@ -14,7 +14,7 @@ export default function ProfileScreen(props: any) {
   const { user, lastReviews, loading, error, fullName, firstName, initials } = useProfile(userId);
 
   const hasLastReviews = () => {
-    return lastReviews.length > 0 
+    return lastReviews.length > 0 ? true : false;
   }
   
   return ( 
@@ -40,7 +40,7 @@ export default function ProfileScreen(props: any) {
             }
           </View>
         </View>
-        {hasLastReviews() ? 
+        {lastReviews && hasLastReviews() ? 
           <View>
             {lastReviews.map((review : any) => { return (
               <View>
@@ -56,7 +56,9 @@ export default function ProfileScreen(props: any) {
             )})}
           </View>
         : 
-          <NoDataText text={`${user.firstName} hasn\'t received any reviews yet.`}/>
+          <View style={{marginLeft: 10}}>
+            <NoDataText text={`${user.firstName} hasn\'t received any reviews yet.`}/>
+          </View>
         }
       </>}
     </ScrollView>

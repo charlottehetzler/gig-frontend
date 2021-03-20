@@ -19,7 +19,7 @@ export default function MyProfileScreen(props: any) {
   
   const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
   
-  const { user, skills, lastReviews, loading, error, fullName, initials } = useProfile(myUserId);
+  const { user, skills, lastReviews, loading, error, fullName, initials, skillRefetch } = useProfile(myUserId);
 
   const guestFirstName = useSelector( (state: any) => state.user.firstName);
   
@@ -38,8 +38,7 @@ export default function MyProfileScreen(props: any) {
   }
 
   const hasLastReviews = () => {
-    // return lastReviews.length > 0 ? true : false;
-    return false;
+    return lastReviews.length > 0 ? true : false;
   }
 
   const userType = useSelector( (state: any) => state.user.userType);
@@ -69,16 +68,16 @@ export default function MyProfileScreen(props: any) {
               <View style={styles.sectionHeader}>
                 <Text style={styles.h4Style}>My skills</Text>
                 {skills && 
-                  <TouchableOpacity style={{marginLeft: 10}} onPress={() => console.log('See all reviews pressed')}>
+                  <TouchableOpacity style={{marginLeft: 10}} onPress={() => setIsAddMode(true)}>
                     <Icon type='material' name='edit' />
-                    <EditSkills visible={isAddMode} onCancel={closeModal}/>
+                    <EditSkills visible={isAddMode} onCancel={closeModal} skills={skills} skillRefetch={skillRefetch}/>
                   </TouchableOpacity>
                 }
               </View>
               {hasSkills() ? 
                 <View style={styles.overview}>
-                {skills.map((job: { name: string; id: number }) => { return (
-                  <Skill name={job.name} key={job.id}/>
+                {skills.map((skill: { name: string; id: number }) => { return (
+                  <Skill name={skill.name} editMode={false} darkMode={false} key={skill.id}/>
                 )})}
                 </View>
               : 
@@ -173,6 +172,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 10,
+    flexDirection: 'row'
   },
   moreButton: {
     backgroundColor: GigColors.White,
@@ -188,8 +188,7 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   noItems: {
     marginTop: 10,
