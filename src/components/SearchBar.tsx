@@ -1,22 +1,39 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { GigColors } from '../constants/colors';
+import { NewSkill } from './Overlay/NewSkill';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_All_SKILLS } from '../lib/skill';
 
 
 export default function SearchBar (props: any) {
 
-  const skills = props.skills;
-  
+  const { data, error, loading } = useQuery(GET_All_SKILLS);
+
+  const [ allSkills, setAllSkills ] = useState()
+
   const [filtered, setFiltered] = useState();
 
   const [searching, setSearching] = useState(false);
+
+  const [ isAddMode, setIsAddMode ] = useState(false);
+
+  const [ addedSkill, setAddedSkill ] = useState();
+
+  const closeModal = () => { setIsAddMode(false) }
+
+  useMemo(() => {
+    if (data && data?.getAllSkills) {
+      setAllSkills(data?.getAllSkills)
+    }
+  },[ data]);
   
   const onSearch = (text: any) => {
     if (text) {
       setSearching(true);
       const temp = text.toLowerCase();
       let skillNames = [];
-      for (const skill of skills) {
+      for (const skill of allSkills) {
         const skillItem = [];
         skillItem.push(skill.id);
         skillItem.push(skill.name);
@@ -30,9 +47,17 @@ export default function SearchBar (props: any) {
       setFiltered(tempList);
     } else {
       setSearching(false)
-      setFiltered(skills)
+      setFiltered(allSkills)
     }
   }
+
+  const handleAdd = (item: any) => {
+    setAddedSkill(item);
+    props.onSelect(item[1], item[0], true);
+    setFiltered(false);
+    setSearching(false);
+  }
+
 
   return (
     <View>
@@ -42,23 +67,36 @@ export default function SearchBar (props: any) {
         placeholderTextColor={GigColors.Grey}
         onChangeText={onSearch}
       />
+      {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+
       {searching &&
         <View style={styles.subContainer}>
-        {filtered.length ?
+        {filtered.length > 0 ?
           filtered.map((item: any) => {
             return (
               <View style={styles.itemView} key={item.id}>
-                <TouchableOpacity onPress={() => props.navigation.navigate('Producers', {skillId: item[0]} )} >
-                  <Text style={styles.itemText}>{item[1]}</Text>
-                </TouchableOpacity>
+                {props.isPersonal ? 
+                  <TouchableOpacity onPress={() => handleAdd(item)}>
+                    <Text style={styles.itemText}>{item[1]}</Text>
+                  </TouchableOpacity>
+                :
+                  <TouchableOpacity onPress={() => props.navigation.navigate('Producers', {skillId: item[0]} )} >
+                    <Text style={styles.itemText}>{item[1]}</Text>
+                  </TouchableOpacity>
+                }
               </View>
             )
           })
         :
           <View style={styles.noResultView}>
-              <Text style={styles.noResultText}>No search items matched</Text>
+            <Text style={styles.noResultText}>We couldn't find your skill.</Text>
+            <Text style={styles.noResultText}>Add it to the platform!</Text>
+            <TouchableOpacity style={{marginLeft: 10}} onPress={() => setIsAddMode(true)}>
+              <Text>Add Skill</Text>
+            </TouchableOpacity>
           </View>
         }
+          <NewSkill visible={isAddMode} onCancel={closeModal} isPersonal={props.isPersonal} refetchSkills={props.refetchSkills}/>
         </View>
       }
     </View>
@@ -85,7 +123,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   noResultView: {
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
     height: 75,
     width: '100%',
     justifyContent: 'center',
@@ -94,7 +132,7 @@ const styles = StyleSheet.create({
   },
   noResultText: {
     fontSize: 18,
-    color: GigColors.Black
+    color: GigColors.DarkGrey
   },
   itemText: {
     color: GigColors.Black,

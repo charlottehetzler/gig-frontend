@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, Switch } from 'react-native';
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../../constants/colors';
 import { useMutation } from '@apollo/client';
 import { Icon, Avatar } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { UPDATE_PROFILE } from '../../lib/user';
+import { Gig } from '../Card/Gig';
 
 export function EditProfile ( props: any ) {
 
@@ -26,6 +27,13 @@ export function EditProfile ( props: any ) {
     const [nativeLanguage, setNativeLanguage] = useState(user.nativeLanguage);
     
     const [changesMade, setChangesMade] = useState(false);
+
+    const [isEnabled, setIsEnabled] = useState(user.isCallable);
+    
+    const toggleSwitch = () => {
+        setIsEnabled((previousState: any) => !previousState);
+        setChangesMade(true)
+    }
 
     const firstNameChangeHandler = (firstName: string) => {
         setFirstName(firstName);
@@ -51,7 +59,8 @@ export function EditProfile ( props: any ) {
         try {
             const { data, errors } = await doSaveProfile({
                 variables: { input: {
-                    userId: currentUserId, firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, nativeLanguage: nativeLanguage
+                    userId: currentUserId, firstName: firstName, lastName: lastName, 
+                    phoneNumber: phoneNumber, nativeLanguage: nativeLanguage, isCallable: isEnabled
                 }}
             });
             props.onCancel()
@@ -123,6 +132,16 @@ export function EditProfile ( props: any ) {
                             value={phoneNumber}
                             onChangeText={phoneChangeHandler}
                             keyboardType={'numeric'}
+                        />
+                    </View>
+                    <View style={styles.input}>
+                        <Text style={styles.inputLabel}>phone number</Text>
+                        <Switch
+                            trackColor={{ false: GigColors.White, true: GigColors.Black }}
+                            thumbColor={isEnabled ? GigColors.White : GigColors.Black}
+                            ios_backgroundColor={GigColors.White}
+                            onValueChange={toggleSwitch}
+                            value={isEnabled}
                         />
                     </View>
                     <View style={styles.input}>

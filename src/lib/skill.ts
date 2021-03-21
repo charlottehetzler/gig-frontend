@@ -39,10 +39,8 @@ mutation addSkill($input: SkillQuery!) {
 }
 `;
 
-export const DELETE_SKILL = gql`
-mutation deleteSkill($input: SkillQuery!) {
-    deleteSkill(input: $input) 
+export const UPDATE_RELATION = gql`
+mutation updateRelation($input: SkillUserRelationQuery!) {
+    updateRelation(input: $input) 
 }
 `;
-
-

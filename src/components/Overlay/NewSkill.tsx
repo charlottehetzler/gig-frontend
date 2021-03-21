@@ -32,6 +32,8 @@ export function NewSkill ( props: any ) {
     const [header, setHeader] = useState('Add a new skill');
     
     const [buttonText, setButtonText] = useState('Publish Skill');
+
+    const [ isPersonal, setIsPersonal ] =  useState(false);
     
     
     const skillChangeHandler = (skill: string) => {
@@ -50,8 +52,8 @@ export function NewSkill ( props: any ) {
               });
             setCategories(allCategories);
         }
+        setIsPersonal(props.isPersonal)
     }, [catData]);
-
 
     const categoryChange = (item: any) => {
         categories.map((cat: any) => {
@@ -62,15 +64,17 @@ export function NewSkill ( props: any ) {
         });
     }
 
-    const isValid = () => { return skillIsValid && categoryIsValid;}
 
+    const isValid = () => { return skillIsValid && categoryIsValid;}
     const handleSubmit = async () => {
         try {
             const { data, errors } = await doSaveSkill({
                 variables: { input: {
-                    gigId: props.gig.gigId, skillName: skill, userId: currentUserId, description: description
+                    userId: currentUserId, categoryId: category.value, name: skill, description: description, isPersonal: isPersonal
                 }}
             });
+            props.onCancel();
+            props.refetchSkills();
         } catch (e) {
           console.log(e);
         }
@@ -112,7 +116,7 @@ export function NewSkill ( props: any ) {
                             searchable={true}
                         />
                     </View>
-                    <View style={[styles.input, {zIndex: 9999}]}>
+                    <View style={[styles.input, {zIndex: 999}]}>
                         <Text style={styles.inputLabel}>add your skill title</Text>
                         <TextInput
                             placeholder={"Title of your skill"}

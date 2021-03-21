@@ -9,6 +9,8 @@ import { useQuery } from '@apollo/client';
 import { useSelector } from 'react-redux';
 import Communications from 'react-native-communications';
 import { EditProfile } from '../Overlay/EditProfile';
+import moment from 'moment';
+import { GET_SUBMITTED_REVIEW } from '../../lib/review';
 
 
 export function Profile (props: any) {
@@ -20,20 +22,30 @@ export function Profile (props: any) {
   const userId = props.user.id
 
   const { data, loading, error } = useQuery(GET_COMMON_CHAT_ROOM, {variables: {currentUserId: currentUserId, userId: userId} });  
-
+  
+  const { data: reviewData, loading: reviewLoading, error: reviewError } = useQuery(GET_SUBMITTED_REVIEW, {variables: {query: { userId: userId, fromUserId: currentUserId}} });  
+ 
   const [ isAddMode, setIsAddMode ] = useState(false);
   
   const [ isEditMode, setIsEditMode ] = useState(false);
+  
+  const [ reviewDisabled, setReviewDisabled ] = useState(false);
 
   const [ chatRoomId, setChatRoomId ] = useState();
   
-  const closeModal = () => { setIsAddMode(false) }
+  const closeModal = () => setIsAddMode(false);
   
-  const closeEditModal = () => { setIsEditMode(false) }
+  const closeEditModal = () => setIsEditMode(false);
+
+  const disableReview = () => setReviewDisabled(true);
 
   useMemo(() => {
     if (data && data?.getCommonChatRoom) {
-      setChatRoomId(data?.getCommonChatRoom.id)
+      setChatRoomId(data?.getCommonChatRoom.id);
+    }
+    if (reviewData && reviewData?.getSubmittedReview) {
+      console.log(reviewData?.getSubmittedReview)
+      setReviewDisabled(reviewData?.getSubmittedReview);
     }
   }, [data]);
 
@@ -68,29 +80,66 @@ export function Profile (props: any) {
             isDisabled={true}
           />
         </View>
-      
+
         <View style={[styles.infos, {marginBottom: 20}]}>
-          
-          <View style={styles.profileActions}>
-            <TouchableOpacity style={[styles.profileAction]} onPress={() => Communications.phonecall(props.user.phoneNumber, true)}>
-            <Icon type='material' name='call' color={GigColors.Black} style={{marginRight: 10}}/>
-              <Text>Call</Text>
-            </TouchableOpacity>
+          {props.isMe ? 
+            <View>
+              <View style={styles.info}>
+                <Icon name="calendar-today" color={GigColors.DarkGrey}/>
+                <Text style={[styles.infoText, {color: GigColors.DarkGrey}]}>{moment(props.user.birthday).format('LL')}</Text>
+              </View>
 
-            <TouchableOpacity style={[styles.profileAction]} onPress={() => navigate('Chat', {
-              chatRoomId: chatRoomId, userId: userId,
-              firstName: props.user.firstName, lastName: props.user.lastName
-            })}>
-              <Icon type='material' name='mail-outline' color={GigColors.Black} style={{marginRight: 10}}/>
-              <Text>Message</Text>
-            </TouchableOpacity>
-          </View>
+              <View style={styles.info}>
+                <Icon name="call" color={GigColors.Black} />
+                <Text style={styles.infoText}>{props.user.phoneNumber}</Text>
+              </View>
+              {props.user.email &&
+                <View style={styles.info}>
+                  <Icon name="email" color={GigColors.Black} />
+                  <Text style={styles.infoText}>{props.user.email}</Text>
+                </View>
+              }
 
-          <TouchableOpacity style={styles.profileAction} onPress={() => setIsAddMode(true)}>
-            <Icon type='material' name='star-outline' color={GigColors.Black} style={{marginRight: 10}}/>
-            <Text>Add review</Text>
-            <NewReview visible={isAddMode} onCancel={closeModal} userId={props.user.id} firstName={props.user.firstName}/>
-          </TouchableOpacity>
+            </View>
+          :
+            <View>
+              <View style={styles.profileActions}>
+                {props.user.isCallable ?
+                  <TouchableOpacity style={[styles.profileAction]} onPress={() => Communications.phonecall(props.user.phoneNumber, true)}>
+                    <Icon type='material' name='call' color={GigColors.Black} style={{marginRight: 10}}/>
+                    <Text>Call</Text>
+                  </TouchableOpacity>
+                :
+                  <View style={[styles.profileAction, {borderColor: GigColors.DarkGrey}]}>
+                    <Icon type='material' name='call' color={GigColors.DarkGrey} style={{marginRight: 10}}/>
+                    <Text style={{color: GigColors.DarkGrey}}>Call</Text>
+                  </View>
+                }
+
+                <TouchableOpacity style={[styles.profileAction]} onPress={() => navigate('Chat', {
+                  chatRoomId: chatRoomId, userId: userId,
+                  firstName: props.user.firstName, lastName: props.user.lastName
+                })}>
+                  <Icon type='material' name='mail-outline' color={GigColors.Black} style={{marginRight: 10}}/>
+                  <Text>Message</Text>
+                </TouchableOpacity>
+              </View>
+              {console.log(reviewDisabled)}
+              {reviewDisabled ? 
+                <View style={[styles.profileAction, {borderColor: GigColors.DarkGrey}]}>
+                  <Icon type='material' name='star-outline' color={GigColors.DarkGrey} style={{marginRight: 10}}/>
+                  <Text style={{color: GigColors.DarkGrey}}>Add review</Text>
+                  <NewReview visible={isAddMode} onCancel={closeModal} userId={props.user.id} firstName={props.user.firstName} disable={disableReview}/>
+                </View>
+              : 
+                <TouchableOpacity style={styles.profileAction} onPress={() => setIsAddMode(true)}>
+                  <Icon type='material' name='star-outline' color={GigColors.Black} style={{marginRight: 10}}/>
+                  <Text>Add review</Text>
+                  <NewReview visible={isAddMode} onCancel={closeModal} userId={props.user.id} firstName={props.user.firstName} disable={disableReview}/>
+                </TouchableOpacity>
+            }
+            </View>
+          }
 
         </View>
       </View>
@@ -112,7 +161,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   infoText: {
-    color: GigColors.DarkGrey,
+    color: GigColors.Black,
     marginLeft: 10
   },
   language: {

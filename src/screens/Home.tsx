@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { GET_All_SKILLS } from '../lib/skill';
@@ -13,7 +13,7 @@ export default function HomeScreen (props: any) {
 
   const isLoggedIn = useSelector( (state: any) => state.user.isLoggedIn);
 
-  const { data, error, loading } = useQuery(GET_All_SKILLS);
+  const { data, error, loading, refetch } = useQuery(GET_All_SKILLS);
 
   const [ skills, setSkills ] = useState()
 
@@ -23,6 +23,18 @@ export default function HomeScreen (props: any) {
     }
   },[ data]);
 
+  useEffect(() => {
+    fetchSkills();
+  }, []);
+
+  const fetchSkills = async () => {
+    try {
+      const newSkills = await refetch();
+      setSkills(newSkills.data.getAllSkills);
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   const renderItem = ({ item } : any ) => (
     <View >
@@ -41,7 +53,7 @@ export default function HomeScreen (props: any) {
       {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       
       {!loading &&  <>
-      <SearchBar skills={skills} navigation={props.navigation}/>
+      <SearchBar navigation={props.navigation} isPersonal={false} refetchSkills={fetchSkills}/>
 
       <ScrollView>
         <Text style={styles.h4Style}> Browse random gigs:</Text>

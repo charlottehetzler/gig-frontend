@@ -33,17 +33,13 @@ export default function MyProfileScreen(props: any) {
   
   const closeModal = () => { setIsAddMode(false) }
   
-  const hasSkills = () => {
-    return skills.length > 0
-  }
-
-  const hasLastReviews = () => {
-    return lastReviews.length > 0 ? true : false;
-  }
-
   const userType = useSelector( (state: any) => state.user.userType);
   
   const isConsumer = () => { return userType === 'consumer' }
+  
+  const hasSkills = () => {
+    return skills.length > 0;
+  }
 
 
   return ( 
@@ -70,7 +66,7 @@ export default function MyProfileScreen(props: any) {
                 {skills && 
                   <TouchableOpacity style={{marginLeft: 10}} onPress={() => setIsAddMode(true)}>
                     <Icon type='material' name='edit' />
-                    <EditSkills visible={isAddMode} onCancel={closeModal} skills={skills} skillRefetch={skillRefetch}/>
+                    <EditSkills visible={isAddMode} onCancel={closeModal} skills={skills} skillRefetch={skillRefetch} isPersonal={true}/>
                   </TouchableOpacity>
                 }
               </View>
@@ -90,14 +86,14 @@ export default function MyProfileScreen(props: any) {
         <View style={styles.profileSection}>
           <View style={[styles.sectionHeader, {marginLeft: 10}]}>
             <Text style={styles.h4Style}>My reviews</Text>
-            {lastReviews && hasLastReviews() &&
+            {lastReviews && lastReviews.length > 0 &&
               <TouchableOpacity style={styles.moreButton} onPress={() => props.navigation.navigate('Reviews', {userId: myUserId, firstName: 'My'})}>
                 <Text>See all</Text>
               </TouchableOpacity>
             }
           </View>
         </View>
-        {hasLastReviews() ? 
+        {lastReviews && lastReviews.length > 0 ? 
           <View>
             {lastReviews.map((review : any) => { return (
               <View>
@@ -169,10 +165,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   overview: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    // justifyContent: 'space-between',
     marginTop: 10,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
   moreButton: {
     backgroundColor: GigColors.White,

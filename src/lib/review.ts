@@ -44,3 +44,9 @@ mutation addReview($input: ReviewQuery!) {
     }
 }
 `;
+
+export const GET_SUBMITTED_REVIEW = gql`
+query getSubmittedReview($query: ReviewQuery!) {
+    getSubmittedReview(query: $query) 
+}
+`;

@@ -39,7 +39,8 @@ export function NewReview ( props: any ) {
                     userId: userId, fromUserId: currentUserId, rating: rating, comment: comment
                 }}
             });
-            props.onCancel()
+            props.disable();
+            props.onCancel();
         } catch (e) {
           console.log(e);
         }

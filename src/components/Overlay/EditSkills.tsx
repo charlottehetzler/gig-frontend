@@ -6,32 +6,31 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Icon } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { Skill } from '../Card/Skill';
-import { DELETE_SKILL} from '../../lib/skill';
+import { UPDATE_RELATION, GET_All_SKILLS_FOR_PRODUCER} from '../../lib/skill';
 import { NoDataText } from '../Placeholder/NoDataText';
 import SearchBar from '../SearchBar';
 
+let ADDED_SKILLS: any[] = [];
+
 export function EditSkills ( props: any ) {
-
-    const skills = props.skills;
-
-    const refetch = props.skillRefetch;
 
     const currentUserId = useSelector((state: any) => state.user.userId);
 
-    // const { data, error, loading: skillLoading, refetch } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {variables: {query: {userId: currentUserId} }});
+    const { data, error, loading: skillLoading, refetch } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {variables: {query: {userId: currentUserId} }});
 
     const [ currentSkills, setCurrentSkills ] = useState<any>();
     
-    const [ doDeleteSkill, { loading: deleteSkillLoading } ] = useMutation(DELETE_SKILL);
+    const [ addedSkills, setAddedSkills ] = useState<any>(ADDED_SKILLS);
+        
+    const [ doUpdateRelation, { loading: updateRelationLoading } ] = useMutation(UPDATE_RELATION);
 
-    const [changesMade, setChangesMade] = useState(false);
-
-    const [filtered, setFiltered] = useState();
-
-    const [searching, setSearching] = useState(false);
+    const [ changesMade, setChangesMade ] = useState(false);
+    
 
     useMemo(() => {
-        setCurrentSkills(skills);
+        if (data && data?.getAllSkillsForProducer) {
+            setCurrentSkills(data?.getAllSkillsForProducer);
+        }
     }, []);
 
     const fetchCurrentSkills = async () => {
@@ -45,44 +44,32 @@ export function EditSkills ( props: any ) {
         }
     }
 
-    const handleDelete = async (skillId: number) => {
+    const handleUpdate = async (skillName: string, skillId: number, isPersonal: boolean) => {
         try {
-            const { data, errors } = await doDeleteSkill({
-                variables: { input: { userId: currentUserId, skillId: skillId }}
+            const { data, errors } = await doUpdateRelation({
+                variables: { input: { userId: currentUserId, skillId: skillId, isPersonal: isPersonal }}
             });
-            if (data && data?.deleteSkill) {
-                await fetchCurrentSkills();
+            if (data && data?.updateRelation) {
+                const addedSkill = { skillId, skillName };
+                console.log(addedSkill);
+                ADDED_SKILLS.push(addedSkill)
+                setAddedSkills(ADDED_SKILLS);
+                setChangesMade(true);
             }
         } catch (e) {
             console.log(e);
         }
     }
 
-    const loading = useMemo(() => {
-        return deleteSkillLoading;
-    }, [deleteSkillLoading]);
 
-    const onSearch = (text: any) => {
-        if (text) {
-          setSearching(true);
-          const temp = text.toLowerCase();
-          let skillNames = [];
-          for (const skill of skills) {
-            const skillItem = [];
-            skillItem.push(skill.id);
-            skillItem.push(skill.name);
-            skillNames.push(skillItem)
-          }
-          const tempList = skillNames.filter((item: any) => {
-            if (item[1].toLowerCase().includes(temp)) {
-              return item
-            }
-          })
-          setFiltered(tempList);
-        } else {
-          setSearching(false)
-          setFiltered(skills)
-        }
+    const loading = useMemo(() => {
+        return updateRelationLoading || skillLoading;
+    }, [updateRelationLoading, skillLoading]);
+
+    const onSave = () => {
+        ADDED_SKILLS = [];
+        setAddedSkills(ADDED_SKILLS)
+        props.onCancel();
     }
 
     return (
@@ -93,7 +80,7 @@ export function EditSkills ( props: any ) {
                 
                 <View style={styles.headerWrapper}>
                     {changesMade ? 
-                        <TouchableOpacity onPress={() => console.log("not there yet")}>
+                        <TouchableOpacity onPress={() => onSave()}>
                             <Text style={styles.save}>save</Text>
                         </TouchableOpacity>
                     :
@@ -108,8 +95,19 @@ export function EditSkills ( props: any ) {
                 </View>
 
                 <View style={styles.container}>
-                    <SearchBar skills={skills} navigation={props.navigation}/>
-
+                    <SearchBar navigation={props.navigation} isPersonal={props.isPersonal} onSelect={handleUpdate}/>
+                    {addedSkills && addedSkills.length > 0 &&
+                        <View style={styles.skillSection}>
+                            <Text style={styles.smallSubheader}>Your added skills</Text>
+                            <View style={styles.overview}>
+                                {addedSkills.map((skill: any) => { return (
+                                    <TouchableOpacity >
+                                        <Skill name={skill.skillName} editMode={true} key={skill.skillId} darkMode={true} />
+                                    </TouchableOpacity>
+                                )})}
+                            </View>
+                        </View>
+                    }
                     <View style={styles.skillSection}>
                         <Text style={styles.smallSubheader}>Your current skills</Text>
                         {currentSkills && currentSkills.length > 0 ?
@@ -125,11 +123,6 @@ export function EditSkills ( props: any ) {
                         }
                     </View>
 
-                    <View style={styles.skillSection}>
-                        <Text style={styles.smallSubheader}>Your added skills</Text>
-                        <View style={styles.overview}>
-                        </View>
-                    </View>
 
                 </View>
             </View>
@@ -187,7 +180,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         marginTop: 10,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        flexWrap: 'wrap'
     },
     smallSubheader: {
         color: GigColors.DarkGrey,
