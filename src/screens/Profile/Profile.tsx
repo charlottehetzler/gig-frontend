@@ -41,7 +41,7 @@ export default function ProfileScreen(props: any) {
       
       <ScrollView>
         {user && <>
-        <Profile initials={initials} fullName={fullName} user={user} isMe={false} navigation={props.navigation} refetch={fetchReviews}/>
+        <Profile initials={initials} fullName={fullName} user={user} isMe={false} skillId={skillId} navigation={props.navigation} refetch={fetchReviews }/>
         
         <View style={styles.profileSection}>
           <View style={[styles.sectionHeader, {marginLeft: 10}]}>

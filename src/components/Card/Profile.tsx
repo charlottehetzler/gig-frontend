@@ -25,7 +25,7 @@ export function Profile (props: any) {
 
   const { data, loading, error } = useQuery(GET_COMMON_CHAT_ROOM, {variables: {currentUserId: currentUserId, userId: userId} });  
   
-  const { data: reviewData, loading: reviewLoading, error: reviewError } = useQuery(GET_SUBMITTED_REVIEW, {variables: {query: { userId: userId, fromUserId: currentUserId}} });  
+  const { data: reviewData, loading: reviewLoading, error: reviewError } = useQuery(GET_SUBMITTED_REVIEW, {variables: {query: { userId: userId, fromUserId: currentUserId, skillId: props.skillId}} });  
  
   const [ isAddMode, setIsAddMode ] = useState(false);
   
