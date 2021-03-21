@@ -11,7 +11,11 @@ query getUser($query: UserQuery!) {
         birthday,
         nativeLanguage,
         phoneNumber,
-        isCallable
+        isCallable,
+        languages {
+            id,
+            name
+        }
     }
 }
 `;

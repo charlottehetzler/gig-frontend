@@ -17,7 +17,6 @@ export function Producer ({firstName, lastName, userId, navigation, skillId} : P
 
     useMemo(() => {
         if (data && data?.getAvgRatingForSkill) {
-            console.log(data?.getAvgRatingForSkill)
             setAvgRating(data?.getAvgRatingForSkill);
         }
     }, [data]);

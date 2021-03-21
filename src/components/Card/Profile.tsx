@@ -18,6 +18,8 @@ export function Profile (props: any) {
   const { navigate } = props.navigation;
   
   const currentUserId = useSelector((state: any) => state.user.userId);
+
+  const languages = props.user.languages;
     
   const userId = props.user.id
 
@@ -67,7 +69,14 @@ export function Profile (props: any) {
 
         <Avatar containerStyle={styles.avatar} size={75} title={props.initials}/>
         <Text style={styles.h4Style}>{props.fullName}</Text>
-        <Text style={styles.language}><Text style={styles.nativeLanguage}> {props.user.nativeLanguage}</Text> </Text>
+        <View style={styles.overview}> 
+          <Text style={styles.nativeLanguage}> {props.user.nativeLanguage} </Text> 
+          {languages.length > 0 &&
+            languages.map((language: any) => { return (
+              <Text key={language.id}>{language.name} </Text>
+            )})
+          }
+        </View>
         
         <View style={styles.rating}>
           <AirbnbRating
@@ -214,5 +223,12 @@ const styles = StyleSheet.create({
   },
   contactAction: {
     width: '70%'
+  },
+  overview: {
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   }
 });
