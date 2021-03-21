@@ -1,12 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { GET_All_SKILLS } from '../lib/skill';
 import { useQuery } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GigColors } from '../constants/colors';
 import { useSelector } from 'react-redux';
-import AuthPlaceholder from '../components/Placeholder/AuthPlaceholder';
 import SearchBar from '../components/SearchBar';
 
 export default function HomeScreen (props: any) {
@@ -64,8 +63,13 @@ export default function HomeScreen (props: any) {
           horizontal
           style={styles.flatListHorizontal}
         />
-      
-        <Text style={styles.h4Style}> All gigs:</Text>
+        <View style={styles.subHeader}>
+          <Text style={styles.h4Style}> All gigs:</Text>
+          <TouchableOpacity style={styles.moreButton} onPress={() => props.navigation.navigate('Categories')}>
+            <Text>See all</Text>
+          </TouchableOpacity>
+
+        </View>
         <FlatList
           data={skills}
           renderItem={renderItem}
@@ -102,11 +106,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-},
+  },
   title: {
     fontSize: 18,
     textAlign: 'center',
     textTransform: 'uppercase',
     color: GigColors.Black
+  },
+  moreButton: {
+    backgroundColor: GigColors.White,
+    color: GigColors.Black,
+    borderWidth: 1,
+    borderColor: GigColors.Black,
+    paddingVertical: 3,
+    paddingHorizontal: 5,
+    borderRadius: 5,
+    justifyContent: "center",
+    marginBottom: 0,
+    marginRight: 16
+  },
+  subHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between'
   }
 });

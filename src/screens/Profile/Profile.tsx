@@ -79,8 +79,8 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'flex-end',
+    justifyContent: 'space-between'
   },
   moreButton: {
     backgroundColor: GigColors.White,

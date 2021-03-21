@@ -9,6 +9,8 @@ import SignupScreen from "../screens/Auth/Signup";
 import ProfileScreen from '../screens/Profile/Profile';
 import DecisionScreen from '../screens/Auth/Decision';
 import LoadingScreen from '../screens/Auth/Loading';
+import CategoriesScreen from '../screens/Skills/Categories';
+import SkillsScreen from '../screens/Skills/Skills';
 
 const MainStack = createStackNavigator();
 export function MainStackScreen() {
@@ -16,6 +18,8 @@ export function MainStackScreen() {
         <MainStack.Navigator>
             <MainStack.Screen name="HomeScreen" component={Tabs} options={{ headerShown: false }}/>
             <MainStack.Screen name="Producers" component={ProducersScreen} options={{ headerShown: false }}/>
+            <MainStack.Screen name="Categories" component={CategoriesScreen} options={{ headerShown: false }}/>
+            <MainStack.Screen name="Skills" component={SkillsScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Reviews" component={ReviewsScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }}/>

@@ -19,7 +19,6 @@ export default function ProducersScreen(props: any) {
   
   let [producers, setProducers] = useState<any>()
 
-  console.log(data?.getProducersForSkill)
     
   useMemo(() => {
     if (data && data?.getProducersForSkill) {
@@ -72,16 +71,5 @@ export default function ProducersScreen(props: any) {
 const styles = StyleSheet.create({
   container: {
     marginTop: StatusBar.currentHeight || 0
-  },
-  h4Style: {
-    marginTop: 25,
-    fontSize: 26,
-    marginBottom: 10
-  },
-  header: {
-    height: 75, 
-    alignItems: 'center', 
-    justifyContent:'center',
-    backgroundColor: GigColors.DarkGrey
   }
 });

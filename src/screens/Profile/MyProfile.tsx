@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between'
   },
   noItems: {
     marginTop: 10,
