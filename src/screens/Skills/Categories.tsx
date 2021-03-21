@@ -19,7 +19,7 @@ export default function CategoriesScreen(props: any) {
 }, [catData]);
 
   const renderItem = ({ item } : any ) => (
-    <View >
+    <View style={styles.categoryWrapper}>
       <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Skills', {categoryName: item['name'], skills: item['categorySkills']})} >
         <Text style={styles.title}>{item['name']} </Text>
       </TouchableOpacity>
@@ -38,6 +38,7 @@ export default function CategoriesScreen(props: any) {
           data={categories}
           renderItem={renderItem}
           keyExtractor={item => item.id}
+          numColumns={2}
         />
       </>}
     </SafeAreaView>
@@ -66,4 +67,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  categoriesWrapper: {
+    flexDirection: 'row',
+  },
+  categoryWrapper: {
+    width: '50%',
+    height: 150
+  }
 });
