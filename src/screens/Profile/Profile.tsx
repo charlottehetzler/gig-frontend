@@ -9,9 +9,9 @@ import { NoDataText } from '../../components/Placeholder/NoDataText';
 
 export default function ProfileScreen(props: any) {
 
-  const { isMe, userId } = props.route.params;
+  const { isMe, userId, skillId } = props.route.params;
 
-  const { user, lastReviews, loading, error, fullName, firstName, initials } = useProfile(userId);
+  const { user, lastReviews, loading, error, fullName, firstName, initials } = useProfile(userId, skillId);
 
   const hasLastReviews = () => {
     return lastReviews.length > 0 ? true : false;

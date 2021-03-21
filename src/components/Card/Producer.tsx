@@ -1,23 +1,38 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
 import { Avatar, Rating, AirbnbRating } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
+import { useQuery } from '@apollo/client';
+import { GET_AVG_RATING_FOR_SKILL } from '../../lib/review';
 
 
-type Props = { firstName: string, lastName: string, rating: number, userId: number, navigation: any }
+type Props = { firstName: string, lastName: string, userId: number, navigation: any, skillId: number }
 
-export function Producer ({firstName, lastName, rating, userId, navigation} : Props) {
+export function Producer ({firstName, lastName, userId, navigation, skillId} : Props) {
     
+    const { data, loading, error } = useQuery(GET_AVG_RATING_FOR_SKILL, {variables: {query: {skillId: skillId, userId: userId} }});  
+    
+    const [ avgRating, setAvgRating ] = useState();
+
+    useMemo(() => {
+        if (data && data?.getAvgRatingForSkill) {
+            setAvgRating(data?.getAvgRatingForSkill);
+        }
+    }, [data]);
+
     const getInitials = (firstName : string, lastName : string) => {
         let first = firstName.charAt(0).toUpperCase();
         let last = lastName.charAt(0).toUpperCase();
         return first + last;
     }
     const { navigate } = navigation;
+
     
-    return (
-        <TouchableOpacity style={styles.card} onPress={() => navigate('Profile', {userId: userId, isMe: false})}>
+    return ( <>
+        {loading &&  <ActivityIndicator size="small" color='#000000' style={{alignItems:'center', justifyContent:'center'}}/>}
+
+        <TouchableOpacity style={styles.card} onPress={() => navigate('Profile', {userId: userId, isMe: false, skillId: skillId})}>
             <Avatar title={getInitials(firstName, lastName)} containerStyle={styles.avatar} size={60} />
         
             <View style={styles.text}>
@@ -25,14 +40,14 @@ export function Producer ({firstName, lastName, rating, userId, navigation} : Pr
                 <AirbnbRating
                     count={5}
                     selectedColor={GigColors.Black}
-                    defaultRating={rating}
+                    defaultRating={avgRating}
                     size={15}
                     showRating={false}
                     isDisabled={true}
                 />
             </View>
         </TouchableOpacity>
-    )
+   </> )
 }
 
 const styles = StyleSheet.create({

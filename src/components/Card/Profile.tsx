@@ -44,7 +44,6 @@ export function Profile (props: any) {
       setChatRoomId(data?.getCommonChatRoom.id);
     }
     if (reviewData && reviewData?.getSubmittedReview) {
-      console.log(reviewData?.getSubmittedReview)
       setReviewDisabled(reviewData?.getSubmittedReview);
     }
   }, [data]);
@@ -124,7 +123,6 @@ export function Profile (props: any) {
                   <Text>Message</Text>
                 </TouchableOpacity>
               </View>
-              {console.log(reviewDisabled)}
               {reviewDisabled ? 
                 <View style={[styles.profileAction, {borderColor: GigColors.DarkGrey}]}>
                   <Icon type='material' name='star-outline' color={GigColors.DarkGrey} style={{marginRight: 10}}/>

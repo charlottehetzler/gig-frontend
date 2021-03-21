@@ -7,6 +7,7 @@ import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { GET_PRODUCERS_FOR_SKILL } from '../lib/user';
 import { useSelector } from 'react-redux';
 import { NoDataText } from '../components/Placeholder/NoDataText';
+import { GET_AVG_RATING_FOR_SKILL } from '../lib/review';
 
 
 export default function ProducersScreen(props: any) {
@@ -16,7 +17,7 @@ export default function ProducersScreen(props: any) {
   const { skillId, skillName } = props.route.params;
   
   const { data, loading, error } = useQuery(GET_PRODUCERS_FOR_SKILL, {variables: {query: {skillId: skillId, currentUserId: currentUserId}}});  
-  
+    
   let [producers, setProducers] = useState<any>()
 
     
@@ -26,8 +27,7 @@ export default function ProducersScreen(props: any) {
         return {
           firstName: item.firstName,
           lastName: item.lastName,
-          avgRating: item.avgRating,
-          userId: item.id,
+          userId: item.id
         }
       }));
       producerList.sort((a, b) => (a.avgRating > b.avgRating) ? -1 : 1)
@@ -39,9 +39,9 @@ export default function ProducersScreen(props: any) {
     <Producer 
       firstName={item["firstName"]} 
       lastName={item["lastName"]} 
-      rating={item["avgRating"]} 
       userId={item["userId"]}
       navigation={props.navigation}
+      skillId={skillId}
     />
   );
 
