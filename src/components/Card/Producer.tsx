@@ -13,10 +13,11 @@ export function Producer ({firstName, lastName, userId, navigation, skillId} : P
     
     const { data, loading, error } = useQuery(GET_AVG_RATING_FOR_SKILL, {variables: {query: {skillId: skillId, userId: userId} }});  
     
-    const [ avgRating, setAvgRating ] = useState();
+    const [ avgRating, setAvgRating ] = useState(0);
 
     useMemo(() => {
         if (data && data?.getAvgRatingForSkill) {
+            console.log(data?.getAvgRatingForSkill)
             setAvgRating(data?.getAvgRatingForSkill);
         }
     }, [data]);

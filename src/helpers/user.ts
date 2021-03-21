@@ -11,7 +11,7 @@ export default function useProfile (userId: number, skillId?: number) {
 
     const { data: skillData, loading: skillLoading, error: skillError, refetch: skillRefetch } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {variables: {query: {userId: userId} }});
   
-    const { data: reviewData, loading: reviewLoading, error: reviewError } = useQuery(GET_LAST_REVIEWS_FOR_USER, {variables: {query: {userId: userId, skillId: skillId} }});
+    const { data: reviewData, loading: reviewLoading, error: reviewError, refetch: reviewRefetch } = useQuery(GET_LAST_REVIEWS_FOR_USER, {variables: {query: {userId: userId, skillId: skillId} }});
 
     const [fullName, setFullName] = useState();
   
@@ -50,5 +50,5 @@ export default function useProfile (userId: number, skillId?: number) {
     }, [userError, skillError, reviewError]);
 
 
-    return { user, skills, lastReviews, loading, error, fullName, initials, firstName, skillRefetch }
+    return { user, skills, lastReviews, loading, error, fullName, initials, firstName, skillRefetch, reviewRefetch }
 }

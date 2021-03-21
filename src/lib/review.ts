@@ -53,8 +53,6 @@ query getSubmittedReview($query: ReviewQuery!) {
 
 export const GET_AVG_RATING_FOR_SKILL = gql`
 query getAvgRatingForSkill($query: ReviewQuery!) {
-    getAvgRatingForSkill(query: $query) {
-        
-    }
+    getAvgRatingForSkill(query: $query)
 }
 `;

@@ -18,7 +18,7 @@ export function Profile (props: any) {
   const { navigate } = props.navigation;
   
   const currentUserId = useSelector((state: any) => state.user.userId);
-  
+    
   const userId = props.user.id
 
   const { data, loading, error } = useQuery(GET_COMMON_CHAT_ROOM, {variables: {currentUserId: currentUserId, userId: userId} });  
@@ -133,7 +133,7 @@ export function Profile (props: any) {
                 <TouchableOpacity style={styles.profileAction} onPress={() => setIsAddMode(true)}>
                   <Icon type='material' name='star-outline' color={GigColors.Black} style={{marginRight: 10}}/>
                   <Text>Add review</Text>
-                  <NewReview visible={isAddMode} onCancel={closeModal} userId={props.user.id} firstName={props.user.firstName} disable={disableReview}/>
+                  <NewReview visible={isAddMode} onCancel={closeModal} userId={props.user.id} firstName={props.user.firstName} disable={disableReview} refetch={props.refetch}/>
                 </TouchableOpacity>
             }
             </View>

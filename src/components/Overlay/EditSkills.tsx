@@ -6,7 +6,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Icon } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { Skill } from '../Card/Skill';
-import { UPDATE_RELATION, GET_All_SKILLS_FOR_PRODUCER} from '../../lib/skill';
+import { UPDATE_RELATION, GET_All_SKILLS_FOR_PRODUCER, GET_AVAILABLE_SKILLS_FOR_PRODUCER} from '../../lib/skill';
 import { NoDataText } from '../Placeholder/NoDataText';
 import SearchBar from '../SearchBar';
 
@@ -16,7 +16,7 @@ export function EditSkills ( props: any ) {
 
     const currentUserId = useSelector((state: any) => state.user.userId);
 
-    const { data, error, loading: skillLoading, refetch } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {variables: {query: {userId: currentUserId} }});
+    const { data, error, loading: skillLoading, refetch } = useQuery(GET_AVAILABLE_SKILLS_FOR_PRODUCER, {variables: {query: {userId: currentUserId} }});
 
     const [ currentSkills, setCurrentSkills ] = useState<any>();
     
@@ -51,7 +51,6 @@ export function EditSkills ( props: any ) {
             });
             if (data && data?.updateRelation) {
                 const addedSkill = { skillId, skillName };
-                console.log(addedSkill);
                 ADDED_SKILLS.push(addedSkill)
                 setAddedSkills(ADDED_SKILLS);
                 setChangesMade(true);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Review } from '../../components/Card/Review';
 import { GigColors } from '../../constants/colors';
@@ -11,11 +11,24 @@ export default function ProfileScreen(props: any) {
 
   const { isMe, userId, skillId } = props.route.params;
 
-  const { user, lastReviews, loading, error, fullName, firstName, initials } = useProfile(userId, skillId);
+  const { user, lastReviews, loading, error, fullName, firstName, initials, reviewRefetch } = useProfile(userId, skillId);
+
+  const [ reviews, setReviews ] = useState();
 
   const hasLastReviews = () => {
     return lastReviews.length > 0 ? true : false;
   }
+
+  const fetchReviews = async () => {
+    try {
+        const refetchData = await reviewRefetch();
+        if (refetchData && refetchData?.getLastReviewsForUser) {
+          setReviews(refetchData?.getLastReviewsForUser);
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
   
   return ( 
     <SafeAreaView >
@@ -28,7 +41,7 @@ export default function ProfileScreen(props: any) {
       
       <ScrollView>
         {user && <>
-        <Profile initials={initials} fullName={fullName} user={user} isMe={false} navigation={props.navigation}/>
+        <Profile initials={initials} fullName={fullName} user={user} isMe={false} navigation={props.navigation} refetch={fetchReviews}/>
         
         <View style={styles.profileSection}>
           <View style={[styles.sectionHeader, {marginLeft: 10}]}>

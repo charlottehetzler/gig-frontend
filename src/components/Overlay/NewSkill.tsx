@@ -64,6 +64,7 @@ export function NewSkill ( props: any ) {
         });
     }
 
+    
 
     const isValid = () => { return skillIsValid && categoryIsValid;}
     const handleSubmit = async () => {
@@ -143,7 +144,6 @@ export function NewSkill ( props: any ) {
                         :
                             <DisabledDefaultButton title={buttonText}/>
                         }
-                        {props.gig && <WhiteDefaultButton title={buttonText}/>}
                     </View>
                 </View>
             </View>

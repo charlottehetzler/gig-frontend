@@ -30,6 +30,14 @@ query getOneSkill($query: SkillQuery!) {
 }
 `;
 
+export const GET_AVAILABLE_SKILLS_FOR_PRODUCER = gql`
+query getAvailableSkillsForProducer($query: SkillQuery!) {
+    getAvailableSkillsForProducer(query: $query) {
+        id, name
+    }
+}
+`;
+
 export const ADD_SKILL = gql`
 mutation addSkill($input: SkillQuery!) {
     addSkill(input: $input) {
