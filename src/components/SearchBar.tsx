@@ -3,15 +3,17 @@ import { View, StyleSheet, Text, TextInput, TouchableOpacity, ActivityIndicator 
 import { GigColors } from '../constants/colors';
 import { NewSkill } from './Overlay/NewSkill';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_All_SKILLS } from '../lib/skill';
+import { GET_All_SKILLS, GET_AVAILABLE_SKILLS_FOR_PRODUCER } from '../lib/skill';
 
 
 export default function SearchBar (props: any) {
 
-  const { data, error, loading } = useQuery(GET_All_SKILLS);
+  const { data: skillsData, error: skillsErros, loading: skillsLoading } = useQuery(GET_All_SKILLS);
 
-  const [ allSkills, setAllSkills ] = useState()
+  const { data, error, loading, refetch } = useQuery(GET_AVAILABLE_SKILLS_FOR_PRODUCER, {variables: {query: {userId: props.currentUserId} }});
 
+  const [ skills, setSkills ] = useState()
+  
   const [filtered, setFiltered] = useState();
 
   const [searching, setSearching] = useState(false);
@@ -23,17 +25,23 @@ export default function SearchBar (props: any) {
   const closeModal = () => { setIsAddMode(false) }
 
   useMemo(() => {
-    if (data && data?.getAllSkills) {
-      setAllSkills(data?.getAllSkills)
+    if (props.profileMode) {
+      if (data && data?.getAvailableSkillsForProducer) {
+        setSkills(data?.getAvailableSkillsForProducer);
+      }
+    } else {
+      if (skillsData && skillsData?.getAllSkills) {
+        setSkills(skillsData?.getAllSkills);
+      }
     }
-  },[ data]);
+  },[skillsData, data]);
   
   const onSearch = (text: any) => {
     if (text) {
       setSearching(true);
       const temp = text.toLowerCase();
       let skillNames = [];
-      for (const skill of allSkills) {
+      for (const skill of skills) {
         const skillItem = [];
         skillItem.push(skill.id);
         skillItem.push(skill.name);
@@ -47,7 +55,7 @@ export default function SearchBar (props: any) {
       setFiltered(tempList);
     } else {
       setSearching(false)
-      setFiltered(allSkills)
+      setFiltered(skills)
     }
   }
 
@@ -57,7 +65,6 @@ export default function SearchBar (props: any) {
     setFiltered(false);
     setSearching(false);
   }
-
 
   return (
     <View>

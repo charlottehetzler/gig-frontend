@@ -1,28 +1,31 @@
 import React from 'react';
-import { View, StyleSheet, Text, GestureResponderEvent } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { GigColors } from '../../constants/colors';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-type Props = { name: string, editMode: boolean, darkMode: boolean, onDelete?: any }
-
-
-export function Skill ({name, editMode, darkMode, onDelete} : Props) {
-    const iconColor = darkMode ? GigColors.White : GigColors.Black;
+export function Skill (props: any) {
+    
+    const iconColor = props.darkMode ? GigColors.White : GigColors.Black;
+    
+    const handleDelete = () => {
+        props.onDelete(props.id, false, props.addMode);
+    }
 
     return (<>
-        {editMode ? 
-            <TouchableOpacity style={[styles.skill, darkMode ? styles.darkmodeOn : styles.darkmodeOff]}>
-                <Text style={{color: iconColor}}>{name}</Text>
+        {props.editMode ? 
+            <TouchableOpacity 
+                style={[styles.skill, props.darkMode ? styles.darkmodeOn : styles.darkmodeOff]} 
+                onPress={handleDelete}>
+                <Text style={{color: iconColor}}>{props.name}</Text>
                 <Icon type='material' name='close' size={20} color={iconColor}/>
             </TouchableOpacity>
         :
-            <View style={[styles.skill, darkMode ? styles.darkmodeOn : styles.darkmodeOff]}>
-                <Text style={{color: iconColor}}>{name}</Text>
+            <View style={[styles.skill, props.darkMode ? styles.darkmodeOn : styles.darkmodeOff]}>
+                <Text style={{color: iconColor}}>{props.name}</Text>
             </View>
         } 
-    </>
-    )
+    </>)
 }
 
 const styles = StyleSheet.create({

@@ -52,7 +52,7 @@ export default function HomeScreen (props: any) {
       {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       
       {!loading &&  <>
-      <SearchBar navigation={props.navigation} isPersonal={false} refetchSkills={fetchSkills}/>
+      <SearchBar navigation={props.navigation} isPersonal={false} refetchSkills={fetchSkills} profileMode={false}/>
 
       <ScrollView>
         <Text style={styles.h4Style}> Browse random gigs:</Text>

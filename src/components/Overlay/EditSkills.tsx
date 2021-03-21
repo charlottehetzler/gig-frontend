@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Modal, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, TextInput } from 'react-native';
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../../constants/colors';
@@ -6,26 +6,28 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Icon } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { Skill } from '../Card/Skill';
-import { UPDATE_RELATION, GET_All_SKILLS_FOR_PRODUCER, GET_AVAILABLE_SKILLS_FOR_PRODUCER} from '../../lib/skill';
+import { UPDATE_RELATION, GET_All_SKILLS_FOR_PRODUCER} from '../../lib/skill';
 import { NoDataText } from '../Placeholder/NoDataText';
 import SearchBar from '../SearchBar';
+import useProfile from '../../helpers/user';
 
 let ADDED_SKILLS: any[] = [];
 
 export function EditSkills ( props: any ) {
 
     const currentUserId = useSelector((state: any) => state.user.userId);
+    
+    const { data, loading: skillLoading, error, refetch } = useQuery(GET_All_SKILLS_FOR_PRODUCER , {variables: {query: {userId: currentUserId} }});
 
-    const { data, error, loading: skillLoading, refetch } = useQuery(GET_AVAILABLE_SKILLS_FOR_PRODUCER, {variables: {query: {userId: currentUserId} }});
+    const { skills, skillRefetch } = useProfile(currentUserId);
 
-    const [ currentSkills, setCurrentSkills ] = useState<any>();
+    const [ currentSkills, setCurrentSkills ] = useState(skills);
     
     const [ addedSkills, setAddedSkills ] = useState<any>(ADDED_SKILLS);
         
     const [ doUpdateRelation, { loading: updateRelationLoading } ] = useMutation(UPDATE_RELATION);
 
     const [ changesMade, setChangesMade ] = useState(false);
-    
 
     useMemo(() => {
         if (data && data?.getAllSkillsForProducer) {
@@ -35,7 +37,8 @@ export function EditSkills ( props: any ) {
 
     const fetchCurrentSkills = async () => {
         try {
-            const refetchData = await refetch();
+            const refetchData = await skillRefetch();
+
             if (refetchData && refetchData?.getAllSkillsForProducer) {
                 setCurrentSkills(refetchData?.getAllSkillsForProducer);
             }
@@ -44,13 +47,14 @@ export function EditSkills ( props: any ) {
         }
     }
 
-    const handleUpdate = async (skillName: string, skillId: number, isPersonal: boolean) => {
+    const handleUpdate = async (name: string, id: number, isPersonal: boolean) => {
         try {
             const { data, errors } = await doUpdateRelation({
-                variables: { input: { userId: currentUserId, skillId: skillId, isPersonal: isPersonal }}
+                variables: { input: { userId: currentUserId, skillId: id, isPersonal: isPersonal }}
             });
+
             if (data && data?.updateRelation) {
-                const addedSkill = { skillId, skillName };
+                const addedSkill = { id, name };
                 ADDED_SKILLS.push(addedSkill)
                 setAddedSkills(ADDED_SKILLS);
                 setChangesMade(true);
@@ -59,17 +63,34 @@ export function EditSkills ( props: any ) {
             console.log(e);
         }
     }
-
+    const handleDelete = async (skillId: number, isPersonal: boolean, addMode: boolean) => {
+        try {
+            const { data, errors } = await doUpdateRelation({
+                variables: { input: { userId: currentUserId, skillId: skillId, isPersonal: isPersonal }}
+            });
+            if (addMode) {
+                const index = ADDED_SKILLS.findIndex(x => x.skillId === skillId);
+                ADDED_SKILLS.splice(index, 1);
+                setAddedSkills(ADDED_SKILLS);
+            } else {
+                await fetchCurrentSkills();
+            }
+            setChangesMade(true);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    const onSave = () => {
+        ADDED_SKILLS = [];
+        setAddedSkills(ADDED_SKILLS);
+        setChangesMade(false);
+        props.onCancel();
+    }
 
     const loading = useMemo(() => {
         return updateRelationLoading || skillLoading;
     }, [updateRelationLoading, skillLoading]);
 
-    const onSave = () => {
-        ADDED_SKILLS = [];
-        setAddedSkills(ADDED_SKILLS)
-        props.onCancel();
-    }
 
     return (
         <Modal visible={props.visible} animationType='slide'>
@@ -94,14 +115,14 @@ export function EditSkills ( props: any ) {
                 </View>
 
                 <View style={styles.container}>
-                    <SearchBar navigation={props.navigation} isPersonal={props.isPersonal} onSelect={handleUpdate}/>
+                    <SearchBar navigation={props.navigation} isPersonal={props.isPersonal} onSelect={handleUpdate} currentUserId={currentUserId} profileMode={true}/>
                     {addedSkills && addedSkills.length > 0 &&
                         <View style={styles.skillSection}>
                             <Text style={styles.smallSubheader}>Your added skills</Text>
                             <View style={styles.overview}>
                                 {addedSkills.map((skill: any) => { return (
                                     <TouchableOpacity >
-                                        <Skill name={skill.skillName} editMode={true} key={skill.skillId} darkMode={true} />
+                                        <Skill name={skill.name} id={skill.id} editMode={true} key={skill.id} darkMode={true} onDelete={handleDelete} addMode={true}/>
                                     </TouchableOpacity>
                                 )})}
                             </View>
@@ -109,11 +130,11 @@ export function EditSkills ( props: any ) {
                     }
                     <View style={styles.skillSection}>
                         <Text style={styles.smallSubheader}>Your current skills</Text>
-                        {currentSkills && currentSkills.length > 0 ?
+                        {skills && skills.length > 0 ?
                             <View style={styles.overview}>
-                                {currentSkills.map((skill: { name: string; id: number }) => { return (
+                                {skills.map((skill: any) => { return (
                                     <TouchableOpacity >
-                                        <Skill name={skill.name} editMode={true} key={skill.id} darkMode={false} />
+                                        <Skill name={skill.name} id={skill.id} editMode={true} key={skill.skillId} darkMode={false} onDelete={handleDelete} addMode={false}/>
                                     </TouchableOpacity>
                                 )})}
                             </View>
