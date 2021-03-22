@@ -11,8 +11,8 @@ import DecisionScreen from '../screens/Auth/Decision';
 import LoadingScreen from '../screens/Auth/Loading';
 import CategoriesScreen from '../screens/Skills/Categories';
 import SkillsScreen from '../screens/Skills/Skills';
-import NetworkScreen from '../screens/Network';
-import FriendsScreen from '../screens/Friends';
+import NetworkScreen from '../screens/Network/Network';
+import FriendsScreen from '../screens/Network/Friends';
 
 const MainStack = createStackNavigator();
 export function MainStackScreen() {

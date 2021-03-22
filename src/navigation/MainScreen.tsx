@@ -6,7 +6,7 @@ import { GigColors } from '../constants/colors';
 import HomeScreen from '../screens/Home';
 import MessagesScreen from '../screens/Message/Messages';
 import MyProfileScreen from '../screens/Profile/MyProfile';
-import NetworkScreen from '../screens/Network';
+import NetworkScreen from '../screens/Network/Network';
 
 const Tab = createBottomTabNavigator();
 export function Tabs(props: any) {

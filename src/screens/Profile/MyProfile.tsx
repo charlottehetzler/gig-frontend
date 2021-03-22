@@ -94,7 +94,7 @@ export default function MyProfileScreen(props: any) {
           </View>
         </View>
         {lastReviews && lastReviews.length > 0 ? 
-          <View>
+          <View style={{marginBottom: 100}}>
             {lastReviews.map((review : any) => { return (
               <View>
                 <Review 

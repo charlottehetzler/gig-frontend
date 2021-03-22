@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, StatusBar, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { DefaultHeader } from '../components/Header/DefaultHeader';
-import { GET_FRIEND_REQUESTS, GET_NUMBER_OF_FRIENDS, GET_NEW_USERS} from '../lib/friend';
+import { DefaultHeader } from '../../components/Header/DefaultHeader';
+import { GET_FRIEND_REQUESTS, GET_NUMBER_OF_FRIENDS, GET_NEW_USERS} from '../../lib/friend';
 import { useQuery } from '@apollo/client';
 import { useSelector } from 'react-redux';
 import { Icon } from 'react-native-elements';
-import { Friend } from '../components/Card/Friend';
-import { NoDataText } from '../components/Placeholder/NoDataText';
+import { Friend } from '../../components/Card/Friend';
+import { NoDataText } from '../../components/Placeholder/NoDataText';
 
 
 export default function NetworkScreen(props: any) {
@@ -24,6 +24,7 @@ export default function NetworkScreen(props: any) {
     const [ requests, setRequests ] = useState();
     
     const [ newUsers, setNewUsers ] = useState();
+    console.log(newUserData)
 
     useEffect(() => {
         onUpdate()
@@ -115,7 +116,7 @@ export default function NetworkScreen(props: any) {
     return (
         <SafeAreaView style={styles.container}>
             <View>
-                <DefaultHeader title={'my network'} navigation={props.navigation} goBack={true}/>
+                <DefaultHeader title={'My Network'} navigation={props.navigation} goBack={true}/>
             </View> 
             {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
 

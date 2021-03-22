@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, StatusBar, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { DefaultHeader } from '../components/Header/DefaultHeader';
-import { GET_FRIENDS} from '../lib/friend';
+import { DefaultHeader } from '../../components/Header/DefaultHeader';
+import { GET_FRIENDS} from '../../lib/friend';
 import { useQuery } from '@apollo/client';
 import { useSelector } from 'react-redux';
-import { GigColors } from '../constants/colors';
-import { Friend } from '../components/Card/Friend';
+import { GigColors } from '../../constants/colors';
+import { Friend } from '../../components/Card/Friend';
 
 export default function FriendsScreen(props: any) {
     
@@ -37,7 +37,7 @@ export default function FriendsScreen(props: any) {
     return (
         <SafeAreaView style={styles.container}>
         <View>
-            <DefaultHeader title={'my friends'} navigation={props.navigation} goBack={true}/>
+            <DefaultHeader title={'My Friends'} navigation={props.navigation} goBack={true}/>
         </View> 
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
         
