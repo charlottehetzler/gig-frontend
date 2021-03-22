@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
-import { Avatar, Icon } from 'react-native-elements';
+import { Avatar } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
 import { useMutation } from '@apollo/client';
@@ -31,7 +31,7 @@ export function Friend (props: any) {
           console.log(e);
         }
     }
-console.log(props)
+
     return ( <>
         <View style={styles.card}>
             <View style={styles.cardName}>
@@ -41,14 +41,21 @@ console.log(props)
             {updateRequestLoading &&  
                 <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>
             }
-            {props.isFriend ? 
+            {props.isFriend && !props.isNew &&
                 <MessageButton userId={props.userId} firstName={props.firstName} lastName={props.lastName} navigation={props.navigation}/>
-            :   
+            }
+            {!props.isFriend && !props.isNew && 
                 <View style={styles.requestButtons}>
                     <RequestButton userId={props.userId} title={'Accept'} status={'accept'} onUpdate={props.onUpdate}/>
                     <RequestButton userId={props.userId} title={'Decline'} status={'decline'} onUpdate={props.onUpdate}/>
                 </View>
             }
+            {!props.isFriend && props.isNew &&
+                <TouchableOpacity>
+                    <RequestButton userId={props.userId} title={'Connect'} status={'connect'} onUpdate={props.onUpdate}/>
+                </TouchableOpacity>
+            }
+            
         </View>
    </> )
 }

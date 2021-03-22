@@ -1,11 +1,10 @@
-import React, { useState, useMemo } from 'react';
-import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
+import React  from 'react';
+import {StyleSheet, Text, ActivityIndicator} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
-import { useQuery, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useSelector } from 'react-redux';
-import { ACCEPT_OR_DECLINE_REQUEST } from '../../lib/friend';
-
+import { ACCEPT_OR_DECLINE_REQUEST, SEND_FRIEND_REQUEST } from '../../lib/friend';
 
 
 export function RequestButton (props: any) {
@@ -13,16 +12,25 @@ export function RequestButton (props: any) {
     const currentUserId = useSelector((state: any) => state.user.userId);
 
     const [ doUpdateRequest, { loading: updateRequestLoading } ] = useMutation(ACCEPT_OR_DECLINE_REQUEST);
+    
+    const [ doSendRequest, { loading: sendRequestLoading } ] = useMutation(SEND_FRIEND_REQUEST);
 
-    // console.log(props)
     const onUpdateRequest = async () => {
-        
         try {
-            const { data, errors } = await doUpdateRequest({
-                variables: { input: {currentUserId: currentUserId, userId: props.userId, status: props.status} }
-            });
-            if (data && data?.acceptOrDeclineRequest) {
-                props.onUpdate();
+            if (props.status === 'connect') {
+                const { data, errors } = await doSendRequest({
+                    variables: { input: {currentUserId: currentUserId, userId: props.userId} }
+                });
+                if (data && data?.sendFriendRequest) {
+                    props.onUpdate();
+                }
+            } else {
+                const { data, errors } = await doUpdateRequest({
+                    variables: { input: {currentUserId: currentUserId, userId: props.userId, status: props.status} }
+                });
+                if (data && data?.acceptOrDeclineRequest) {
+                    props.onUpdate();
+                }
             }
         } catch (e) {
           console.log(e);

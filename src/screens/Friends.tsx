@@ -29,9 +29,10 @@ export default function FriendsScreen(props: any) {
           userId={item["id"]}
           currentUserId={currentUserId}
           isFriend={true}
+          isNew={false}
           navigation={props.navigation}
         />
-    ); 
+    );
 
     return (
         <SafeAreaView style={styles.container}>

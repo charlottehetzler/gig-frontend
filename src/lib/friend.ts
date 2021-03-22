@@ -11,6 +11,16 @@ query getFriendsForUser($query: FriendQuery!) {
 }
 `;
 
+export const GET_NEW_USERS = gql`
+query getNewUsers($query: UserQuery!) {
+    getNewUsers(query: $query) {
+        id,
+        firstName, 
+        lastName
+    } 
+}
+`;
+
 export const GET_NUMBER_OF_FRIENDS = gql`
 query getNumberOfFriendsForUser($query: FriendQuery!) {
     getNumberOfFriendsForUser(query: $query) 
