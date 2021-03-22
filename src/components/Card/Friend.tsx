@@ -1,10 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
-import { Avatar, Rating, AirbnbRating } from 'react-native-elements';
+import { Avatar, Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_AVG_RATING_FOR_SKILL } from '../../lib/review';
+import { useMutation } from '@apollo/client';
 import { ACCEPT_OR_DECLINE_REQUEST } from '../../lib/friend';
 
 
@@ -35,13 +34,21 @@ export function Friend (props: any) {
 
     return ( <>
         <View style={styles.card}>
-            <Avatar title={getInitials(props.firstName, props.lastName)} containerStyle={styles.avatar} size={60} />
-            <Text style={styles.name}>{props.firstName + " " + props.lastName}</Text>
+            <View style={styles.cardName}>
+                <Avatar title={getInitials(props.firstName, props.lastName)} containerStyle={styles.avatar} size={60} />
+                <Text style={styles.name}>{props.firstName + " " + props.lastName}</Text>
+            </View>
             <TouchableOpacity style={styles.requestButton} onPress={onUpdateRequest}>
                 {updateRequestLoading &&  
                     <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>
                 }
-                <Text>Accept</Text>
+                {props.isFriend ? <>
+                    <Icon type='material' name='mail-outline' color={GigColors.Black} style={{marginRight: 10}}/>
+                    <Text>Message</Text>
+                </>
+                :
+                    <Text>Accept</Text>
+                }
             </TouchableOpacity>
         </View>
    </> )
@@ -51,12 +58,17 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: GigColors.White,
         borderRadius: 4,
-        paddingVertical: 20,
+        paddingVertical: 10,
         paddingHorizontal: 10,
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         borderBottomColor: GigColors.Grey,
         borderBottomWidth: 1,
+    },
+    cardName: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     avatar: {
         backgroundColor: GigColors.DarkGrey, 
@@ -67,13 +79,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'left',
         fontWeight: '600',
-        color: GigColors.Black,
-        marginBottom: 5
+        color: GigColors.Black
     },
     requestButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderColor: GigColors.Black,
         borderWidth: 1,
-        borderBottomColor: GigColors.Black,
+        borderRadius: 4,
         padding: 5,
-        justifyContent: 'center'
-    }
+      },
 });

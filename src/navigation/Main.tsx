@@ -11,6 +11,8 @@ import DecisionScreen from '../screens/Auth/Decision';
 import LoadingScreen from '../screens/Auth/Loading';
 import CategoriesScreen from '../screens/Skills/Categories';
 import SkillsScreen from '../screens/Skills/Skills';
+import NetworkScreen from '../screens/Network';
+import FriendsScreen from '../screens/Friends';
 
 const MainStack = createStackNavigator();
 export function MainStackScreen() {
@@ -20,6 +22,8 @@ export function MainStackScreen() {
             <MainStack.Screen name="Producers" component={ProducersScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Categories" component={CategoriesScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Skills" component={SkillsScreen} options={{ headerShown: false }}/>
+            <MainStack.Screen name="Network" component={NetworkScreen} options={{ headerShown: false }}/>
+            <MainStack.Screen name="Friends" component={FriendsScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Reviews" component={ReviewsScreen} options={{ headerShown: false }}/>
             <MainStack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }}/>

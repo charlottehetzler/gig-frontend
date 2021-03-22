@@ -6,6 +6,7 @@ import { GigColors } from '../constants/colors';
 import HomeScreen from '../screens/Home';
 import MessagesScreen from '../screens/Message/Messages';
 import MyProfileScreen from '../screens/Profile/MyProfile';
+import NetworkScreen from '../screens/Network';
 
 const Tab = createBottomTabNavigator();
 export function Tabs(props: any) {
@@ -15,11 +16,12 @@ export function Tabs(props: any) {
             tabBarIcon: ({ focused }) => {
                 let iconName : string;
                 let iconType = Platform.OS === 'ios' ? 'ionicon' : 'material'
-                // let color = GigColors.DarkGrey;
                 let color = focused ? GigColors.Black : GigColors.DarkGrey;
 
                 if (route.name === 'Home') {
-                    iconName = "home"
+                    iconName = 'home'
+                } else if (route.name === 'Network') {
+                    iconName = 'people'
                 } else if (route.name === 'Messages') {
                     iconName = 'mail'
                 } else {
@@ -37,6 +39,7 @@ export function Tabs(props: any) {
         }}>
 
             <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Newtork" component={NetworkScreen} />
             <Tab.Screen name="Messages" component={MessagesScreen} />
             <Tab.Screen name="MyProfile" component={MyProfileScreen} />
         </Tab.Navigator>

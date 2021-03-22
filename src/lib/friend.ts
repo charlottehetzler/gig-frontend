@@ -28,7 +28,7 @@ query getFriendRequestsForUser($query: FriendQuery!) {
 `;
 
 export const ACCEPT_OR_DECLINE_REQUEST = gql`
-query acceptOrDeclineRequest($input: FriendQuery!) {
+mutation acceptOrDeclineRequest($input: FriendQuery!) {
     acceptOrDeclineRequest(input: $input) {
         id,
         status
@@ -37,7 +37,7 @@ query acceptOrDeclineRequest($input: FriendQuery!) {
 `;
 
 export const SEND_FRIEND_REQUEST = gql`
-query sendFriendRequest($input: FriendQuery!) {
+mutation sendFriendRequest($input: FriendQuery!) {
     sendFriendRequest(input: $input) {
         id,
         status

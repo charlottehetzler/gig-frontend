@@ -7,6 +7,7 @@ import { useQuery } from '@apollo/client';
 import { useSelector } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { Friend } from '../components/Card/Friend';
+import { NoDataText } from '../components/Placeholder/NoDataText';
 
 
 
@@ -54,6 +55,7 @@ export default function NetworkScreen(props: any) {
           userId={item["userId"]}
           currentUserId={currentUserId}
           onUpdate={fetchRequests}
+          isFriend={false}
           navigation={props.navigation}
         />
       );
@@ -67,24 +69,27 @@ export default function NetworkScreen(props: any) {
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
         
         {numberOfFriends !== 0 ?  
-            <TouchableOpacity style={styles.friendsButton}>
-                <Text>All ({numberOfFriends})</Text>
+            <TouchableOpacity style={styles.friendsButton} onPress={() => props.navigation.navigate('Friends')}>
+                <Text style={styles.h4Style}>All ({numberOfFriends})</Text>
                 <Icon type='material' name='keyboard-arrow-right' />
             </TouchableOpacity>
         :
             <View style={styles.friendsButton}>
-                <Text>All ({numberOfFriends})</Text>
+                <Text style={styles.h4Style}>All ({numberOfFriends})</Text>
                 <Icon type='material' name='keyboard-arrow-right' />
             </View>
         }
-        <View>
-            <Text>Requests</Text>
+        <View style={styles.friendSection}>
+            <Text style={styles.h4Style}>Requests</Text>
             {requests && requests.length > 0 &&
                 <FlatList
-                data={requests}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
+                    data={requests}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
                 />
+            }
+            {requests && requests.length === 0 &&
+                <NoDataText text={`You have no pending friend requests.`}/>
             }
 
         </View>
@@ -101,6 +106,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        paddingHorizontal: 10,
+        paddingVertical: 20
+    },
+    h4Style: {
+        fontSize: 26
+    },
+    friendSection: {
         paddingHorizontal: 10
     }
 });
