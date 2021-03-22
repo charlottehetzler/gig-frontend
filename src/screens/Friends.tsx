@@ -26,7 +26,7 @@ export default function FriendsScreen(props: any) {
         <Friend 
           firstName={item["firstName"]} 
           lastName={item["lastName"]} 
-          userId={item["userId"]}
+          userId={item["id"]}
           currentUserId={currentUserId}
           isFriend={true}
           navigation={props.navigation}

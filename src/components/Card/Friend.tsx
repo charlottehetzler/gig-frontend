@@ -5,19 +5,18 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
 import { useMutation } from '@apollo/client';
 import { ACCEPT_OR_DECLINE_REQUEST } from '../../lib/friend';
+import { MessageButton } from '../Button/MessageButton';
 
 
 export function Friend (props: any) {
-        
-    const { navigate } = props.navigation;
-
+    
+    const [ doUpdateRequest, { loading: updateRequestLoading } ] = useMutation(ACCEPT_OR_DECLINE_REQUEST);
+    
     const getInitials = (firstName : string, lastName : string) => {
         let first = firstName.charAt(0).toUpperCase();
         let last = lastName.charAt(0).toUpperCase();
         return first + last;
     }
-
-    const [ doUpdateRequest, { loading: updateRequestLoading } ] = useMutation(ACCEPT_OR_DECLINE_REQUEST);
 
     const onUpdateRequest = async () => {
         try {
@@ -38,18 +37,14 @@ export function Friend (props: any) {
                 <Avatar title={getInitials(props.firstName, props.lastName)} containerStyle={styles.avatar} size={60} />
                 <Text style={styles.name}>{props.firstName + " " + props.lastName}</Text>
             </View>
-            <TouchableOpacity style={styles.requestButton} onPress={onUpdateRequest}>
-                {updateRequestLoading &&  
-                    <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>
-                }
-                {props.isFriend ? <>
-                    <Icon type='material' name='mail-outline' color={GigColors.Black} style={{marginRight: 10}}/>
-                    <Text>Message</Text>
-                </>
-                :
-                    <Text>Accept</Text>
-                }
-            </TouchableOpacity>
+            {updateRequestLoading &&  
+                <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>
+            }
+            {props.isFriend ? 
+                <MessageButton userId={props.userId} firstName={props.firstName} lastName={props.lastName} navigation={props.navigation}/>
+            :
+                <Text>Accept</Text>
+            }
         </View>
    </> )
 }

@@ -11,6 +11,7 @@ import Communications from 'react-native-communications';
 import { EditProfile } from '../Overlay/EditProfile';
 import moment from 'moment';
 import { GET_SUBMITTED_REVIEW } from '../../lib/review';
+import { MessageButton } from '../Button/MessageButton';
 
 
 export function Profile (props: any) {
@@ -123,14 +124,7 @@ export function Profile (props: any) {
                     <Text style={{color: GigColors.DarkGrey}}>Call</Text>
                   </View>
                 }
-
-                <TouchableOpacity style={[styles.profileAction]} onPress={() => navigate('Chat', {
-                  chatRoomId: chatRoomId, userId: userId,
-                  firstName: props.user.firstName, lastName: props.user.lastName
-                })}>
-                  <Icon type='material' name='mail-outline' color={GigColors.Black} style={{marginRight: 10}}/>
-                  <Text>Message</Text>
-                </TouchableOpacity>
+                <MessageButton userId={userId} firstName={props.user.firstName} lastName={props.user.lastName} navigation={props.navigation}/>
               </View>
               {reviewDisabled ? 
                 <View style={[styles.profileAction, {borderColor: GigColors.DarkGrey}]}>
