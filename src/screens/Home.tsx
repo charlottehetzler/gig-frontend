@@ -6,7 +6,8 @@ import { useQuery } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GigColors } from '../constants/colors';
 import { useSelector } from 'react-redux';
-import SearchBar from '../components/SearchBar';
+import SearchBar from '../components/Search/SearchBar';
+import { SeeAllButton } from '../components/Button/SeeAllButton';
 
 export default function HomeScreen (props: any) {
 
@@ -65,10 +66,7 @@ export default function HomeScreen (props: any) {
         />
         <View style={styles.subHeader}>
           <Text style={styles.h4Style}> All gigs:</Text>
-          <TouchableOpacity style={styles.moreButton} onPress={() => props.navigation.navigate('Categories')}>
-            <Text>See all</Text>
-          </TouchableOpacity>
-
+          <SeeAllButton case={'categories'} navigation={props.navigation}/>
         </View>
         <FlatList
           data={skills}

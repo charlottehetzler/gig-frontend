@@ -1,16 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { GigColors } from '../constants/colors';
-import { NewSkill } from './Overlay/NewSkill';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_All_SKILLS, GET_AVAILABLE_SKILLS_FOR_PRODUCER } from '../lib/skill';
+import { GigColors } from '../../constants/colors';
+import { NewSkill } from '../Overlay/NewSkill';
+import { useQuery } from '@apollo/client';
+import { GET_All_SKILLS, GET_AVAILABLE_SKILLS_FOR_PRODUCER } from '../../lib/skill';
 
 
 export default function SearchBar (props: any) {
 
   const { data: skillsData, error: skillsErros, loading: skillsLoading } = useQuery(GET_All_SKILLS);
 
-  const { data, error, loading, refetch } = useQuery(GET_AVAILABLE_SKILLS_FOR_PRODUCER, {variables: {query: {userId: props.currentUserId} }});
+  const { data, error, loading: availableSkillsLoading, refetch } = useQuery(GET_AVAILABLE_SKILLS_FOR_PRODUCER, {variables: {query: {userId: props.currentUserId} }});
 
   const [ skills, setSkills ] = useState()
   
@@ -65,6 +65,9 @@ export default function SearchBar (props: any) {
     setFiltered(false);
     setSearching(false);
   }
+  const loading = useMemo(() => {
+    return availableSkillsLoading || skillsLoading;
+  }, [ availableSkillsLoading, skillsLoading ]);
 
   return (
     <View>

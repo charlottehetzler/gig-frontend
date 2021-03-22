@@ -18,19 +18,19 @@ export function AuthButtons (props: any) {
 }
 
 const styles = StyleSheet.create({
-    signupText: {
-      fontSize: 20,
-      textAlign: 'center',
-      color: GigColors.Black, 
-      fontWeight: '500'
-    },
-    loginText: {
-      fontSize: 20,
-      textAlign: 'center',
-      color: GigColors.DarkGrey, 
-      fontWeight: '500'
-    },
-    buttons: {
-      marginTop: 50
-    }
+  signupText: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: GigColors.Black, 
+    fontWeight: '500'
+  },
+  loginText: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: GigColors.DarkGrey, 
+    fontWeight: '500'
+  },
+  buttons: {
+    marginTop: 50
+  }
 });

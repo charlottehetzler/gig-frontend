@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/client';
 import { useSelector } from 'react-redux';
 import { GigColors } from '../../constants/colors';
 import { Friend } from '../../components/Card/Friend';
+import FriendSearch from '../../components/Search/FriendSearch';
 
 export default function FriendsScreen(props: any) {
     
@@ -42,6 +43,7 @@ export default function FriendsScreen(props: any) {
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
         
         {friends && friends.length > 0 && <>
+            <FriendSearch isChat={false} navigation={props.navigation}/>
             <FlatList
                 data={friends}
                 renderItem={renderItem}

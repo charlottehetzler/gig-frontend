@@ -9,6 +9,7 @@ import AuthPlaceholder from '../../components/Placeholder/AuthPlaceholder';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon } from 'react-native-elements';
 import { GigColors } from '../../constants/colors';
+import { NewMessage } from '../../components/Overlay/NewMessage';
 
 
 export default function MessagesScreen (props: any) {
@@ -27,19 +28,35 @@ export default function MessagesScreen (props: any) {
 
   const isFocused = props.navigation.isFocused();
 
+  const [ isAddMode, setIsAddMode ] = useState(false);
+
   useEffect(() => { 
     fetchChatRooms();     
   }, [isFocused, chatRooms]);
 
+  // const fetchChatRooms = async () => {
+  //   try {
+  //     const rooms = await refetch();
+  //     setChatRooms(rooms.data['getUser']['allChatRooms']);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
+
   const fetchChatRooms = async () => {
     try {
-      const rooms = await refetch();
-      setChatRooms(rooms.data['getUser']['allChatRooms']);
-    } catch (e) {
-      console.log(e);
+      const refetchData = await refetch();
+      if (refetchData && refetchData?.getUser && refetchData?.getUser?.allChatRooms) {
+        setChatRooms(refetchData && refetchData?.getUser && refetchData?.getUser?.allChatRooms);
+      }
+    } catch (e) {
+       console.log(e)
     }
-  }
-  
+}
+  const closeModal = () => setIsAddMode(false);
+
+  const closeModal2 = () => setIsAddMode(false);
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -50,9 +67,11 @@ export default function MessagesScreen (props: any) {
         {!isLoggedIn &&
           <AuthPlaceholder title={'you have not received any messages yet. Signup or Login to get started!'}/>
         }
-        <TouchableOpacity style={styles.newMessage}>
+        <TouchableOpacity style={styles.newMessage}  onPress={() => setIsAddMode(true)}>
           <Icon type='material' name='edit' color={GigColors.DarkGrey} size={20}/>
           <Text style={{color: GigColors.DarkGrey}}>New Messaage</Text>
+          <NewMessage visible={isAddMode} onCancel={closeModal} onSelect={closeModal2}navigation={props.navigation}/>
+
         </TouchableOpacity>
         {chatRooms && chatRooms.length > 0 &&
           <ScrollView>

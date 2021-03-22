@@ -6,6 +6,7 @@ import useProfile from '../../helpers/user';
 import { Profile } from '../../components/Card/Profile';
 import { DefaultHeader } from '../../components/Header/DefaultHeader';
 import { NoDataText } from '../../components/Placeholder/NoDataText';
+import { SeeAllButton } from '../../components/Button/SeeAllButton';
 
 export default function ProfileScreen(props: any) {
 
@@ -42,16 +43,12 @@ export default function ProfileScreen(props: any) {
       <ScrollView>
         {user && <>
         <Profile initials={initials} fullName={fullName} user={user} isMe={false} skillId={skillId} navigation={props.navigation} refetch={fetchReviews }/>
-        
-        <View style={styles.profileSection}>
-          <View style={[styles.sectionHeader, {marginLeft: 10}]}>
-            <Text style={styles.h4Style}>{user.firstName}'s reviews</Text>
-            {lastReviews && hasLastReviews() &&
-              <TouchableOpacity style={styles.moreButton} onPress={() => props.navigation.navigate('Reviews', {userId: userId, firstName: 'My'})}>
-                <Text>See all</Text>
-              </TouchableOpacity>
-            }
-          </View>
+    
+        <View style={[styles.sectionHeader, {marginLeft: 10}]}>
+          <Text style={styles.h4Style}>{user.firstName}'s reviews</Text>
+          {lastReviews && hasLastReviews() &&
+            <SeeAllButton userId={userId} firstName={user.firstName + 's'} navigation={props.navigation} case={'reviews'}/>
+          }
         </View>
         {lastReviews && hasLastReviews() ? 
           <View>
@@ -80,11 +77,6 @@ export default function ProfileScreen(props: any) {
 }
 
 const styles = StyleSheet.create({
-  profileSection: {
-    alignItems: 'flex-start',
-    marginVertical: 5,
-    marginTop: 15,
-  },
   h4Style: {
     marginTop: 15,
     fontSize: 24,
@@ -93,7 +85,9 @@ const styles = StyleSheet.create({
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginVertical: 5,
+    marginBottom: 15,
   },
   moreButton: {
     backgroundColor: GigColors.White,
@@ -105,6 +99,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: "center",
     marginBottom: 0,
-    marginLeft: 10
+    marginRight: 16
   },
+  subHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between'
+  }
 });

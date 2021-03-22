@@ -11,6 +11,7 @@ import { DefaultHeader } from '../../components/Header/DefaultHeader';
 import { NoDataText } from '../../components/Placeholder/NoDataText';
 import { Icon } from 'react-native-elements';
 import { EditSkills } from '../../components/Overlay/EditSkills';
+import { SeeAllButton } from '../../components/Button/SeeAllButton';
 
 
 export default function MyProfileScreen(props: any) {
@@ -83,15 +84,11 @@ export default function MyProfileScreen(props: any) {
           }
         </View>
 
-        <View style={styles.profileSection}>
-          <View style={[styles.sectionHeader, {marginLeft: 10}]}>
-            <Text style={styles.h4Style}>My reviews</Text>
-            {lastReviews && lastReviews.length > 0 &&
-              <TouchableOpacity style={styles.moreButton} onPress={() => props.navigation.navigate('Reviews', {userId: myUserId, firstName: 'My'})}>
-                <Text>See all</Text>
-              </TouchableOpacity>
-            }
-          </View>
+        <View style={[styles.sectionHeader, {marginLeft: 10}]}>
+          <Text style={styles.h4Style}>My reviews</Text>
+          {lastReviews && lastReviews.length > 0 &&
+            <SeeAllButton userId={myUserId} firstName={'My'} navigation={props.navigation} case={'reviews'}/>
+          }
         </View>
         {lastReviews && lastReviews.length > 0 ? 
           <View style={{marginBottom: 100}}>

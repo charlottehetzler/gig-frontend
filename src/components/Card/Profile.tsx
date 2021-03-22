@@ -124,7 +124,7 @@ export function Profile (props: any) {
                     <Text style={{color: GigColors.DarkGrey}}>Call</Text>
                   </View>
                 }
-                <MessageButton userId={userId} firstName={props.user.firstName} lastName={props.user.lastName} navigation={props.navigation}/>
+                <MessageButton title={'Message'} userId={userId} firstName={props.user.firstName} lastName={props.user.lastName} navigation={props.navigation} isSearchBar={false}/>
               </View>
               {reviewDisabled ? 
                 <View style={[styles.profileAction, {borderColor: GigColors.DarkGrey}]}>

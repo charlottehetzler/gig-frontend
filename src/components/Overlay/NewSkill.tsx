@@ -22,17 +22,15 @@ export function NewSkill ( props: any ) {
     const [ categories, setCategories] = useState()
     
     const [category, setCategory] = useState();
+    
     const [categoryIsValid, setCategoryIsValid] = useState(false);
     
     const [skill, setSkill] = useState();
+    
     const [skillIsValid, setSkillIsValid] = useState(false);
     
     const [description, setDescription] = useState();
     
-    const [header, setHeader] = useState('Add a new skill');
-    
-    const [buttonText, setButtonText] = useState('Publish Skill');
-
     const [ isPersonal, setIsPersonal ] =  useState(false);
     
     
@@ -64,9 +62,8 @@ export function NewSkill ( props: any ) {
         });
     }
 
-    
+    const isValid = () => { return skillIsValid && categoryIsValid }
 
-    const isValid = () => { return skillIsValid && categoryIsValid;}
     const handleSubmit = async () => {
         try {
             const { data, errors } = await doSaveSkill({
@@ -93,12 +90,14 @@ export function NewSkill ( props: any ) {
         <Modal visible={props.visible} animationType='slide'>
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
             <View style={styles.inputContainer}>
+                
                 <View style={styles.headerWrapper}>
                     <TouchableWithoutFeedback onPress={props.onCancel}>
                         <Icon type='material' name='close' style={styles.icon} size={25}/>
                     </TouchableWithoutFeedback>
-                    <Text style={styles.title}>{header}</Text>
+                    <Text style={styles.title}>Add a new skill</Text>
                 </View>
+
                 <View style={styles.container}>
                     <View style={[styles.input, {zIndex: 9999}]}>
                         <Text style={styles.inputLabel}>select area of your job</Text>
@@ -117,6 +116,7 @@ export function NewSkill ( props: any ) {
                             searchable={true}
                         />
                     </View>
+
                     <View style={[styles.input, {zIndex: 999}]}>
                         <Text style={styles.inputLabel}>add your skill title</Text>
                         <TextInput
@@ -138,16 +138,17 @@ export function NewSkill ( props: any ) {
                             keyboardType={'default'}
                         />
                     </View>
+
                     <View style={styles.button}>
                         {isValid() ? 
-                            <DefaultButton title={buttonText} onPress={handleSubmit} />
+                            <DefaultButton title={'Publish Skill'} onPress={handleSubmit} />
                         :
-                            <DisabledDefaultButton title={buttonText}/>
+                            <DisabledDefaultButton title={'Publish Skill'}/>
                         }
                     </View>
+
                 </View>
             </View>
-
         </Modal>
     );
 }
@@ -201,29 +202,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         color: GigColors.Black
     },
-    dateWrapper: {
-        flexDirection: 'row', 
-        alignItems: 'center', 
-        justifyContent: 'space-between',
-        marginVertical: 15,
-    },
-    date: {
-        flex: 1
-    }, 
     button: {
         marginTop: 15
-    },
-    dateInput: {
-        color: GigColors.Black
-    },
-    datePicker:{
-        paddingHorizontal: 10,
-        paddingVertical: 15,
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-        borderWidth: 1,
-        borderColor: GigColors.Grey,
-        borderRadius: 5,
-        color: GigColors.Black
     }
  });

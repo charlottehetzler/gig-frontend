@@ -24,7 +24,6 @@ export default function NetworkScreen(props: any) {
     const [ requests, setRequests ] = useState();
     
     const [ newUsers, setNewUsers ] = useState();
-    console.log(newUserData)
 
     useEffect(() => {
         onUpdate()
@@ -40,12 +39,11 @@ export default function NetworkScreen(props: any) {
         if (newUserData && newUserData?.getNewUsers) {
             setNewUsers(newUserData?.getNewUsers)
         }
-    }, [friendData, requestData]);
+    }, [friendData, requestData, newUserData]);
 
     const fetchRequests = async () => {
         try {
             const refetchData = await requestRefetch();
-
             if (refetchData && refetchData?.getFriendRequestsForUser) {
                 setRequests(refetchData?.getFriendRequestsForUser);
             }
@@ -57,7 +55,6 @@ export default function NetworkScreen(props: any) {
     const fetchNumberOfFriends = async () => {
         try {
             const refetchData = await friendRefetch();
-
             if (refetchData && refetchData?.getNumberOfFriendsForUser) {
                 setNumberOfFriends(refetchData?.getNumberOfFriendsForUser);
             }

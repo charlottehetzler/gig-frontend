@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { Skill } from '../Card/Skill';
 import { UPDATE_RELATION, GET_All_SKILLS_FOR_PRODUCER} from '../../lib/skill';
 import { NoDataText } from '../Placeholder/NoDataText';
-import SearchBar from '../SearchBar';
+import SearchBar from '../Search/SearchBar';
 import useProfile from '../../helpers/user';
 
 let ADDED_SKILLS: any[] = [];

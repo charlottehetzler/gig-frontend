@@ -42,7 +42,7 @@ export function Friend (props: any) {
                 <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>
             }
             {props.isFriend && !props.isNew &&
-                <MessageButton userId={props.userId} firstName={props.firstName} lastName={props.lastName} navigation={props.navigation}/>
+                <MessageButton title={'Message'} userId={props.userId} firstName={props.firstName} lastName={props.lastName} navigation={props.navigation} isSearchBar={false}/>
             }
             {!props.isFriend && !props.isNew && 
                 <View style={styles.requestButtons}>

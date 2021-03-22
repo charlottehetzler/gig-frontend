@@ -24,14 +24,28 @@ export function MessageButton (props: any) {
         }
       }, [data]);
 
+    const handleSelect = () => {
+        navigate('Chat', {
+            chatRoomId: chatRoomId, userId: props.userId, firstName: props.firstName, lastName: props.lastName
+        });
+        if (props.isSearchBar) {
+            props.onSelect();
+        }
+    }
+
     return (<>
         {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
-        
-        <TouchableOpacity style={[styles.profileAction]} onPress={() => navigate('Chat', {
-            chatRoomId: chatRoomId, userId: props.userId, firstName: props.firstName, lastName: props.lastName
-        })}>
-            <Icon type='material' name='mail-outline' color={GigColors.Black} style={{marginRight: 10}}/>
-            <Text>Message</Text>
+
+        <TouchableOpacity style={[props.isSearchBar ? styles.searchAction : styles.profileAction]} onPress={handleSelect}>
+            {!props.isSearchBar ? <>
+                <Icon type='material' name='mail-outline' color={GigColors.Black} style={{marginRight: 10}}/>
+                <Text style={props.isSearchBar ? styles.searchText : null}>{props.title}</Text>
+            </>
+            :   <>
+                <Text style={props.isSearchBar ? styles.searchText : null}>{props.title}</Text>
+                <Icon type='material' name='keyboard-arrow-right' color={GigColors.DarkGrey} />
+                </>
+            }
         </TouchableOpacity>
     </>)
 }
@@ -46,5 +60,13 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 4,
         padding: 5,
-      },
+    },
+    searchAction: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+    },
+    searchText: {
+        fontSize: 18
+    }
 });
