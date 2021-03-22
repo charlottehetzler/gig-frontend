@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator, ViewPropTypes } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Skill } from '../../components/Card/Skill';
 import { Profile } from '../../components/Card/Profile';
 import { Review } from '../../components/Card/Review';
