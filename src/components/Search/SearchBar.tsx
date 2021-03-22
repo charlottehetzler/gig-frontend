@@ -65,6 +65,7 @@ export default function SearchBar (props: any) {
     setFiltered(false);
     setSearching(false);
   }
+  
   const loading = useMemo(() => {
     return availableSkillsLoading || skillsLoading;
   }, [ availableSkillsLoading, skillsLoading ]);

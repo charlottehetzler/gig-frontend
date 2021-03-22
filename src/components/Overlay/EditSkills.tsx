@@ -63,6 +63,7 @@ export function EditSkills ( props: any ) {
             console.log(e);
         }
     }
+
     const handleDelete = async (skillId: number, isPersonal: boolean, addMode: boolean) => {
         try {
             const { data, errors } = await doUpdateRelation({
@@ -80,6 +81,7 @@ export function EditSkills ( props: any ) {
             console.log(e);
         }
     }
+    
     const onSave = () => {
         ADDED_SKILLS = [];
         setAddedSkills(ADDED_SKILLS);
@@ -133,7 +135,7 @@ export function EditSkills ( props: any ) {
                         {skills && skills.length > 0 ?
                             <View style={styles.overview}>
                                 {skills.map((skill: any) => { return (
-                                    <TouchableOpacity >
+                                    <TouchableOpacity key={skill.skillId}>
                                         <Skill name={skill.name} id={skill.id} editMode={true} key={skill.skillId} darkMode={false} onDelete={handleDelete} addMode={false}/>
                                     </TouchableOpacity>
                                 )})}

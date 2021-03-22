@@ -2,11 +2,17 @@ import React, { useState, useMemo } from 'react';
 import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, Switch } from 'react-native';
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../../constants/colors';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Icon, Avatar } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { UPDATE_PROFILE } from '../../lib/user';
-import { Gig } from '../Card/Gig';
+import { GET_ALL_AVAILABLE_LANGUAGES_FOR_USER, GET_ALL_LANGUAGES, GET_ALL_LANGUAGES_FOR_USER, ADD_OR_UPDATE_LANGUAGE_FOR_USER } from '../../lib/language';
+import { NoDataText } from '../Placeholder/NoDataText';
+import { Skill } from '../Card/Skill';
+import LanguageSearch from '../Search/LanguageSearch';
+import DropDownPicker from 'react-native-dropdown-picker';
+
+let ADDED_LANGUAGES: any[] = [];
 
 export function EditProfile ( props: any ) {
 
@@ -16,19 +22,65 @@ export function EditProfile ( props: any ) {
 
     const [ doSaveProfile, { loading: saveProfileLoading } ] = useMutation(UPDATE_PROFILE);
     
-    const [firstName, setFirstName] = useState(user.firstName);
+    const [ doUpdateRelation, { loading: updateRelationLoading } ] = useMutation(ADD_OR_UPDATE_LANGUAGE_FOR_USER);
     
-    const [lastName, setLastName] = useState(user.lastName);
+    const { data, loading: languageLoading, error, refetch } = useQuery(GET_ALL_LANGUAGES_FOR_USER , {variables: {query: {userId: currentUserId} }});  
     
-    const [email, setEmail] = useState();
-    
-    const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
-    
-    const [nativeLanguage, setNativeLanguage] = useState(user.nativeLanguage);
-    
-    const [changesMade, setChangesMade] = useState(false);
+    const { data: languageData, loading: avilLanguageLoading, error: languageError, refetch: languageRefetch } = useQuery(GET_ALL_AVAILABLE_LANGUAGES_FOR_USER, {variables: {query: {currentUserId: currentUserId } }});
 
-    const [isEnabled, setIsEnabled] = useState(user.isCallable);
+    const [ languages, setLanguages ] = useState();
+    
+    const [ firstName, setFirstName ] = useState(user.firstName);
+    
+    const [ lastName, setLastName ] = useState(user.lastName);
+    
+    const [ email, setEmail ] = useState();
+    
+    const [ phoneNumber, setPhoneNumber ] = useState(user.phoneNumber);
+    
+    const [ nativeLanguage, setNativeLanguage ] = useState(user.nativeLanguage);
+    
+    const [ currentLanguages, setCurrentLanguages ] = useState();
+    
+    const [ addedLanguages, setaddedLanguages ] = useState();
+    
+    const [ changesMade, setChangesMade ] = useState(false);
+
+    const [ isEnabled, setIsEnabled ] = useState(user.isCallable);
+    
+    useMemo(() => {
+        if (data && data?.getAllLanguagesForUser) {
+            setCurrentLanguages(data?.getAllLanguagesForUser);
+        }
+        if (languageData && languageData?.getAllAvilableLanguagesForUser) {
+            const availableLanguages = (languageData.getAllAvilableLanguagesForUser as any[]).map(language => {
+                return {label: language.name, value: language.id};
+            });
+            setLanguages(availableLanguages);
+        }
+    }, [data, languageData]);
+
+    const fetchCurrentLanguages = async () => {
+        try {
+            const refetchData = await refetch();
+            if (refetchData && refetchData?.getAllLanguagesForUser) {
+                setCurrentLanguages(refetchData?.getAllLanguagesForUser);
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const fetchAvailableLanguages = async () => {
+        try {
+            const refetchData = await languageRefetch();
+            if (refetchData && refetchData?.getAllAvilableLanguagesForUser) {
+                setLanguages(refetchData?.getAllAvilableLanguagesForUser);
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
     
     const toggleSwitch = () => {
         setIsEnabled((previousState: any) => !previousState);
@@ -55,6 +107,42 @@ export function EditProfile ( props: any ) {
         setChangesMade(true);
     }
 
+    const languageChange = async (item: any) => {
+        try {
+            // TODO: check incoming item
+            // for each selected language, push in added array
+            // array as input for mutation --> change accordingly in backend
+            
+            // languages.map((lang: any) => {
+            //     if (item.value === lang.value) {
+            //         setCategory(lang);
+            //         setCategoryIsValid(true);
+            //     }
+            // });
+            const { data, errors } = await doUpdateRelation({
+                variables: { input: { userId: currentUserId, languageId: id, isActive: isPersonal }}
+            });
+
+            if (data && data?.addOrUpdateLanguageForUser) {
+                setChangesMade(true);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const handleDelete = async (languageId: number, isPersonal: boolean, addMode: boolean) => {
+        try {
+            const { data, errors } = await doUpdateRelation({
+                variables: { input: { userId: currentUserId, languageId: languageId, isPersonal: isPersonal }}
+            });
+            await fetchCurrentLanguages();
+            setChangesMade(true);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     const handleSubmit = async () => {
         try {
             const { data, errors } = await doSaveProfile({
@@ -63,6 +151,8 @@ export function EditProfile ( props: any ) {
                     phoneNumber: phoneNumber, nativeLanguage: nativeLanguage, isCallable: isEnabled
                 }}
             });
+
+            setChangesMade(false);
             props.onCancel()
         } catch (e) {
           console.log(e);
@@ -135,7 +225,7 @@ export function EditProfile ( props: any ) {
                         />
                     </View>
                     <View style={styles.input}>
-                        <Text style={styles.inputLabel}>phone number</Text>
+                        <Text style={styles.inputLabel}>Receive Calls?</Text>
                         <Switch
                             trackColor={{ false: GigColors.White, true: GigColors.Black }}
                             thumbColor={isEnabled ? GigColors.White : GigColors.Black}
@@ -153,6 +243,37 @@ export function EditProfile ( props: any ) {
                             onChangeText={nativeLanguageChangeHandler}
                             keyboardType={'default'}
                         />
+                    </View>
+                    <View style={styles.input}>
+                        <Text style={styles.inputLabel}>more languages</Text>
+                        <View style={styles.languageSection}>
+                            {currentLanguages && currentLanguages.length > 0 ?
+                                <View style={styles.overview}>
+                                    {currentLanguages.map((lang: any) => { return (
+                                        <TouchableOpacity >
+                                            <Skill name={lang.name} id={lang.id} editMode={true} key={lang.id} darkMode={false} onDelete={handleDelete} addMode={false}/>
+                                        </TouchableOpacity>
+                                    )})}
+                                </View>
+                            :
+                                <NoDataText text={'You haven\'t added any other languages yet.'}/>
+                            }
+                            <DropDownPicker
+                                items={languages}
+                                multiple={true}
+                                placeholder="Select a category"
+                                onChangeItem={item => handleUpdate(item)}
+                                containerStyle={{height: 50}}
+                                dropDownStyle={{backgroundColor: '#FFFFFF'}}
+                                itemStyle={{backgroundColor: '#FFFFFF', borderBottomColor: '#C4C4C4', borderBottomWidth: 1, paddingVertical:20}}
+                                zIndex={5000}
+                                arrowColor={'#7F7F7F'}
+                                labelStyle={{color: '#7F7F7F', textTransform:'uppercase'}}
+                                activeLabelStyle={{color: GigColors.Black}}
+                                dropDownMaxHeight={600}
+                                searchable={true}
+                            />
+                        </View>
                     </View>
                 </View>
             </View>
@@ -222,5 +343,18 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         color: GigColors.Black
     },
-
+    languageSection: {
+        marginTop: 25,
+    },
+    overview: {
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        marginTop: 10,
+        flexDirection: 'row',
+        flexWrap: 'wrap'
+    },
+    smallSubheader: {
+        color: GigColors.DarkGrey,
+        fontSize: 14
+    },
  });
