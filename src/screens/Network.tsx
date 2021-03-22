@@ -52,7 +52,7 @@ export default function NetworkScreen(props: any) {
         <Friend 
           firstName={item["firstName"]} 
           lastName={item["lastName"]} 
-          userId={item["userId"]}
+          userId={item["id"]}
           currentUserId={currentUserId}
           onUpdate={fetchRequests}
           isFriend={false}
@@ -63,36 +63,35 @@ export default function NetworkScreen(props: any) {
 
     return (
         <SafeAreaView style={styles.container}>
-        <View>
-            <DefaultHeader title={'my network'} navigation={props.navigation} goBack={true}/>
-        </View> 
-        {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
-        
-        {numberOfFriends !== 0 ?  
-            <TouchableOpacity style={styles.friendsButton} onPress={() => props.navigation.navigate('Friends')}>
-                <Text style={styles.h4Style}>All ({numberOfFriends})</Text>
-                <Icon type='material' name='keyboard-arrow-right' />
-            </TouchableOpacity>
-        :
-            <View style={styles.friendsButton}>
-                <Text style={styles.h4Style}>All ({numberOfFriends})</Text>
-                <Icon type='material' name='keyboard-arrow-right' />
-            </View>
-        }
-        <View style={styles.friendSection}>
-            <Text style={styles.h4Style}>Requests</Text>
-            {requests && requests.length > 0 &&
-                <FlatList
-                    data={requests}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                />
-            }
-            {requests && requests.length === 0 &&
-                <NoDataText text={`You have no pending friend requests.`}/>
-            }
+            <View>
+                <DefaultHeader title={'my network'} navigation={props.navigation} goBack={true}/>
+            </View> 
+            {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
 
-        </View>
+            {numberOfFriends !== 0 ?  
+                <TouchableOpacity style={styles.friendsButton} onPress={() => props.navigation.navigate('Friends')}>
+                    <Text style={styles.h4Style}>All ({numberOfFriends})</Text>
+                    <Icon type='material' name='keyboard-arrow-right' />
+                </TouchableOpacity>
+            :
+                <View style={styles.friendsButton}>
+                    <Text style={styles.h4Style}>All ({numberOfFriends})</Text>
+                    <Icon type='material' name='keyboard-arrow-right' />
+                </View>
+            }
+            <View style={styles.friendSection}>
+                <Text style={[styles.h4Style, {paddingLeft: 10, paddingBottom: 10}]}>Requests</Text>
+                {requests && requests.length > 0 &&
+                    <FlatList
+                        data={requests}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id}
+                    />
+                }
+                {requests && requests.length === 0 &&
+                    <NoDataText text={`You have no pending friend requests.`}/>
+                }
+            </View>
         
         </SafeAreaView>
     );
@@ -100,19 +99,19 @@ export default function NetworkScreen(props: any) {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: StatusBar.currentHeight || 0
+        marginTop: StatusBar.currentHeight || 0,
     },
     friendsButton: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-        paddingVertical: 20
+        paddingVertical: 20,
     },
     h4Style: {
         fontSize: 26
     },
     friendSection: {
-        paddingHorizontal: 10
+        paddingBottom: 30
     }
 });

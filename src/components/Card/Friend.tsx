@@ -6,6 +6,7 @@ import { GigColors } from '../../constants/colors';
 import { useMutation } from '@apollo/client';
 import { ACCEPT_OR_DECLINE_REQUEST } from '../../lib/friend';
 import { MessageButton } from '../Button/MessageButton';
+import { RequestButton } from '../Button/RequestButton';
 
 
 export function Friend (props: any) {
@@ -30,7 +31,7 @@ export function Friend (props: any) {
           console.log(e);
         }
     }
-
+console.log(props)
     return ( <>
         <View style={styles.card}>
             <View style={styles.cardName}>
@@ -42,8 +43,11 @@ export function Friend (props: any) {
             }
             {props.isFriend ? 
                 <MessageButton userId={props.userId} firstName={props.firstName} lastName={props.lastName} navigation={props.navigation}/>
-            :
-                <Text>Accept</Text>
+            :   
+                <View style={styles.requestButtons}>
+                    <RequestButton userId={props.userId} title={'Accept'} status={'accept'} onUpdate={props.onUpdate}/>
+                    <RequestButton userId={props.userId} title={'Decline'} status={'decline'} onUpdate={props.onUpdate}/>
+                </View>
             }
         </View>
    </> )
@@ -76,13 +80,17 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: GigColors.Black
     },
-    requestButton: {
+    requestButtons: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
+        padding: 5,
+    },
+    requestButton: {
         borderColor: GigColors.Black,
         borderWidth: 1,
         borderRadius: 4,
         padding: 5,
-      },
+        marginLeft: 5
+    },
 });

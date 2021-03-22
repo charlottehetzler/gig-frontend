@@ -60,17 +60,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         textTransform: 'uppercase',
         color: GigColors.Black
-    },
-    item: {
-        backgroundColor: GigColors.White,
-        borderColor: GigColors.Black,
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 15,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
+    }
 });

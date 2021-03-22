@@ -39,7 +39,7 @@ export function Tabs(props: any) {
         }}>
 
             <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Newtork" component={NetworkScreen} />
+            <Tab.Screen name="Network" component={NetworkScreen} />
             <Tab.Screen name="Messages" component={MessagesScreen} />
             <Tab.Screen name="MyProfile" component={MyProfileScreen} />
         </Tab.Navigator>
