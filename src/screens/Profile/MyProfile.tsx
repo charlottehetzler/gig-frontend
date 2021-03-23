@@ -46,7 +46,7 @@ export default function MyProfileScreen(props: any) {
   return ( 
     <SafeAreaView>
       <View>
-        <DefaultHeader title={'My Profile'} navigation={props.navigation}/>
+        <DefaultHeader title={'Profile'} navigation={props.navigation}/>
       </View>
       
       {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}

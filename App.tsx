@@ -35,16 +35,22 @@ export default function App () {
   // }
 
   const client = new ApolloClient({
-    uri: 'http://localhost:3000/graphql',
+    uri: 'https://00f1f8828dc8.ngrok.io/graphql',
     cache: new InMemoryCache(), 
   });
 
   const Drawer = createDrawerNavigator();
 
+  const MyTheme = {
+    colors: {
+      background: GigColors.White,
+    },
+  };
+
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        <NavigationContainer>
+        <NavigationContainer theme={MyTheme}>
           <Drawer.Navigator initialRouteName="Home" drawerContentOptions={{activeTintColor: GigColors.Black}}>
             <Drawer.Screen name="Home" component={MainStackScreen}/>
             {/* <Drawer.Screen name="Logout" component={AuthStackScreen} /> */}

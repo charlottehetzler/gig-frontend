@@ -86,6 +86,7 @@ export function EditSkills ( props: any ) {
         ADDED_SKILLS = [];
         setAddedSkills(ADDED_SKILLS);
         setChangesMade(false);
+        fetchCurrentSkills();
         props.onCancel();
     }
 

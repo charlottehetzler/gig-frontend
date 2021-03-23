@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   h4Style: {
     marginTop: 25,
-    fontSize: 26
+    fontSize: 26, 
   },
   flatListHorizontal: {
     height: 100

@@ -29,7 +29,7 @@ export default function CategoriesScreen(props: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={'All Categories'} navigation={props.navigation} goBack={true}/>
+        <DefaultHeader title={'Categories'} navigation={props.navigation} goBack={true}/>
       </View> 
       {catLoading &&  <ActivityIndicator size="small" color='#000000' style={{alignItems:'center', justifyContent:'center'}}/>}
 

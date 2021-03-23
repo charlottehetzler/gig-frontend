@@ -38,7 +38,7 @@ export default function FriendsScreen(props: any) {
     return (
         <SafeAreaView style={styles.container}>
         <View>
-            <DefaultHeader title={'My Friends'} navigation={props.navigation} goBack={true}/>
+            <DefaultHeader title={'Friends'} navigation={props.navigation} goBack={true}/>
         </View> 
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
         

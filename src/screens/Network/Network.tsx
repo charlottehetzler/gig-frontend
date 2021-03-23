@@ -113,7 +113,7 @@ export default function NetworkScreen(props: any) {
     return (
         <SafeAreaView style={styles.container}>
             <View>
-                <DefaultHeader title={'My Network'} navigation={props.navigation} goBack={true}/>
+                <DefaultHeader title={'Network'} navigation={props.navigation} goBack={true}/>
             </View> 
             {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
 

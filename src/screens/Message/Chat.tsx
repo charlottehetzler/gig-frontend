@@ -99,7 +99,7 @@ export default function ChatScreen (props: any) {
         }
         <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={100}
+            // keyboardVerticalOffset={100}
             style={{width: '100%'}}
         >
         <View style={styles.container}>

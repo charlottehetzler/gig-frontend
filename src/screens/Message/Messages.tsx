@@ -58,7 +58,7 @@ export default function MessagesScreen (props: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={'My Messages'} navigation={props.navigation}/>
+        <DefaultHeader title={'Messages'} navigation={props.navigation}/>
       </View>
       {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       <View>
