@@ -56,7 +56,7 @@ export default function ProducersScreen(props: any) {
         <FlatList
           data={producers}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
         />
       </>}
       {producers && producers.length === 0 && <> 

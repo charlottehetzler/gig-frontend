@@ -17,7 +17,7 @@ export default function ChatScreen (props: any) {
 
     const { data, loading, error, refetch } = useQuery(GET_MESSAGES_BY_CHAT_ROOM, {variables: {query: {chatRoomId: chatRoomId }}, pollInterval: 500,});
 
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState();
     
     const [ doSaveMessage, { loading: saveMessageLoading } ] = useMutation(CREATE_MESSAGE);
     
@@ -92,6 +92,7 @@ export default function ChatScreen (props: any) {
             data={messages}
             renderItem={({ item }) => <ChatMessage myId={currentUserId} message={item} />}
             inverted
+            keyExtractor={item => item.id.toString()}
           />
         :
         <View></View>

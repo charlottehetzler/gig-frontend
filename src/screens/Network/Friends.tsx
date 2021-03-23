@@ -47,7 +47,7 @@ export default function FriendsScreen(props: any) {
             <FlatList
                 data={friends}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.id.toString()}
             />
         </>}
         </SafeAreaView>

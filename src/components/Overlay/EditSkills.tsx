@@ -135,8 +135,8 @@ export function EditSkills ( props: any ) {
                         {skills && skills.length > 0 ?
                             <View style={styles.overview}>
                                 {skills.map((skill: any) => { return (
-                                    <TouchableOpacity key={skill.skillId}>
-                                        <Skill name={skill.name} id={skill.id} editMode={true} key={skill.skillId} darkMode={false} onDelete={handleDelete} addMode={false}/>
+                                    <TouchableOpacity key={skill.id}>
+                                        <Skill name={skill.name} id={skill.id} editMode={true} key={skill.id} darkMode={false} onDelete={handleDelete} addMode={false}/>
                                     </TouchableOpacity>
                                 )})}
                             </View>

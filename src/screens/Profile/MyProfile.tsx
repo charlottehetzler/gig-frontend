@@ -93,7 +93,7 @@ export default function MyProfileScreen(props: any) {
         {lastReviews && lastReviews.length > 0 ? 
           <View style={{marginBottom: 100}}>
             {lastReviews.map((review : any) => { return (
-              <View>
+              <View key={review.id}>
                 <Review 
                   comment={review["comment"]} 
                   rating={review["rating"]} 

@@ -28,10 +28,7 @@ query getAllLanguagesForUser ($query: LanguageQuery!) {
 `;
 
 export const ADD_OR_UPDATE_LANGUAGE_FOR_USER = gql`
-mutation addOrUpdateLanguageForUser ($input: LanguageQuery!) {
-    addOrUpdateLanguageForUser (input: $input) {
-        id,
-        name
-    } 
+mutation addOrUpdateLanguageForUser($userId: Float!, $languageIds: [Float!]!, $isActive: Boolean!) {
+    addOrUpdateLanguageForUser(userId: $userId,languageIds: $languageIds, isActive: $isActive)
 }
 `;

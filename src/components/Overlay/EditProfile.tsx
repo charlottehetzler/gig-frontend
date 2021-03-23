@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, Switch } from 'react-native';
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../../constants/colors';
@@ -9,8 +9,8 @@ import { UPDATE_PROFILE } from '../../lib/user';
 import { GET_ALL_AVAILABLE_LANGUAGES_FOR_USER, GET_ALL_LANGUAGES, GET_ALL_LANGUAGES_FOR_USER, ADD_OR_UPDATE_LANGUAGE_FOR_USER } from '../../lib/language';
 import { NoDataText } from '../Placeholder/NoDataText';
 import { Skill } from '../Card/Skill';
-import LanguageSearch from '../Search/LanguageSearch';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { ScrollView } from 'react-native-gesture-handler';
 
 let ADDED_LANGUAGES: any[] = [];
 
@@ -25,8 +25,8 @@ export function EditProfile ( props: any ) {
     const [ doUpdateRelation, { loading: updateRelationLoading } ] = useMutation(ADD_OR_UPDATE_LANGUAGE_FOR_USER);
     
     const { data, loading: languageLoading, error, refetch } = useQuery(GET_ALL_LANGUAGES_FOR_USER , {variables: {query: {userId: currentUserId} }});  
-    
-    const { data: languageData, loading: avilLanguageLoading, error: languageError, refetch: languageRefetch } = useQuery(GET_ALL_AVAILABLE_LANGUAGES_FOR_USER, {variables: {query: {currentUserId: currentUserId } }});
+    console.log(data)
+    const { data: languageData, loading: availLanguageLoading, error: languageError, refetch: languageRefetch } = useQuery(GET_ALL_AVAILABLE_LANGUAGES_FOR_USER, {variables: {query: {userId: currentUserId } }});
 
     const [ languages, setLanguages ] = useState();
     
@@ -42,18 +42,23 @@ export function EditProfile ( props: any ) {
     
     const [ currentLanguages, setCurrentLanguages ] = useState();
     
-    const [ addedLanguages, setaddedLanguages ] = useState();
+    const [ addedLanguages, setAddedLanguages ] = useState();
     
     const [ changesMade, setChangesMade ] = useState(false);
 
     const [ isEnabled, setIsEnabled ] = useState(user.isCallable);
     
+    useEffect(() => {
+        fetchCurrentLanguages();
+        fetchAvailableLanguages();
+    }, [currentLanguages, languages])
+
     useMemo(() => {
         if (data && data?.getAllLanguagesForUser) {
             setCurrentLanguages(data?.getAllLanguagesForUser);
         }
-        if (languageData && languageData?.getAllAvilableLanguagesForUser) {
-            const availableLanguages = (languageData.getAllAvilableLanguagesForUser as any[]).map(language => {
+        if (languageData && languageData?.getAllAvailableLanguagesForUser) {
+            const availableLanguages = (languageData.getAllAvailableLanguagesForUser as any[]).map(language => {
                 return {label: language.name, value: language.id};
             });
             setLanguages(availableLanguages);
@@ -108,35 +113,22 @@ export function EditProfile ( props: any ) {
     }
 
     const languageChange = async (item: any) => {
+        setAddedLanguages(item);
+        setChangesMade(true);
+    }
+
+    const handleDelete = async (languageId: number) => {
         try {
-            // TODO: check incoming item
-            // for each selected language, push in added array
-            // array as input for mutation --> change accordingly in backend
-            
-            // languages.map((lang: any) => {
-            //     if (item.value === lang.value) {
-            //         setCategory(lang);
-            //         setCategoryIsValid(true);
-            //     }
-            // });
+            let languageIds = [];
+            languageIds.push(languageId)
+    
             const { data, errors } = await doUpdateRelation({
-                variables: { input: { userId: currentUserId, languageId: id, isActive: isPersonal }}
+                variables: { userId: currentUserId, languageIds: languageIds, isActive: false }
             });
 
             if (data && data?.addOrUpdateLanguageForUser) {
-                setChangesMade(true);
+                await fetchCurrentLanguages();
             }
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    const handleDelete = async (languageId: number, isPersonal: boolean, addMode: boolean) => {
-        try {
-            const { data, errors } = await doUpdateRelation({
-                variables: { input: { userId: currentUserId, languageId: languageId, isPersonal: isPersonal }}
-            });
-            await fetchCurrentLanguages();
             setChangesMade(true);
         } catch (e) {
             console.log(e);
@@ -145,18 +137,31 @@ export function EditProfile ( props: any ) {
 
     const handleSubmit = async () => {
         try {
-            const { data, errors } = await doSaveProfile({
+            await doSaveProfile({
                 variables: { input: {
                     userId: currentUserId, firstName: firstName, lastName: lastName, 
                     phoneNumber: phoneNumber, nativeLanguage: nativeLanguage, isCallable: isEnabled
                 }}
             });
 
+            if (addedLanguages.length > 0) {
+                await doUpdateRelation({
+                    variables: { userId: currentUserId, languageIds: addedLanguages, isActive: true }
+                });
+            }
+
             setChangesMade(false);
-            props.onCancel()
+            closeModal();
         } catch (e) {
           console.log(e);
         }
+    }
+
+    const closeModal = () => {
+        ADDED_LANGUAGES = [];
+        setAddedLanguages(ADDED_LANGUAGES);
+        setChangesMade(false);
+        props.onCancel();
     }
 
     const loading = useMemo(() => {
@@ -168,7 +173,7 @@ export function EditProfile ( props: any ) {
         <Modal visible={props.visible} animationType='slide'>
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
             
-            <View style={styles.inputContainer}>
+            <ScrollView style={styles.inputContainer}>
                 
                 <View style={styles.headerWrapper}>
                     {changesMade ? 
@@ -180,7 +185,7 @@ export function EditProfile ( props: any ) {
                     }
                     <Text style={styles.title}>Edit Profile</Text>
 
-                    <TouchableWithoutFeedback onPress={props.onCancel}>
+                    <TouchableWithoutFeedback onPress={closeModal}>
                         <Icon type='material' name='close' style={styles.icon} size={25}/>
                     </TouchableWithoutFeedback>
 
@@ -246,11 +251,11 @@ export function EditProfile ( props: any ) {
                     </View>
                     <View style={styles.input}>
                         <Text style={styles.inputLabel}>more languages</Text>
-                        <View style={styles.languageSection}>
+                        <View >
                             {currentLanguages && currentLanguages.length > 0 ?
                                 <View style={styles.overview}>
                                     {currentLanguages.map((lang: any) => { return (
-                                        <TouchableOpacity >
+                                        <TouchableOpacity key={lang.id}>
                                             <Skill name={lang.name} id={lang.id} editMode={true} key={lang.id} darkMode={false} onDelete={handleDelete} addMode={false}/>
                                         </TouchableOpacity>
                                     )})}
@@ -261,9 +266,11 @@ export function EditProfile ( props: any ) {
                             <DropDownPicker
                                 items={languages}
                                 multiple={true}
-                                placeholder="Select a category"
-                                onChangeItem={item => handleUpdate(item)}
-                                containerStyle={{height: 50}}
+                                multipleText="%d languages have been selected"
+                                defaultValue={'Select'}
+                                placeholder="Select a language"
+                                onChangeItem={item => languageChange(item)}
+                                containerStyle={{height: 50, marginBottom: 350}}
                                 dropDownStyle={{backgroundColor: '#FFFFFF'}}
                                 itemStyle={{backgroundColor: '#FFFFFF', borderBottomColor: '#C4C4C4', borderBottomWidth: 1, paddingVertical:20}}
                                 zIndex={5000}
@@ -271,12 +278,12 @@ export function EditProfile ( props: any ) {
                                 labelStyle={{color: '#7F7F7F', textTransform:'uppercase'}}
                                 activeLabelStyle={{color: GigColors.Black}}
                                 dropDownMaxHeight={600}
-                                searchable={true}
+                                searchable={false}
                             />
                         </View>
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </Modal>
     );
 }
@@ -342,9 +349,6 @@ const styles = StyleSheet.create({
         borderColor: GigColors.Grey,
         borderRadius: 5,
         color: GigColors.Black
-    },
-    languageSection: {
-        marginTop: 25,
     },
     overview: {
         alignItems: 'center',

@@ -26,7 +26,7 @@ export default function SkillsScreen(props: any) {
             <FlatList
             data={skills}
             renderItem={renderItem}
-            keyExtractor={item => item.id}
+            keyExtractor={item => item.id.toString()}
             />
         </>}
         {skills && skills.length === 0 &&

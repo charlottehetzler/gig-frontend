@@ -37,7 +37,7 @@ export default function CategoriesScreen(props: any) {
         <FlatList
           data={categories}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           numColumns={2}
         />
       </>}

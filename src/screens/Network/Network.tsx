@@ -134,7 +134,7 @@ export default function NetworkScreen(props: any) {
                     <FlatList
                         data={requests}
                         renderItem={renderItem}
-                        keyExtractor={item => item.id}
+                        keyExtractor={item => item.id.toString()}
                     />
                 }
                 {requests && requests.length === 0 &&
@@ -149,7 +149,7 @@ export default function NetworkScreen(props: any) {
                     <FlatList
                         data={newUsers}
                         renderItem={renderNewUser}
-                        keyExtractor={item => item.id}
+                        keyExtractor={item => item.id.toString()}
                     />
                 }
                 {newUsers && newUsers.length === 0 &&

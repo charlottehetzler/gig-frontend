@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { SafeAreaView, View, StyleSheet, StatusBar, ScrollView, ActivityIndicator, Text } from 'react-native';
 import { DefaultHeader } from '../../components/Header/DefaultHeader';
 import { Message } from '../../components/Messages/Message';
@@ -34,14 +34,11 @@ export default function MessagesScreen (props: any) {
     fetchChatRooms();     
   }, [isFocused, chatRooms]);
 
-  // const fetchChatRooms = async () => {
-  //   try {
-  //     const rooms = await refetch();
-  //     setChatRooms(rooms.data['getUser']['allChatRooms']);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
+  useMemo(() => {
+    if (data && data?.getUser && data?.getUser?.allChatRooms) {
+      setChatRooms(data?.getUser?.allChatRooms);
+    }
+  }, [data])
 
   const fetchChatRooms = async () => {
     try {
@@ -50,9 +47,10 @@ export default function MessagesScreen (props: any) {
         setChatRooms(refetchData && refetchData?.getUser && refetchData?.getUser?.allChatRooms);
       }
     } catch (e) {
-       console.log(e)
+      console.log(e)
     }
-}
+  }
+
   const closeModal = () => setIsAddMode(false);
 
   const closeModal2 = () => setIsAddMode(false);

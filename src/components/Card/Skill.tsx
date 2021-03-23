@@ -7,9 +7,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 export function Skill (props: any) {
     
     const iconColor = props.darkMode ? GigColors.White : GigColors.Black;
-    
     const handleDelete = () => {
-        props.onDelete(props.id, false, props.addMode);
+        if (!props.isAddMode) {
+            props.onDelete(props.id);
+        } else {
+            props.onDelete(props.id, false, props.addMode);
+        }
     }
 
     return (<>
