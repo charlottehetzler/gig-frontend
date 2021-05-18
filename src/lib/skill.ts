@@ -5,6 +5,7 @@ query {
     getAllSkills {
         id,
         name,
+        description
         category {
             id, 
             name
@@ -17,7 +18,8 @@ export const GET_All_SKILLS_FOR_PRODUCER = gql`
 query getAllSkillsForProducer($query: SkillQuery!) {
     getAllSkillsForProducer(query: $query) {
         id,
-        name
+        name, 
+        description
     }
 }
 `;
@@ -33,7 +35,7 @@ query getOneSkill($query: SkillQuery!) {
 export const GET_AVAILABLE_SKILLS_FOR_PRODUCER = gql`
 query getAvailableSkillsForProducer($query: SkillQuery!) {
     getAvailableSkillsForProducer(query: $query) {
-        id, name
+        id, name, description
     }
 }
 `;
@@ -42,7 +44,8 @@ export const ADD_SKILL = gql`
 mutation addSkill($input: SkillQuery!) {
     addSkill(input: $input) {
         id,
-        name
+        name,
+        description
     }
 }
 `;

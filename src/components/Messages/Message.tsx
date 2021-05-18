@@ -69,20 +69,18 @@ export function Message (props: any) {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: GigColors.White,
-        borderRadius: 4,
+        borderRadius: 10,
         padding: 20,
+        marginBottom: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottomColor: GigColors.Grey,
-        borderBottomWidth: 1,
         flex: 1,
         width: '100%'
     },
     avatar: {
-        backgroundColor: GigColors.DarkGrey, 
+        backgroundColor: GigColors.Taupe, 
         borderRadius: 50, 
-        marginRight: 10
     },
     text: {
         alignItems: 'flex-start',
@@ -95,10 +93,10 @@ const styles = StyleSheet.create({
     },
     lastMessage: {
         fontSize: 16,
-        color: 'grey',
+        color: GigColors.Taupe,
     },
     username: {
-        fontWeight: 'bold',
-        fontSize: 16,
+        fontWeight: '400',
+        fontSize: 18,
     },
 });

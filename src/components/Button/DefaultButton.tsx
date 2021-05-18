@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     button: {
         alignItems: 'center', 
         paddingVertical: 15,
-        backgroundColor: GigColors.Black,
+        backgroundColor: GigColors.Mustard,
         borderRadius: 10, 
         marginVertical: 5
     },

@@ -70,6 +70,7 @@ export default function ProducersScreen(props: any) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: StatusBar.currentHeight || 0
+    marginTop: StatusBar.currentHeight || 0,
+    marginHorizontal: 16
   }
 });

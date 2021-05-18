@@ -12,6 +12,7 @@ import { NoDataText } from '../../components/Placeholder/NoDataText';
 import { Icon } from 'react-native-elements';
 import { EditSkills } from '../../components/Overlay/EditSkills';
 import { SeeAllButton } from '../../components/Button/SeeAllButton';
+import { ProfileLink } from '../../components/Button/ProfileLink';
 
 
 export default function MyProfileScreen(props: any) {
@@ -56,6 +57,10 @@ export default function MyProfileScreen(props: any) {
         {user && isLoggedIn && <>
 
         <Profile initials={initials} fullName={fullName} user={user} isMe={true} navigation={props.navigation}/>
+        <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user}/>
+        <ProfileLink firstName={'My'} navigation={props.navigation} title={'skills'} icon={'lightbulb'} user={user}/>
+        <ProfileLink firstName={'My'} navigation={props.navigation} title={'friends'} icon={'people'} user={user}/>
+        <ProfileLink firstName={'My'} navigation={props.navigation} title={'settings'} icon={'settings'} user={user} initials={props.initials} />
       
         <View style={styles.sectionWrapper}>
           {isConsumer() ? 

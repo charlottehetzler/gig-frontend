@@ -11,6 +11,7 @@ import { NoDataText } from '../Placeholder/NoDataText';
 import { Skill } from '../Card/Skill';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { ScrollView } from 'react-native-gesture-handler';
+import { DefaultButton } from '../Button/DefaultButton';
 
 let ADDED_LANGUAGES: any[] = [];
 
@@ -25,7 +26,7 @@ export function EditProfile ( props: any ) {
     const [ doUpdateRelation, { loading: updateRelationLoading } ] = useMutation(ADD_OR_UPDATE_LANGUAGE_FOR_USER);
     
     const { data, loading: languageLoading, error, refetch } = useQuery(GET_ALL_LANGUAGES_FOR_USER , {variables: {query: {userId: currentUserId} }});  
-    console.log(data)
+    
     const { data: languageData, loading: availLanguageLoading, error: languageError, refetch: languageRefetch } = useQuery(GET_ALL_AVAILABLE_LANGUAGES_FOR_USER, {variables: {query: {userId: currentUserId } }});
 
     const [ languages, setLanguages ] = useState();
@@ -104,6 +105,11 @@ export function EditProfile ( props: any ) {
 
     const phoneChangeHandler = (phoneNumber: string) => {
         setPhoneNumber(phoneNumber);
+        setChangesMade(true);
+    }
+
+    const emailChangeHandler = (email: string) => {
+        setEmail(email);
         setChangesMade(true);
     }
 
@@ -186,7 +192,7 @@ export function EditProfile ( props: any ) {
                     <Text style={styles.title}>Edit Profile</Text>
 
                     <TouchableWithoutFeedback onPress={closeModal}>
-                        <Icon type='material' name='close' style={styles.icon} size={25}/>
+                        <Icon type='material' name='close' style={styles.icon} color={GigColors.Mustard} size={25}/>
                     </TouchableWithoutFeedback>
 
                 </View>
@@ -195,7 +201,7 @@ export function EditProfile ( props: any ) {
                     <View style={styles.avatarWrapper} >
                         <Avatar containerStyle={styles.avatar} size={100} title={props.initials}/>
                         <TouchableOpacity>
-                            <Icon type='material' name='edit' color={GigColors.DarkGrey}/>
+                            <Icon type='material' name='edit' color={GigColors.Blue}/>
                         </TouchableOpacity>
                     </View>
            
@@ -230,10 +236,20 @@ export function EditProfile ( props: any ) {
                         />
                     </View>
                     <View style={styles.input}>
+                        <Text style={styles.inputLabel}>email</Text>
+                        <TextInput
+                            placeholder={"Type here..."}
+                            style={styles.textInput}
+                            value={email}
+                            onChangeText={emailChangeHandler}
+                            keyboardType={'default'}
+                        />
+                    </View>
+                    <View style={styles.input}>
                         <Text style={styles.inputLabel}>Receive Calls?</Text>
                         <Switch
-                            trackColor={{ false: GigColors.White, true: GigColors.Black }}
-                            thumbColor={isEnabled ? GigColors.White : GigColors.Black}
+                            trackColor={{ false: GigColors.White, true: GigColors.Mustard }}
+                            thumbColor={isEnabled ? GigColors.White : GigColors.Mustard}
                             ios_backgroundColor={GigColors.White}
                             onValueChange={toggleSwitch}
                             value={isEnabled}
@@ -282,6 +298,7 @@ export function EditProfile ( props: any ) {
                             />
                         </View>
                     </View>
+                    <DefaultButton title={'update profile'}/>
                 </View>
             </ScrollView>
         </Modal>
@@ -291,7 +308,8 @@ export function EditProfile ( props: any ) {
 const styles = StyleSheet.create({
     inputContainer: {
         flex: 1,
-        marginTop: 60
+        marginTop: 60, 
+        backgroundColor: GigColors.Greyish
     },
     icon: {
         alignItems:'flex-end',
@@ -310,11 +328,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 25
+        marginVertical: 25
     },
     title: {
         fontWeight: '600',
-        color: GigColors.Black,
+        color: GigColors.Blue,
         fontSize: 24,
         textAlign: 'center'
     },
@@ -322,7 +340,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     input: {
-        marginVertical: 10,
+        marginVertical: 10,        
     },
     avatarWrapper: {
         alignItems: 'flex-start',
@@ -331,24 +349,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     avatar: {
-        backgroundColor: GigColors.DarkGrey, 
+        backgroundColor: GigColors.Taupe, 
         borderRadius: 50,
     },
     inputLabel: {
         textTransform: 'uppercase',
         fontWeight: '500',
         marginBottom: 5,
-        fontSize: 14
+        fontSize: 12, 
+        color: GigColors.Blue
     },
     textInput: {
         paddingHorizontal: 10,
         paddingVertical: 15,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: GigColors.Grey,
-        borderRadius: 5,
-        color: GigColors.Black
+        // borderWidth: 1,
+        // borderColor: GigColors.Blue,
+        borderRadius: 10,
+        color: GigColors.Blue,
+        backgroundColor: GigColors.White
     },
     overview: {
         alignItems: 'center',

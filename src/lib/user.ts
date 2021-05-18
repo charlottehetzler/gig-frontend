@@ -12,6 +12,7 @@ query getUser($query: UserQuery!) {
         nativeLanguage,
         phoneNumber,
         isCallable,
+        totalFriends,
         languages {
             id,
             name

@@ -102,21 +102,21 @@ export default function ChatScreen (props: any) {
             // keyboardVerticalOffset={100}
             style={{width: '100%'}}
         >
-        <View style={styles.container}>
-            <Icon name="camera-alt" size={26} color="grey" style={{marginRight: 5}} />
-            <View style={styles.mainContainer}>
-              <TextInput
-                placeholder={"Type a message"}
-                style={styles.textInput}
-                multiline
-                value={message}
-                onChangeText={setMessage}
-              /> 
+        <View style={styles.actions}>
+          <Icon name="add" size={30} color={GigColors.Mustard} style={{marginRight: 5}} />
+          <View style={styles.messageInput}>
+            <TextInput
+              placeholder={"Type a message"}
+              style={styles.textInput}
+              multiline
+              value={message}
+              onChangeText={setMessage}
+            /> 
               { message === '' ? 
-                <Text style={[styles.sendButton, {color: '#C4C4C4'}]}>Send</Text>
+                <Text style={{color: GigColors.Taupe}}>Send</Text>
               : 
-                <TouchableOpacity style={styles.sendButton} onPress={onSendPress}>
-                  <Text style={[styles.sendButton, {color: '#000000'}]}>Send</Text>
+                <TouchableOpacity onPress={onSendPress}>
+                  <Text style={ {color: GigColors.Mustard}}>Send</Text>
                 </TouchableOpacity>
               }
             </View>
@@ -132,29 +132,26 @@ const styles = StyleSheet.create({
     width: '100%', 
     height: '100%'
   },
-  container: {
+  actions: {
     flexDirection: 'row',
     marginHorizontal: 10,
     alignItems: 'center',
-  },
-  mainContainer: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    borderRadius: 7,
-    borderWidth: 1,
-    borderColor: GigColors.Grey,
-  },
-textInput: {
-    flex: 1,
     paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingVertical: 15
+  },
+  messageInput: {
+    backgroundColor: GigColors.White,
+    borderRadius: 7,
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 10
+  },
+  textInput: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-},
-sendButton: {
-    marginRight: 7
-}
-
+    fontSize: 14
+  }
 });

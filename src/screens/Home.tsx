@@ -28,12 +28,12 @@ export default function HomeScreen (props: any) {
   }, []);
 
   const fetchSkills = async () => {
-    try {
-      const newSkills = await refetch();
-      setSkills(newSkills.data.getAllSkills);
-    } catch (e) {
-      console.log(e)
-    }
+    // try {
+    //   const newSkills = await refetch();
+    //   setSkills(newSkills.data.getAllSkills);
+    // } catch (e) {
+    //   console.log(e)
+    // }
   }
 
   const renderItem = ({ item } : any ) => (
@@ -56,7 +56,7 @@ export default function HomeScreen (props: any) {
       <SearchBar navigation={props.navigation} isPersonal={false} refetchSkills={fetchSkills} profileMode={false}/>
 
       <ScrollView>
-        <Text style={styles.h4Style}> Browse random gigs:</Text>
+        <Text style={styles.h4Style}> Browse random gigs</Text>
         <FlatList
           data={skills}
           renderItem={renderItem}
@@ -65,7 +65,7 @@ export default function HomeScreen (props: any) {
           style={styles.flatListHorizontal}
         />
         <View style={styles.subHeader}>
-          <Text style={styles.h4Style}> All gigs:</Text>
+          <Text style={styles.h4Style}> All gigs</Text>
           <SeeAllButton case={'categories'} navigation={props.navigation}/>
         </View>
         <FlatList
@@ -83,22 +83,22 @@ export default function HomeScreen (props: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-    backgroundColor: GigColors.White
+    marginTop: StatusBar.currentHeight || 0
   },
   h4Style: {
     marginTop: 25,
-    fontSize: 26, 
+    fontSize: 26,
+    marginHorizontal: 16,
+    color: GigColors.Blue  
   },
   flatListHorizontal: {
     height: 100
   },
   item: {
     backgroundColor: GigColors.White,
-    borderColor: GigColors.Black,
-    borderWidth: 1,
-    borderRadius: 4,
-    padding: 15,
+    borderRadius: 10,
+    paddingVertical: 25,
+    paddingHorizontal: 15,
     marginVertical: 8,
     marginHorizontal: 16,
     flex: 1,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     textTransform: 'uppercase',
-    color: GigColors.Black
+    color: GigColors.Blue
   },
   moreButton: {
     backgroundColor: GigColors.White,

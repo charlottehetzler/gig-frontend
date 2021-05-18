@@ -38,12 +38,12 @@ export function MessageButton (props: any) {
 
         <TouchableOpacity style={[props.isSearchBar ? styles.searchAction : styles.profileAction]} onPress={handleSelect}>
             {!props.isSearchBar ? <>
-                <Icon type='material' name='mail-outline' color={GigColors.Black} style={{marginRight: 10}}/>
-                <Text style={props.isSearchBar ? styles.searchText : null}>{props.title}</Text>
+                <Icon type='material' name='mail-outline' color={GigColors.White}/>
+                {/* <Text style={props.isSearchBar ? styles.searchText : null}>{props.title}</Text> */}
             </>
             :   <>
-                <Text style={props.isSearchBar ? styles.searchText : null}>{props.title}</Text>
-                <Icon type='material' name='keyboard-arrow-right' color={GigColors.DarkGrey} />
+                {/* <Text style={props.isSearchBar ? styles.searchText : null}>{props.title}</Text> */}
+                <Icon type='material' name='keyboard-arrow-right' color={GigColors.White} />
                 </>
             }
         </TouchableOpacity>
@@ -53,13 +53,9 @@ export function MessageButton (props: any) {
 
 const styles = StyleSheet.create({
     profileAction: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderColor: GigColors.Black,
-        borderWidth: 1,
-        borderRadius: 4,
-        padding: 5,
+        backgroundColor: GigColors.Mustard,
+        borderRadius: 50,
+        padding: 10,
     },
     searchAction: {
         flexDirection: 'row',

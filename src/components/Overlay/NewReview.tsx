@@ -103,7 +103,7 @@ export function NewReview ( props: any ) {
             });
             props.disable();
             props.onCancel();
-            props.refetch();
+            // props.refetch();
         } catch (e) {
           console.log(e);
         }

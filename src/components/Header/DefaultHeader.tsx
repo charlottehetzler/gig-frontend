@@ -31,12 +31,12 @@ export function DefaultHeader (props: any) {
                 <View style={styles.headerWrapper}>
                     {props.goBack ? 
                         <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-                            <Icon name='menu' color={'#000000'}/>
+                            <Icon name='menu' color={GigColors.Mustard}/>
                         </TouchableOpacity>
 
                     :
                         <TouchableOpacity style={styles.iconWrapper} onPress={() => props.navigation.goBack()}>
-                            <Icon type={'material'} name='keyboard-backspace' color={'#000000'}/>
+                            <Icon type={'material'} name='keyboard-backspace' color={GigColors.Mustard} size={40}/>
                         </TouchableOpacity>
                     }
                     <Text style={styles.headerTitle}>{props.title}</Text>
@@ -49,12 +49,12 @@ export function DefaultHeader (props: any) {
                 <View style={styles.headerWrapper}>
                     {!props.goBack ? 
                         <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-                            <Icon name='menu' color={'#000000'}/>
+                            <Icon name='menu' color={GigColors.Mustard} size={40}/>
                         </TouchableOpacity>
 
                     :
                         <TouchableOpacity style={styles.iconWrapper} onPress={() => props.navigation.goBack()}>
-                            <Icon type={'material'} name='keyboard-backspace' color={'#000000'}/>
+                            <Icon type={'material'} name='keyboard-backspace' color={GigColors.Mustard} size={35}/>
                         </TouchableOpacity>
                     }
                     <Text style={styles.headerTitle}>{props.title}</Text>
@@ -70,25 +70,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center', 
         justifyContent: 'space-between',
-        height: 75,
-        backgroundColor: GigColors.White,
-        paddingHorizontal: 7,
-        borderBottomWidth: 2,
-        borderBottomColor: GigColors.Grey,
-        marginBottom: 10
+        height: 120,
+        paddingHorizontal: 16,
+        paddingVertical: 20,
+
     },
     headerTitle: {
-        fontSize: 20,
+        fontSize: 28,
         textAlign: 'center',
-        color: GigColors.Black
+        color: GigColors.Blue, 
     },
     login: {
         textAlign: 'right', 
-        color: GigColors.Black
+        color: GigColors.Blue
     },
     iconWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginLeft: 10
     },
 });

@@ -16,12 +16,13 @@ export function ChatMessage ({myId, message} : Props) {
         <View style={styles.container}>
             <View style={[
                 styles.messageBox, {
-                backgroundColor: isMyMessage() ? '#C4C4C4' : 'white',
-                marginLeft: isMyMessage() ? 50 : 0,
-                marginRight: isMyMessage() ? 0 : 50,
-                }
+                backgroundColor: isMyMessage() ? GigColors.Taupe : GigColors.Blue,
+                marginLeft: isMyMessage() ? 100 : 0,
+                marginRight: isMyMessage() ? 0 : 100,
+                }, 
+                isMyMessage() ? styles.rightMessage : styles.leftMessage
             ]}>
-                <Text style={styles.name}>{isMyMessage() ? `You` : message.user.firstName}</Text>
+                {/* <Text style={styles.name}>{isMyMessage() ? `You` : message.user.firstName}</Text> */}
                 <Text style={styles.message}>{message.content}</Text>
                 
                 <Text style={styles.time}>{moment(message.createdAt).format('LT')}</Text>
@@ -38,16 +39,24 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
     },
-    name: {
-        color: GigColors.DarkGrey,
-        fontWeight: "bold",
-        marginBottom: 5,
-    },
     message: {
-        color: GigColors.Black
+        color: GigColors.White,
+        fontSize: 16
     },
     time: {
       alignSelf: "flex-end",
-      color: 'grey'
+      color: GigColors.White
+    },
+    leftMessage: {
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 0,
+    },
+    rightMessage: {
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 0,
+        borderBottomLeftRadius: 10,
     }
  });

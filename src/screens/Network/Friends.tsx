@@ -41,15 +41,18 @@ export default function FriendsScreen(props: any) {
             <DefaultHeader title={'Friends'} navigation={props.navigation} goBack={true}/>
         </View> 
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
-        
-        {friends && friends.length > 0 && <>
-            <FriendSearch isChat={false} navigation={props.navigation}/>
-            <FlatList
-                data={friends}
-                renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
-            />
-        </>}
+        <View style={{marginHorizontal: 16}}>
+            {friends && friends.length > 0 && <>
+                <FriendSearch isChat={false} navigation={props.navigation}/>
+                <FlatList
+                    data={friends}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id.toString()}
+                    style={{paddingTop: 20}}
+                />
+            </>}
+
+        </View>
         </SafeAreaView>
     );
 }
@@ -57,11 +60,5 @@ export default function FriendsScreen(props: any) {
 const styles = StyleSheet.create({
     container: {
         marginTop: StatusBar.currentHeight || 0
-    },
-    title: {
-        fontSize: 18,
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        color: GigColors.Black
     }
 });

@@ -32,14 +32,14 @@ export function Producer ({firstName, lastName, userId, navigation, skillId} : P
     return ( <>
         {loading &&  <ActivityIndicator size="small" color='#000000' style={{alignItems:'center', justifyContent:'center'}}/>}
 
-        <TouchableOpacity style={styles.card} onPress={() => navigate('Profile', {userId: userId, isMe: false, skillId: skillId})}>
+        <TouchableOpacity style={styles.card} onPress={() => navigate('Profile', { userId: userId, isMe: false, skillId: skillId, navigation: navigation})}>
             <Avatar title={getInitials(firstName, lastName)} containerStyle={styles.avatar} size={60} />
         
             <View style={styles.text}>
                 <Text style={styles.name}>{firstName + " " + lastName}</Text>
                 <AirbnbRating
                     count={5}
-                    selectedColor={GigColors.Black}
+                    selectedColor={GigColors.Blue}
                     defaultRating={avgRating}
                     size={15}
                     showRating={false}
@@ -53,16 +53,14 @@ export function Producer ({firstName, lastName, userId, navigation, skillId} : P
 const styles = StyleSheet.create({
     card: {
         backgroundColor: GigColors.White,
-        borderRadius: 4,
+        borderRadius: 10,
         paddingVertical: 20,
         paddingHorizontal: 10,
         flexDirection: 'row',
         alignItems: 'center',
-        borderBottomColor: GigColors.Grey,
-        borderBottomWidth: 1,
     },
     avatar: {
-        backgroundColor: GigColors.DarkGrey, 
+        backgroundColor: GigColors.Taupe, 
         borderRadius: 50, 
         marginRight: 20
     },
@@ -74,7 +72,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'left',
         fontWeight: '600',
-        color: GigColors.Black,
+        color: GigColors.Blue,
         marginBottom: 5
     },
     date: {

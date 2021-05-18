@@ -33,16 +33,13 @@ export function Friend (props: any) {
     }
 
     return ( <>
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={() => props.navigation.navigate('Profile', { userId: props.userId, isMe: false, skillId: null, navigation: props.navigation})}> 
             <View style={styles.cardName}>
                 <Avatar title={getInitials(props.firstName, props.lastName)} containerStyle={styles.avatar} size={60} />
                 <Text style={styles.name}>{props.firstName + " " + props.lastName}</Text>
             </View>
             {updateRequestLoading &&  
                 <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>
-            }
-            {props.isFriend && !props.isNew &&
-                <MessageButton title={'Message'} userId={props.userId} firstName={props.firstName} lastName={props.lastName} navigation={props.navigation} isSearchBar={false}/>
             }
             {!props.isFriend && !props.isNew && 
                 <View style={styles.requestButtons}>
@@ -55,37 +52,35 @@ export function Friend (props: any) {
                     <RequestButton userId={props.userId} title={'Connect'} status={'connect'} onUpdate={props.onUpdate}/>
                 </TouchableOpacity>
             }
-            
-        </View>
+        </TouchableOpacity>
    </> )
 }
 
 const styles = StyleSheet.create({
     card: {
         backgroundColor: GigColors.White,
-        borderRadius: 4,
-        paddingVertical: 10,
+        borderRadius: 10,
+        paddingVertical: 15,
         paddingHorizontal: 10,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderBottomColor: GigColors.Grey,
-        borderBottomWidth: 1,
+        marginBottom: 10
     },
     cardName: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     avatar: {
-        backgroundColor: GigColors.DarkGrey, 
+        backgroundColor: GigColors.Taupe, 
         borderRadius: 50, 
         marginRight: 20
     },
     name: {
         fontSize: 18,
         textAlign: 'left',
-        fontWeight: '600',
-        color: GigColors.Black
+        fontWeight: '400',
+        color: GigColors.Blue
     },
     requestButtons: {
         flexDirection: 'row',

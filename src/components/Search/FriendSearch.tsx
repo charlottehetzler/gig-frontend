@@ -52,7 +52,7 @@ export default function FriendSearch (props: any) {
     }
 
     return (
-        <View>
+        <View >
             <TextInput 
                 style={styles.textInput}
                 placeholder="Search"
@@ -65,7 +65,7 @@ export default function FriendSearch (props: any) {
                     
                 {filtered.length > 0 ?
                     filtered.map((item: any) => {
-                        return (
+                        return (   
                             <View style={styles.itemView} key={item.id}>
                                 {props.isChat ? 
                                     <MessageButton title={item[1]} userId={item[0]}  firstName={item[2]} lastName={item[3]} isSearchBar={true} navigation={props.navigation} onSelect={props.onSelect}/>

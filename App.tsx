@@ -35,7 +35,7 @@ export default function App () {
   // }
 
   const client = new ApolloClient({
-    uri: 'https://00f1f8828dc8.ngrok.io/graphql',
+    uri: 'http://localhost:3000/graphql',
     cache: new InMemoryCache(), 
   });
 
@@ -43,7 +43,7 @@ export default function App () {
 
   const MyTheme = {
     colors: {
-      background: GigColors.White,
+      background: GigColors.Greyish,
     },
   };
 

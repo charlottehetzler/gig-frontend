@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
 import { GigColors } from '../../constants/colors';
 import { NewSkill } from '../Overlay/NewSkill';
 import { useQuery } from '@apollo/client';
 import { GET_All_SKILLS, GET_AVAILABLE_SKILLS_FOR_PRODUCER } from '../../lib/skill';
+import { Icon } from 'react-native-elements';
 
 
 export default function SearchBar (props: any) {
@@ -21,6 +22,10 @@ export default function SearchBar (props: any) {
   const [ isAddMode, setIsAddMode ] = useState(false);
 
   const [ addedSkill, setAddedSkill ] = useState();
+  
+  const [ iconVisible, setIconVisible ] = useState(false);
+  
+  const [ searchText, setSearchText ] = useState('');
 
   const closeModal = () => { setIsAddMode(false) }
 
@@ -38,24 +43,33 @@ export default function SearchBar (props: any) {
   
   const onSearch = (text: any) => {
     if (text) {
+      setSearchText(text)
       setSearching(true);
+      setIconVisible(true);
       const temp = text.toLowerCase();
       let skillNames = [];
       for (const skill of skills) {
         const skillItem = [];
         skillItem.push(skill.id);
         skillItem.push(skill.name);
-        skillNames.push(skillItem)
+        skillItem.push(skill.description);
+        skillItem.push(skill.category.name)
+        skillNames.push(skillItem);
       }
       const tempList = skillNames.filter((item: any) => {
-        if (item[1].toLowerCase().includes(temp)) {
+        if (item[1].toLowerCase().includes(temp) || 
+          item[2].toLowerCase().includes(temp) || item[3].toLowerCase().includes(temp)
+        ) {
           return item
         }
       })
       setFiltered(tempList);
     } else {
-      setSearching(false)
-      setFiltered(skills)
+      setIconVisible(false);
+      setSearching(false);
+      setFiltered(skills);
+      setSearchText('')
+
     }
   }
 
@@ -65,6 +79,13 @@ export default function SearchBar (props: any) {
     setFiltered(false);
     setSearching(false);
   }
+
+  const onCancel = () => {
+    setFiltered(false);
+    setSearching(false);
+    setIconVisible(false);
+    setSearchText('')
+  }
   
   const loading = useMemo(() => {
     return availableSkillsLoading || skillsLoading;
@@ -72,12 +93,19 @@ export default function SearchBar (props: any) {
 
   return (
     <View>
-      <TextInput 
-        style={styles.textInput}
-        placeholder="Search"
-        placeholderTextColor={GigColors.Grey}
-        onChangeText={onSearch}
-      />
+      <View style={styles.input}>
+        <TextInput 
+          style={styles.textInput}
+          placeholder="Search"
+          placeholderTextColor={GigColors.Grey}
+          onChangeText={onSearch}
+          value={searchText}
+        />
+        <TouchableWithoutFeedback onPress={onCancel}>
+          <Icon type='material' name='close' color={GigColors.Black} style={ iconVisible ? styles.visible : styles.nonVisible} size={25}/>
+        </TouchableWithoutFeedback>
+
+      </View>
       {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
 
       {searching &&
@@ -125,6 +153,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center'
   },
+  input: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 16,
+  },
+  visible: {
+    alignItems:'flex-end',
+    marginRight: 20
+  },
+  nonVisible: {
+    display: 'none'
+  },
   itemView: {
     backgroundColor: GigColors.White,
     height: 30,
@@ -152,10 +193,11 @@ const styles = StyleSheet.create({
   },
   textInput: {
     backgroundColor: GigColors.White,
-    width: '100%',
     borderRadius: 5,
     height: 50,
     fontSize: 20,
     paddingHorizontal: 10,
+    // width: '100%',
+    flex: 1,
   },
 })

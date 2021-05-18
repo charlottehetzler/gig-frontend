@@ -16,7 +16,7 @@ export function Tabs(props: any) {
             tabBarIcon: ({ focused }) => {
                 let iconName : string;
                 let iconType = Platform.OS === 'ios' ? 'ionicon' : 'material'
-                let color = focused ? GigColors.Black : GigColors.DarkGrey;
+                let color = focused ? GigColors.Mustard : GigColors.Taupe;
 
                 if (route.name === 'Home') {
                     iconName = 'home'
@@ -27,15 +27,22 @@ export function Tabs(props: any) {
                 } else {
                     iconName = 'person'
                 }
-                return <Icon name={iconName} size={30} color={color} type={iconType} />;
+                return <Icon name={iconName} size={35} color={color} type={iconType} />;
             },
         })}
+
         tabBarOptions={{
-            activeTintColor: GigColors.Black,
+            activeTintColor: GigColors.Mustard,
+            activeBackgroundColor: GigColors.Greyish,
+            inactiveBackgroundColor: GigColors.Greyish,
             tabStyle: {
                 alignItems: 'center'
             },
-            showLabel: false
+            showLabel: false,
+            style: {
+                borderTopColor: "transparent",
+                height: 100
+            }
         }}>
 
             <Tab.Screen name="Home" component={HomeScreen} />

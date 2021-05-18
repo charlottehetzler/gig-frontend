@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { Rating, AirbnbRating } from 'react-native-elements';
+import { AirbnbRating } from 'react-native-elements';
 import { GigColors } from '../../constants/colors';
 
 type Props = { comment: string, rating: number, firstName: string, lastName: string, date: string}
@@ -9,12 +9,12 @@ export function Review ({comment, rating, firstName, lastName, date} : Props) {
 
     return (
         <View style={styles.card}>
-            <View>
+            <View style={{alignItems: 'flex-start'}}>
                 <Text style={styles.name}>{firstName + " " + lastName}</Text>
                 <View style={styles.rating}>
                     <AirbnbRating
                         count={5}
-                        selectedColor={GigColors.Black}
+                        selectedColor={GigColors.Blue}
                         defaultRating={rating}
                         size={15}
                         showRating={false}
@@ -34,40 +34,33 @@ export function Review ({comment, rating, firstName, lastName, date} : Props) {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: GigColors.White,
-        borderRadius: 4,
-        paddingVertical: 10,
+        borderRadius: 10,
+        paddingVertical: 15,
         paddingHorizontal: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        borderBottomColor: GigColors.Grey,
-        borderBottomWidth:1,
-        marginBottom: 5,
+        marginBottom: 10,
         flex:1
     },
     name: {
-        fontSize: 20,
+        fontSize: 18,
         textAlign: 'left',
-        fontWeight: '600',
-        color: GigColors.Black,
+        fontWeight: '400',
+        color: GigColors.Blue,
         marginBottom: 5
     },
     comment: {
         fontSize: 16,
-        color: GigColors.DarkGrey,
-    },
-    smallText: {
-        fontSize: 14,
-        color: GigColors.Black,
-        marginTop: 10
+        color: GigColors.Taupe,
     },
     rating: {
         marginBottom: 5,
     },
     date: {
-        fontSize: 12,
+        fontSize: 14,
         textAlign: 'right',
         fontWeight: '300',
-        color: GigColors.DarkGrey
+        color: GigColors.Taupe
     }
 });

@@ -15,17 +15,16 @@ export function SeeAllButton (props: any) {
 
   return (
     <TouchableOpacity style={styles.moreButton} onPress={handlePress}>
-      <Text>See all</Text>
+      <Text style={styles.underline}>See all</Text>
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   moreButton: {
-    backgroundColor: GigColors.White,
-    color: GigColors.Black,
-    borderWidth: 1,
-    borderColor: GigColors.Black,
+    // backgroundColor: GigColors.White,
+    // borderWidth: 1,
+    // borderColor: GigColors.Black,
     paddingVertical: 3,
     paddingHorizontal: 5,
     borderRadius: 5,
@@ -33,4 +32,11 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     marginRight: 16
   },
-  });
+  underline: {
+    color: GigColors.Blue,
+    textDecorationStyle: 'solid',
+    textDecorationLine: 'underline',
+    textDecorationColor: GigColors.Blue, 
+    fontSize: 16,
+  }
+});

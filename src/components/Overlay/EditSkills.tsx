@@ -118,7 +118,7 @@ export function EditSkills ( props: any ) {
                 </View>
 
                 <View style={styles.container}>
-                    <SearchBar navigation={props.navigation} isPersonal={props.isPersonal} onSelect={handleUpdate} currentUserId={currentUserId} profileMode={true}/>
+                    {/* <SearchBar navigation={props.navigation} isPersonal={props.isPersonal} onSelect={handleUpdate} currentUserId={currentUserId} profileMode={true}/> */}
                     {addedSkills && addedSkills.length > 0 &&
                         <View style={styles.skillSection}>
                             <Text style={styles.smallSubheader}>Your added skills</Text>

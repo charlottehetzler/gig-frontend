@@ -65,12 +65,13 @@ export default function MessagesScreen (props: any) {
         {!isLoggedIn &&
           <AuthPlaceholder title={'you have not received any messages yet. Signup or Login to get started!'}/>
         }
+        
         <TouchableOpacity style={styles.newMessage}  onPress={() => setIsAddMode(true)}>
-          <Icon type='material' name='edit' color={GigColors.DarkGrey} size={20}/>
-          <Text style={{color: GigColors.DarkGrey}}>New Messaage</Text>
-          <NewMessage visible={isAddMode} onCancel={closeModal} onSelect={closeModal2}navigation={props.navigation}/>
-
+          <Icon type='material' name='edit' color={GigColors.Mustard} size={25}/>
+          <Text style={{color: GigColors.Mustard, fontSize: 16, paddingLeft: 3}}>New Messaage</Text>
+          <NewMessage visible={isAddMode} onCancel={closeModal} onSelect={closeModal2} navigation={props.navigation}/>
         </TouchableOpacity>
+
         {chatRooms && chatRooms.length > 0 &&
           <ScrollView>
             {chatRooms.map((chatRoom: any) => { return (
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    marginBottom: 10,
+    marginBottom: 20,
     marginRight: 10
   }
 });

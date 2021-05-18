@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { Friend } from '../../components/Card/Friend';
 import { NoDataText } from '../../components/Placeholder/NoDataText';
+import { GigColors } from '../../constants/colors';
 
 
 export default function NetworkScreen(props: any) {
@@ -120,7 +121,7 @@ export default function NetworkScreen(props: any) {
             {numberOfFriends !== 0 ?  
                 <TouchableOpacity style={styles.friendsButton} onPress={() => props.navigation.navigate('Friends')}>
                     <Text style={styles.h4Style}>All ({numberOfFriends})</Text>
-                    <Icon type='material' name='keyboard-arrow-right' />
+                    <Icon type='material' name='keyboard-arrow-right' color={GigColors.Mustard} size={35}/>
                 </TouchableOpacity>
             :
                 <View style={styles.friendsButton}>
@@ -129,7 +130,7 @@ export default function NetworkScreen(props: any) {
                 </View>
             }
             <View style={styles.friendSection}>
-                <Text style={[styles.h4Style, {paddingLeft: 10, paddingBottom: 10}]}>Requests</Text>
+                <Text style={styles.h4Style}>Requests</Text>
                 {requests && requests.length > 0 &&
                     <FlatList
                         data={requests}
@@ -138,13 +139,13 @@ export default function NetworkScreen(props: any) {
                     />
                 }
                 {requests && requests.length === 0 &&
-                    <View style={{marginLeft: 10}}>
+                    <View>
                         <NoDataText text={`You have no pending friend requests.`}/>
                     </View>
                 }
             </View>
             <View style={styles.friendSection}>
-                <Text style={[styles.h4Style, {paddingLeft: 10, paddingBottom: 10}]}>New to Gig</Text>
+                <Text style={styles.h4Style}>New to Gig</Text>
                 {newUsers && newUsers.length > 0 && 
                     <FlatList
                         data={newUsers}
@@ -153,7 +154,7 @@ export default function NetworkScreen(props: any) {
                     />
                 }
                 {newUsers && newUsers.length === 0 &&
-                    <View style={{marginLeft: 10}}>
+                    <View>
                         <NoDataText text={`You're connected to all Gig Users`}/>
                     </View>
                 }
@@ -166,18 +167,23 @@ export default function NetworkScreen(props: any) {
 const styles = StyleSheet.create({
     container: {
         marginTop: StatusBar.currentHeight || 0,
+        // marginHorizontal: 16
     },
     friendsButton: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 10,
         paddingVertical: 20,
+        marginBottom: 15,
+        marginHorizontal: 16
     },
     h4Style: {
-        fontSize: 26
+        fontSize: 26,
+        color: GigColors.Blue,
+        paddingBottom: 15
     },
     friendSection: {
-        paddingBottom: 30
+        paddingBottom: 30,
+        marginHorizontal: 16
     }
 });
