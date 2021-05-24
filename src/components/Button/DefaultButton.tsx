@@ -13,6 +13,7 @@ export function DefaultButton (props: any) {
 }
 
 export function DisabledDefaultButton (props: any) {
+    console.log(props)
     return (
         <View style={styles.disabled}>
             <Text style={styles.buttonText}>{props.title}</Text>
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     disabled: {
         alignItems: 'center', 
         paddingVertical: 15,
-        backgroundColor: 'rgba(127, 127, 127, .4)',
+        backgroundColor: 'rgba(209, 165, 23, 0.5)',
         borderRadius: 10, 
         marginVertical: 5
     },
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 20,
         textAlign: 'center',
-        color: GigColors.White, 
+        color: GigColors.Blue, 
         textTransform: 'uppercase'
     },
     buttonTextBlack: {

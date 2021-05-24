@@ -3,10 +3,10 @@ import { Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements';
 import { GigColors } from '../constants/colors';
-import HomeScreen from '../screens/Home';
-import MessagesScreen from '../screens/Message/Messages';
-import MyProfileScreen from '../screens/Profile/MyProfile';
-import NetworkScreen from '../screens/Network/Network';
+import HomeScreen from '../Gigs/Home';
+import MessagesScreen from '../Messages/Messages';
+import MyProfileScreen from '../Profile/MyProfile';
+import NetworkScreen from '../Network/Network';
 
 const Tab = createBottomTabNavigator();
 export function Tabs(props: any) {

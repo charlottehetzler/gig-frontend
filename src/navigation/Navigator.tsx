@@ -1,14 +1,14 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack'
-import HomeScreen from '../screens/Home';
-import ProducersScreen from '../screens/Producers';
-import ProfileScreen from '../screens/Profile/Profile';
-import MessagesScreen from '../screens/Message/Messages';
-import ChatScreen from '../screens/Message/Chat';
-import ReviewsScreen from '../screens/Reviews';
-import SigninScreen from '../screens/Auth/Signin';
-import SignupScreen from '../screens/Auth/Signup';
-import DecisionScreen from '../screens/Auth/Decision';
+import HomeScreen from '../Gigs/Home';
+import ProducersScreen from '../Producers/Producers';
+import ProfileScreen from '../Profile/Profile';
+import MessagesScreen from '../Messages/Messages';
+import ChatScreen from '../Messages/Chat';
+import ReviewsScreen from '../Reviews/Reviews';
+import SigninScreen from '../Auth/Signin';
+import SignupScreen from '../Auth/Signup';
+import DecisionScreen from '../Auth/Decision';
 
 const HomeStack = createStackNavigator();
 export function HomeStackScreen(loggedIn: boolean) {

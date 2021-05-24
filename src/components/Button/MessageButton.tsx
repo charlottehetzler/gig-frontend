@@ -42,8 +42,8 @@ export function MessageButton (props: any) {
                 {/* <Text style={props.isSearchBar ? styles.searchText : null}>{props.title}</Text> */}
             </>
             :   <>
-                {/* <Text style={props.isSearchBar ? styles.searchText : null}>{props.title}</Text> */}
-                <Icon type='material' name='keyboard-arrow-right' color={GigColors.White} />
+                <Text style={props.isSearchBar ? styles.searchText : null}>{props.title}</Text>
+                <Icon type='material' name='keyboard-arrow-right' color={GigColors.Blue} />
                 </>
             }
         </TouchableOpacity>
@@ -53,7 +53,7 @@ export function MessageButton (props: any) {
 
 const styles = StyleSheet.create({
     profileAction: {
-        backgroundColor: GigColors.Mustard,
+        backgroundColor: GigColors.White,
         borderRadius: 50,
         padding: 10,
     },
@@ -61,8 +61,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'space-between',
+        backgroundColor: GigColors.White
     },
     searchText: {
-        fontSize: 18
+        fontSize: 18, 
+        color: GigColors.Blue
     }
 });

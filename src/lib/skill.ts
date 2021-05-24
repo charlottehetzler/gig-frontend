@@ -55,3 +55,9 @@ mutation updateRelation($input: SkillUserRelationQuery!) {
     updateRelation(input: $input) 
 }
 `;
+
+export const ADD_OR_UPDATE_SKILL_FOR_USER = gql`
+mutation addOrUpdateSkillForUser($userId: Float!, $skillIds: [Float!]!, $isPersonal: Boolean!) {
+    addOrUpdateSkillForUser(userId: $userId,skillIds: $skillIds, isPersonal: $isPersonal)
+}
+`;

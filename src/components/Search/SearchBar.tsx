@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
 import { GigColors } from '../../constants/colors';
-import { NewSkill } from '../Overlay/NewSkill';
+import { NewSkill } from '../../Gigs/NewSkill';
 import { useQuery } from '@apollo/client';
 import { GET_All_SKILLS, GET_AVAILABLE_SKILLS_FOR_PRODUCER } from '../../lib/skill';
 import { Icon } from 'react-native-elements';
@@ -97,15 +97,15 @@ export default function SearchBar (props: any) {
         <TextInput 
           style={styles.textInput}
           placeholder="Search"
-          placeholderTextColor={GigColors.Grey}
+          placeholderTextColor={GigColors.Taupe}
           onChangeText={onSearch}
           value={searchText}
         />
         <TouchableWithoutFeedback onPress={onCancel}>
-          <Icon type='material' name='close' color={GigColors.Black} style={ iconVisible ? styles.visible : styles.nonVisible} size={25}/>
+          <Icon type='material' name='close' color={GigColors.Blue} style={ iconVisible ? styles.visible : styles.nonVisible} size={25}/>
         </TouchableWithoutFeedback>
-
       </View>
+
       {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
 
       {searching &&
@@ -119,7 +119,7 @@ export default function SearchBar (props: any) {
                     <Text style={styles.itemText}>{item[1]}</Text>
                   </TouchableOpacity>
                 :
-                  <TouchableOpacity onPress={() => props.navigation.navigate('Producers', {skillId: item[0]} )} >
+                  <TouchableOpacity onPress={() => props.navigation.navigate('Producers', {skillId: item[0], skillName: item[1]} )} >
                     <Text style={styles.itemText}>{item[1]}</Text>
                   </TouchableOpacity>
                 }
@@ -146,22 +146,26 @@ const styles = StyleSheet.create({
   subContainer: {
     backgroundColor: GigColors.White,
     paddingTop: 10,
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center'
+    alignContent: 'center',
+    marginHorizontal: 16, 
+    marginTop: -5
   },
   input: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginHorizontal: 16,
+    backgroundColor: GigColors.White, 
+    borderRadius: 10,
   },
   visible: {
     alignItems:'flex-end',
-    marginRight: 20
+    marginRight: 20,
   },
   nonVisible: {
     display: 'none'
@@ -184,20 +188,17 @@ const styles = StyleSheet.create({
   },
   noResultText: {
     fontSize: 18,
-    color: GigColors.DarkGrey
+    color: GigColors.Taupe
   },
   itemText: {
-    color: GigColors.Black,
-    paddingHorizontal: 10,
+    color: GigColors.Blue,
     fontSize: 16
   },
   textInput: {
-    backgroundColor: GigColors.White,
-    borderRadius: 5,
     height: 50,
     fontSize: 20,
     paddingHorizontal: 10,
-    // width: '100%',
     flex: 1,
+    color: GigColors.Blue
   },
 })
