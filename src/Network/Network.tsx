@@ -15,15 +15,11 @@ export default function NetworkScreen(props: any) {
     const currentUserId = useSelector((state: any) => state.user.userId);
     
     const { data: friendData, loading: friendLoading, error: friendError, refetch: friendRefetch } = useQuery(GET_NUMBER_OF_FRIENDS, {variables: {query: {currentUserId: currentUserId } }});
-    
     const { data: requestData, loading: requestLoading, error: requestError, refetch: requestRefetch } = useQuery(GET_FRIEND_REQUESTS, {variables: {query: {currentUserId: currentUserId} }});
-    
     const { data: newUserData, loading: newUserLoading, error: newUserError, refetch: newUserRefetch } = useQuery(GET_NEW_USERS, {variables: {query: {currentUserId: currentUserId} }});
 
     const [ numberOfFriends, setNumberOfFriends ] = useState(0);
-
     const [ requests, setRequests ] = useState();
-    
     const [ newUsers, setNewUsers ] = useState();
 
     useEffect(() => {

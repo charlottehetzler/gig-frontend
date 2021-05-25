@@ -11,7 +11,7 @@ export default function FriendsScreen(props: any) {
     
     const currentUserId = useSelector((state: any) => state.user.userId);
 
-    const { data, loading, error, refetch } = useQuery(GET_FRIENDS, {variables: {query: {currentUserId: currentUserId } }});
+    const { data, loading, error, refetch } = useQuery(GET_FRIENDS, {variables: {query: { currentUserId: currentUserId } }});
 
     const [ friends, setFriends ] = useState();
 

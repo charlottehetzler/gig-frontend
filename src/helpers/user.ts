@@ -4,7 +4,6 @@ import { GET_All_SKILLS_FOR_PRODUCER } from "../lib/skill";
 import { GET_LAST_REVIEWS_FOR_USER } from "../lib/review";
 import { useMemo, useState } from "react";
 
-
 export default function useProfile (userId: number, skillId?: number) {
 
     const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {variables: {query: {userId: userId} }});

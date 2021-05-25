@@ -13,6 +13,10 @@ export function ProfileActions (props: any) {
 
     const closeModal = () => setIsAddMode(false);
 
+    const [ reviewDisabled, setReviewDisabled ] = useState(props.reviewDisabled);
+
+    const disableReview = () => setReviewDisabled(true)
+
     return (
         <View style={styles.profileActions}>
             {props.user.isCallable ?
@@ -27,15 +31,15 @@ export function ProfileActions (props: any) {
 
             <MessageButton title={'Message'} userId={props.userId} firstName={props.user.firstName} lastName={props.user.lastName} navigation={props.navigation} isSearchBar={false}/>
             
-            {props.reviewDisabled ? 
+            {reviewDisabled ? 
                 <View style={[styles.profileAction, styles.inActive]}>
                     <Icon type='material' name='star-outline' color={GigColors.Mustard}/>
-                    <NewReview visible={isAddMode} onCancel={closeModal} userId={props.userId} firstName={props.user.firstName} disable={props.disableReview}/>
+                    <NewReview visible={isAddMode} onCancel={closeModal} userId={props.userId} firstName={props.user.firstName} disable={reviewDisabled}/>
                 </View>
             : 
                 <TouchableOpacity style={[styles.profileAction, styles.active]} onPress={() => setIsAddMode(true)}>
                     <Icon type='material' name='star-outline' color={GigColors.White}/>
-                    <NewReview visible={isAddMode} onCancel={closeModal} userId={props.userId} firstName={props.user.irstName} disable={props.disableReview}/>
+                    <NewReview visible={isAddMode} onCancel={closeModal} userId={props.userId} firstName={props.user.firstName} disable={disableReview}/>
                 </TouchableOpacity>
             }
 

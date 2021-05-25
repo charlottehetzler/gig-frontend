@@ -10,7 +10,6 @@ import { DefaultButton, DisabledDefaultButton } from '../../components/Button/De
 import { ScrollView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Icon } from 'react-native-elements';
 import { GET_All_SKILLS_FOR_PRODUCER, ADD_OR_UPDATE_SKILL_FOR_USER, GET_AVAILABLE_SKILLS_FOR_PRODUCER } from '../../lib/skill';
-import useProfile from '../../helpers/user';
 
 let ADDED_SKILLS: any[] = [];
 

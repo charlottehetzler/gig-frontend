@@ -73,11 +73,11 @@ mutation userSignup($input: SignupInput!) {
 export const UPDATE_USER = gql `
 mutation userUpdate($input: UpdateInput!) {
     userUpdate(input: $input) {
-        userId,
         token,
         firstName,
         lastName, 
-        userType
+        userType,
+        userId
     }
 }
 `;

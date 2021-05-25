@@ -84,12 +84,15 @@ const styles = StyleSheet.create({
     },
     text: {
         alignItems: 'flex-start',
+        justifyContent: 'flex-start',
         width: 200
     },
     time: {
         fontSize: 14,
         color: 'grey',
-        marginRight: 10
+        marginRight: 10, 
+        width: 75,
+        textAlign: 'right'
     },
     lastMessage: {
         fontSize: 16,

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, Switch } from 'react-native';
+import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, Switch, Platform } from 'react-native';
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../../constants/colors';
 import { useMutation } from '@apollo/client';
@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 import { UPDATE_PROFILE } from '../../lib/user';
 import { ScrollView } from 'react-native-gesture-handler';
 import { DefaultButton, DisabledDefaultButton } from '../../components/Button/DefaultButton';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
 
 
 export function EditProfile (props: any) {
@@ -24,11 +26,17 @@ export function EditProfile (props: any) {
     
     const [ email, setEmail ] = useState(user.email);
     
+    const [ birthday, setBirthday ] = useState(user.birthday);
+    
     const [ phoneNumber, setPhoneNumber ] = useState(user.phoneNumber);
     
     const [ changesMade, setChangesMade ] = useState(false);
 
     const [ isEnabled, setIsEnabled ] = useState(user.isCallable);
+
+    const [mode, setMode] = useState();
+    
+    const [show, setShow] = useState(false);
     
     const toggleSwitch = () => {
         setIsEnabled((previousState: any) => !previousState);
@@ -54,6 +62,22 @@ export function EditProfile (props: any) {
         setEmail(email);
         setChangesMade(true);
     }
+
+    const onChange = (event: any, selectedDate: any) => {
+        const currentDate = selectedDate || birthday;
+        setShow(Platform.OS === 'ios');
+        setBirthday(currentDate);
+        setShow(false)
+    };
+    
+    const showMode = (currentMode: string ) => {
+        setShow(true);
+        setMode(currentMode);
+    };
+    
+    const showDatepicker = () => {
+        showMode('date');
+    };
 
     const handleSubmit = async () => {
         try {
@@ -146,6 +170,21 @@ export function EditProfile (props: any) {
                             keyboardType={'default'}
                         />
                     </View>
+                    <View style={styles.input}>
+                        <Text style={styles.inputLabel}>birthday</Text>
+                        <TouchableWithoutFeedback onPress={showDatepicker} >
+                            <Text style={styles.datePicker}>{moment(birthday).format('LL')}</Text>
+                        </TouchableWithoutFeedback >
+                    </View>
+                    {show && (
+                        <DateTimePicker
+                            value={birthday}
+                            testID="dateTimePicker"
+                            onChange={onChange}
+                            mode={mode}
+                            display={'spinner'}
+                        /> 
+                    )}
                     <View style={[styles.input, {marginBottom: 150}]}>
                         <Text style={styles.inputLabel}>Receive Calls?</Text>
                         <Switch
@@ -243,4 +282,13 @@ const styles = StyleSheet.create({
         color: GigColors.DarkGrey,
         fontSize: 14
     },
+    datePicker:{
+        paddingHorizontal: 10,
+        paddingVertical: 15,
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        borderRadius: 10,
+        color: GigColors.Blue,
+        backgroundColor: GigColors.White
+    }
  });

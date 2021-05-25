@@ -16,7 +16,7 @@ export default function DecisionScreen (props:any) {
     const handleDecision = async (val: string) => {
         try {
             const { data, errors } = await doUserUpdate({
-                variables: { input: { userId: userId, type: val}}
+                variables: { input: { userId: userId, type: val }}
             });
             if (data.userUpdate) {
                 dispatch({

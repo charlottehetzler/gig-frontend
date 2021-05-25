@@ -22,12 +22,10 @@ export default function MessagesScreen (props: any) {
     lastName: useSelector( (state: any) => state.user.lastName)
   };
 
-  const { data, loading, refetch, error } = useQuery(GET_USER, {variables: {query: {userId: currentUser.id }}});
-  
+  const { data, loading, refetch, error } = useQuery(GET_USER, {variables: { query: {userId: currentUser.id }}});
+  console.log(currentUser)
   const [chatRooms, setChatRooms] = useState();
-
   const isFocused = props.navigation.isFocused();
-
   const [ isAddMode, setIsAddMode ] = useState(false);
 
   // useEffect(() => { 

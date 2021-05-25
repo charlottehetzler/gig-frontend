@@ -24,7 +24,7 @@ export function ProfileLink (props: any) {
     return (
         <TouchableOpacity style={styles.card} onPress={() => navigation()}>
             <View style={styles.icon}>
-              <Icon type='material' name={props.icon} color={GigColors.Mustard}/>
+              <Icon type='material' name={props.icon} color={GigColors.White}/>
             </View>
             <View style={styles.text}>
                 <Text style={{fontSize: 16}}>{props.firstName} {props.title}</Text>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     icon: {
-        backgroundColor: GigColors.Sun,
+        backgroundColor: GigColors.Mustard,
         borderRadius: 7,
         padding: 10,
         marginRight: 20

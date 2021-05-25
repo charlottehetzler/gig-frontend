@@ -2,26 +2,44 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { GET_All_SKILLS } from '../lib/skill';
+import { GET_ALL_DEALS_FOR_PRODUCER, GET_ALL_DEALS } from '../lib/deal';
 import { useQuery } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GigColors } from '../constants/colors';
 import { useSelector } from 'react-redux';
 import SearchBar from '../components/Search/SearchBar';
 import { SeeAllButton } from '../components/Button/SeeAllButton';
+import { NewDeal } from './NewDeal';
 
 export default function HomeScreen (props: any) {
 
   const isLoggedIn = useSelector( (state: any) => state.user.isLoggedIn);
+  const currentUserId = useSelector((state: any) => state.user.userId);
+  const type = useSelector( (state: any) => state.user.userType);
+  const isConsumer = () => { return type === 'consumer' }
 
   const { data, error, loading, refetch } = useQuery(GET_All_SKILLS);
+  const { data: dealData, error: dealError, loading: dealLoading, refetch: dealRefetch } = useQuery(GET_ALL_DEALS_FOR_PRODUCER, {variables: { userId: currentUserId }})
+  const { data: hotDealsData, error: hotDealsError, loading: hotDealsLoading, refetch: hotDealsRefetch } = useQuery(GET_ALL_DEALS)
 
-  const [ skills, setSkills ] = useState()
+  const [ skills, setSkills ] = useState();
+  const [ deals, setDeals ] = useState();
+  const [ hotDeals, setHotDeals ] = useState();
+
+  const [ isAddMode, setIsAddMode ] = useState(false);
+  const closeAddModal = () => setIsAddMode(false);
 
   useMemo(() => {
     if (data && data?.getAllSkills) {
       setSkills(data?.getAllSkills)
     }
-  },[ data]);
+    if (dealData && dealData?.getAllDealsForProducer) {
+      setDeals(dealData?.getAllDealsForProducer);
+    }
+    if (hotDealsData && hotDealsData?.getAllDeals) {
+      setHotDeals(hotDealsData?.getAllDeals)
+    }
+  },[ data, dealData, hotDealsData ]);
 
   useEffect(() => {
     fetchSkills();
@@ -36,10 +54,19 @@ export default function HomeScreen (props: any) {
     // }
   }
 
+
   const renderItem = ({ item } : any ) => (
     <View>
       <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Producers', {skillId: item['id'], skillName: item['name']})} >
         <Text style={styles.title}>{item['name']} </Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const renderDeal = ({ item } : any ) => (
+    <View>
+      <TouchableOpacity style={styles.item} >
+        <Text style={styles.title}>{item['title']} </Text>
       </TouchableOpacity>
     </View>
   );
@@ -55,7 +82,18 @@ export default function HomeScreen (props: any) {
       {!loading &&  <>
       <SearchBar navigation={props.navigation} isPersonal={false} refetchSkills={fetchSkills} profileMode={false}/>
       <ScrollView>
-        <Text style={styles.h4Style}> Browse random gigs</Text>
+        <Text style={styles.h4Style}>{isConsumer() ? 'Hot deals' : 'Now wanted'}</Text>
+        <FlatList
+          data={isConsumer() ? hotDeals : skills}
+          renderItem={isConsumer() ? renderDeal : renderItem}
+          keyExtractor={item => item.id.toString()}
+          horizontal
+          style={styles.flatListHorizontal}
+        />
+        <View style={styles.subHeader}>
+          <Text style={styles.h4Style}>New gigs</Text>
+          <SeeAllButton case={'categories'} navigation={props.navigation}/>
+        </View>
         <FlatList
           data={skills}
           renderItem={renderItem}
@@ -64,20 +102,26 @@ export default function HomeScreen (props: any) {
           style={styles.flatListHorizontal}
         />
         <View style={styles.subHeader}>
-          <Text style={styles.h4Style}> All gigs</Text>
-          <SeeAllButton case={'categories'} navigation={props.navigation}/>
+          <Text style={styles.h4Style}>{isConsumer() ? 'My gigs' : 'My deals'}</Text>
+          <TouchableOpacity style={styles.moreButton} onPress={() => setIsAddMode(true)}>
+            <Text style={styles.underline}>{isConsumer() ? 'Add gig' : 'Add deal'}</Text>
+          </TouchableOpacity>
         </View>
-        <FlatList
-          data={skills}
-          renderItem={renderItem}
-          keyExtractor={item => item.id.toString()}
-        />  
+        <View style={styles.deals}>
+          <FlatList
+            data={deals}
+            renderItem={renderDeal}
+            keyExtractor={item => item.id.toString()}
+            horizontal
+            style={styles.flatListHorizontal}
+          />
+        </View>
+        <NewDeal visible={isAddMode} onCancel={closeAddModal} refetchDeals={dealRefetch} />
       </ScrollView>
       </>}
     </SafeAreaView>
   ) 
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -91,18 +135,19 @@ const styles = StyleSheet.create({
     color: GigColors.Blue  
   },
   flatListHorizontal: {
-    height: 100
+    height: 125
   },
   item: {
     backgroundColor: GigColors.White,
     borderRadius: 10,
-    paddingVertical: 25,
+    paddingVertical: 20,
     paddingHorizontal: 15,
     marginVertical: 8,
-    marginHorizontal: 16,
+    marginHorizontal: 10,
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    width: 125
   },
   title: {
     fontSize: 18,
@@ -111,10 +156,6 @@ const styles = StyleSheet.create({
     color: GigColors.Blue
   },
   moreButton: {
-    backgroundColor: GigColors.White,
-    color: GigColors.Black,
-    borderWidth: 1,
-    borderColor: GigColors.Black,
     paddingVertical: 3,
     paddingHorizontal: 5,
     borderRadius: 5,
@@ -126,5 +167,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between'
+  }, 
+  deals: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  underline: {
+    color: GigColors.Blue,
+    textDecorationStyle: 'solid',
+    textDecorationLine: 'underline',
+    textDecorationColor: GigColors.Blue, 
+    fontSize: 16,
   }
 });

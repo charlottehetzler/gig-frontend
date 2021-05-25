@@ -22,15 +22,15 @@ export function NewReview ( props: any ) {
 
     const { data: catData, error: catError, loading: catLoading } = useQuery(GET_All_CATEGORIES);
     
-    const [rating, setRating] = useState();
+    const [ rating, setRating ] = useState();
     
-    const [comment, setComment] = useState();
+    const [ comment, setComment ] = useState();
     
-    const [commentIsValid, setCommentIsValid] = useState(false);
+    const [ commentIsValid, setCommentIsValid ] = useState(false);
 
-    const [ categories, setCategories] = useState()
+    const [ categories, setCategories ] = useState()
     
-    const [ categoriesD, setCategoriesD] = useState()
+    const [ categoriesD, setCategoriesD ] = useState()
     
     const [ category, setCategory ] = useState();
     
@@ -40,7 +40,7 @@ export function NewReview ( props: any ) {
 
     const [ skillIsValid, setSkillIsValid ] = useState(false);
         
-    const [ categorySkills, setCategorySkills] = useState();
+    const [ categorySkills, setCategorySkills ] = useState();
 
     useMemo(() => {
         if (catData && catData?.getAllCategories){
@@ -96,14 +96,13 @@ export function NewReview ( props: any ) {
 
     const handleSubmit = async () => {
         try {
-            const { data, errors } = await doSaveReview({
+            await doSaveReview({
                 variables: { input: {
                     userId: userId, fromUserId: currentUserId, rating: rating, comment: comment, skillId: skillId
                 }}
             });
-            props.disable();
+            props.disable()
             props.onCancel();
-            // props.refetch();
         } catch (e) {
           console.log(e);
         }
@@ -123,7 +122,6 @@ export function NewReview ( props: any ) {
         return saveReviewLoading;
     }, [saveReviewLoading]);
     
-
     return (
         <Modal visible={props.visible} animationType='slide'>
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
@@ -131,18 +129,19 @@ export function NewReview ( props: any ) {
             <View style={styles.inputContainer}>
                 
                 <View style={styles.headerWrapper}>
-                    <TouchableWithoutFeedback onPress={props.onCancel}>
-                        <Icon type='material' name='close' style={styles.icon} size={25}/>
-                    </TouchableWithoutFeedback>
+                    <View></View>
                     <Text style={styles.title}>Review {props.firstName}</Text>
+                    <TouchableWithoutFeedback onPress={props.onCancel}>
+                        <Icon type='material' name='close' style={styles.icon} color={GigColors.Mustard} size={25}/>
+                    </TouchableWithoutFeedback>
                 </View>
 
                 <View style={styles.container}>
                     <View style={[styles.input, {zIndex: 9999}]}>
-                        <Text style={styles.inputLabel}>add your rating</Text>
+                        <Text style={styles.inputLabel}>your rating</Text>
                         <AirbnbRating
                             count={5}
-                            selectedColor={GigColors.Black}
+                            selectedColor={GigColors.Mustard}
                             defaultRating={3}
                             size={30}
                             onFinishRating={completeRating}
@@ -151,7 +150,7 @@ export function NewReview ( props: any ) {
                     </View>
            
                     <View style={styles.input}>
-                        <Text style={styles.inputLabel}>add your review</Text>
+                        <Text style={styles.inputLabel}>your review</Text>
                         <TextInput
                             placeholder={"Type here..."}
                             style={styles.textInput}
@@ -162,36 +161,36 @@ export function NewReview ( props: any ) {
                     </View>
                     {isConsumer() && categories && <>
                         <View style={[styles.input, {zIndex: 9999}]}>
-                            <Text style={styles.inputLabel}>select area of your review</Text>
+                            <Text style={styles.inputLabel}>category</Text>
                             <DropDownPicker
                                 items={categories}
                                 placeholder="Select a category"
                                 onChangeItem={item => categoryChange(item)}
                                 containerStyle={{height: 50}}
-                                dropDownStyle={{backgroundColor: '#FFFFFF'}}
-                                itemStyle={{backgroundColor: '#FFFFFF', borderBottomColor: '#C4C4C4', borderBottomWidth: 1, paddingVertical:20}}
+                                dropDownStyle={{backgroundColor: GigColors.White}}
+                                itemStyle={{backgroundColor: GigColors.White, paddingVertical:20}}
                                 zIndex={5000}
-                                arrowColor={'#7F7F7F'}
-                                labelStyle={{color: '#7F7F7F', textTransform:'uppercase'}}
-                                activeLabelStyle={{color: GigColors.Black}}
+                                arrowColor={GigColors.Blue}
+                                labelStyle={{color: GigColors.Mustard, textTransform:'uppercase'}}
+                                activeLabelStyle={{color: GigColors.Blue}}
                                 dropDownMaxHeight={600}
                                 searchable={true}
                             />
                         </View>
                         {categorySkills && 
                             <View style={[styles.input, {zIndex: 999}]}>
-                                <Text style={styles.inputLabel}>select skill of your review</Text>
+                                <Text style={styles.inputLabel}>skill</Text>
                                 <DropDownPicker
                                     items={categorySkills}
                                     placeholder="Select a skill"
                                     onChangeItem={item => skillChange(item)}
                                     containerStyle={{height: 50}}
-                                    dropDownStyle={{backgroundColor: '#FFFFFF'}}
-                                    itemStyle={{backgroundColor: '#FFFFFF', borderBottomColor: '#C4C4C4', borderBottomWidth: 1, paddingVertical:20}}
+                                    dropDownStyle={{backgroundColor: GigColors.White}}
+                                    itemStyle={{backgroundColor: GigColors.White, paddingVertical:20}}
                                     zIndex={5000}
-                                    arrowColor={'#7F7F7F'}
-                                    labelStyle={{color: '#7F7F7F', textTransform:'uppercase'}}
-                                    activeLabelStyle={{color: GigColors.Black}}
+                                    arrowColor={GigColors.Blue}
+                                    labelStyle={{color: GigColors.Mustard, textTransform:'uppercase'}}
+                                    activeLabelStyle={{color: GigColors.Blue}}
                                     dropDownMaxHeight={600}
                                     searchable={true}
                                 />
@@ -216,25 +215,30 @@ export function NewReview ( props: any ) {
 const styles = StyleSheet.create({
     inputContainer: {
         flex: 1,
-        marginTop: 60
+        marginTop: 60, 
+        backgroundColor: GigColors.Greyish
     },
     icon: {
         alignItems:'flex-end',
         marginRight: 20
     },
     headerWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginVertical: 25
     },
     title: {
         fontWeight: '600',
-        color: GigColors.Black,
+        color: GigColors.Blue,
         fontSize: 24,
         textAlign: 'center'
     },
     container: {
-        padding: 10,
+        marginHorizontal: 16
     },
     input: {
-        marginVertical: 10,
+        marginVertical: 20,
     },
     textInputBig: {
         paddingHorizontal: 10,
@@ -242,7 +246,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderBottomWidth: 2,
-        borderBottomColor: GigColors.DarkGrey,
+        borderBottomColor: GigColors.Blue,
         marginVertical: 15,
         fontSize: 18, 
         color: GigColors.Black
@@ -257,10 +261,9 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
-        borderColor: GigColors.Grey,
-        borderRadius: 5,
-        color: GigColors.Black
+        borderRadius: 10,
+        color: GigColors.Blue,
+        backgroundColor: GigColors.White
     },
     dateWrapper: {
         flexDirection: 'row', 

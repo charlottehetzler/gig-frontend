@@ -15,7 +15,7 @@ export default function MyProfileScreen(props: any) {
   
   const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
   
-  const { user, loading, error, fullName, initials,  } = useProfile(myUserId);
+  const { user, loading, error, fullName, initials } = useProfile(myUserId);
 
   const guestFirstName = useSelector( (state: any) => state.user.firstName);
   
@@ -44,7 +44,11 @@ export default function MyProfileScreen(props: any) {
         <ProfileCard initials={initials} fullName={fullName} user={user} isMe={true} navigation={props.navigation}/>
         <View style={styles.sectionWrapper}>
           {isConsumer() ? 
-            null
+            <View >
+              <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user}/>
+              <ProfileLink firstName={'My'} navigation={props.navigation} title={'friends'} icon={'people'} user={user}/>
+              <ProfileLink firstName={'My'} navigation={props.navigation} title={'settings'} icon={'settings'} user={user} initials={props.initials} />
+          </View>
             :
             <View >
               <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user}/>

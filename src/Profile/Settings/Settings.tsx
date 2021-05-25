@@ -4,6 +4,11 @@ import { EditProfile } from './EditProfile';
 import { GigColors } from '../../constants/colors';
 import { DefaultHeader } from '../../components/Header/DefaultHeader';
 import EditLanguages from './EditLanguages';
+import { useMutation } from '@apollo/client';
+import { UPDATE_USER } from '../../lib/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { USER_UPDATE } from '../../redux/actions/user';
+
 
 export default function SettingsScreen(props: any) {
 
@@ -14,6 +19,34 @@ export default function SettingsScreen(props: any) {
     const closeEditLangModal = () => setIsEditLangMode(false);
 
     const user = props.route.params.user;
+
+    const [ doUserUpdate, { loading: userUpdateLoading } ] = useMutation(UPDATE_USER);
+    const dispatch = useDispatch();
+    const userId = useSelector( (state: any) => state.user.userId);
+    const type = useSelector( (state: any) => state.user.userType);
+
+    const changeType = async (type: string) => {
+        try {
+            const { data, errors } = await doUserUpdate({
+                variables: { input: { userId: userId, type: type}}
+            });
+            console.log(errors)
+            if (data.userUpdate) {
+                dispatch({
+                    type: USER_UPDATE, 
+                    token: data.userUpdate.token, 
+                    userId: data.userUpdate.userId, 
+                    isLoggedIn: true,
+                    firstName: data.userUpdate.firstName, 
+                    lastName: data.userUpdate.lastName,
+                    userType: data.userUpdate.userType
+                });
+                props.navigation.navigate('HomeScreen');
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -31,8 +64,8 @@ export default function SettingsScreen(props: any) {
                 <TouchableOpacity style={styles.setting}>
                     <Text style={styles.title}>Notifications</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.setting}>
-                    <Text style={styles.title}>Change to Consumer</Text>
+                <TouchableOpacity style={styles.setting} onPress={() => changeType(type)}>
+                    <Text style={[styles.title, {color: GigColors.Mustard}]}>Change to Consumer</Text>
                 </TouchableOpacity>
 
                 <EditProfile visible={isEditMode} onCancel={closeEditModal} user={user} initials={props.initials} />

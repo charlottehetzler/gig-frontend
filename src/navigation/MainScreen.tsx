@@ -16,7 +16,7 @@ export function Tabs(props: any) {
             tabBarIcon: ({ focused }) => {
                 let iconName : string;
                 let iconType = Platform.OS === 'ios' ? 'ionicon' : 'material'
-                let color = focused ? GigColors.Mustard : GigColors.Taupe;
+                let color = focused ? GigColors.Mustard : GigColors.Blue;
 
                 if (route.name === 'Home') {
                     iconName = 'home'

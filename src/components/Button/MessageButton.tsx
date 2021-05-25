@@ -53,9 +53,9 @@ export function MessageButton (props: any) {
 
 const styles = StyleSheet.create({
     profileAction: {
-        backgroundColor: GigColors.White,
+        backgroundColor: GigColors.Mustard,
         borderRadius: 50,
-        padding: 10,
+        padding: 10
     },
     searchAction: {
         flexDirection: 'row',
