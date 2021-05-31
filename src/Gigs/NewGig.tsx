@@ -3,7 +3,7 @@ import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, Pl
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../constants/colors';
 import { DefaultButton, DisabledDefaultButton } from '../components/Button/DefaultButton';
-import { CREATE_DEAL } from '../lib/deal';
+import { CREATE_GIG } from '../lib/gig';
 import { GET_All_CATEGORIES } from '../lib/category';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useQuery, useMutation } from '@apollo/client';
@@ -13,13 +13,12 @@ import moment from 'moment';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
-export function NewDeal ( props: any ) {
-
+export function NewGig ( props: any ) {
     const currentUserId = useSelector((state: any) => state.user.userId);
 
     const { data: catData, error: catError, loading: catLoading } = useQuery(GET_All_CATEGORIES);
 
-    const [ doSaveDeal, { loading: saveDealLoading } ] = useMutation(CREATE_DEAL);
+    const [ doSaveGig, { loading: saveGigLoading } ] = useMutation(CREATE_GIG);
             
     const [ categories, setCategories ] = useState()
     const [ category, setCategory ] = useState();
@@ -30,16 +29,15 @@ export function NewDeal ( props: any ) {
     const [ skillIsValid, setSkillIsValid ] = useState(false);
     
     const [ categorySkills, setCategorySkills ] = useState();
-
     
-    const [ title, setTitle ] = useState();
+    const [ title, setTitle ] = useState(props?.data?.title);
     const [ titleIsValid, setTitleIsValid ] = useState();
     
-    const [ description, setDescription ] = useState();
+    const [ description, setDescription ] = useState(props?.data?.description);
     const [ descriptionIsValid, setDescriptionIsValid ] = useState();
     
-    const [ fromDate, setFromDate ] = useState(new Date ());
-    const [ toDate, setToDate ] = useState(); 
+    const [ fromDate, setFromDate ] = useState(props?.data?.fromDate || new Date ());
+    const [ toDate, setToDate ] = useState(props?.data?.toDate); 
     
     const [ modeFrom, setModeFrom ] = useState();
     const [ showFrom, setShowFrom ] = useState(false);
@@ -47,6 +45,9 @@ export function NewDeal ( props: any ) {
     const [ modeTo, setModeTo ] = useState();
     const [ showTo, setShowTo] = useState(false);
     
+    const type = useSelector( (state: any) => state.user.userType);
+    const isConsumer = () => { return type === 'consumer' }
+
     useMemo(() => {
         if (catData && catData?.getAllCategories){
             const allCategories = (catData.getAllCategories as any[]).map(category => {
@@ -133,28 +134,32 @@ export function NewDeal ( props: any ) {
     const showDatepickerTo = () => showMode('date', 'to');
     const showTimepickerTo = () => showMode('time', 'to');
 
-    const isValid = () => { return skillIsValid && titleIsValid && descriptionIsValid }
+    const isValid = () => { 
+        return skillIsValid && titleIsValid && descriptionIsValid 
+    }
 
     const handleSubmit = async () => {
         try {
 
-            const { data, errors } = await doSaveDeal({
+            const { data, errors } = await doSaveGig({
                 variables: { input: {
                     userId: currentUserId, categoryId: category.value, skillId: skill.value, 
-                    title: title, description: description, fromDate: fromDate, toDate: toDate
+                    title: title, description: description, fromDate: fromDate, toDate: toDate,
+                    isAd: !isConsumer()
                 }}
             });
-            console.log(errors)
             props.onCancel();
             props.refetchDeals();
+            props.refetchGigs();
+            props.refetchPosts()
         } catch (e) {
           console.log(e);
         }
     }
 
     const loading = useMemo(() => {
-        return catLoading || saveDealLoading;
-    }, [catLoading, saveDealLoading]);
+        return catLoading || saveGigLoading;
+    }, [catLoading, saveGigLoading]);
       
     const error = useMemo(() => {
         return catError;
@@ -170,14 +175,14 @@ export function NewDeal ( props: any ) {
                     <TouchableWithoutFeedback onPress={props.onCancel}>
                         <Icon type='material' name='close' style={styles.icon} size={25}/>
                     </TouchableWithoutFeedback>
-                    <Text style={styles.title}>Add a new deal</Text>
+                    <Text style={styles.title}>Add a new gig</Text>
                 </View>
 
                 <View style={styles.container}>
                     <View style={[styles.input, {zIndex: 999}]}>
                         <Text style={styles.inputLabel}>Title</Text>
                         <TextInput
-                            placeholder={"Title of your deal"}
+                            placeholder={"Title of your gig"}
                             style={styles.textInput}
                             value={title}
                             onChangeText={titleChangeHandler}
@@ -188,7 +193,7 @@ export function NewDeal ( props: any ) {
                     <View style={styles.input}>
                         <Text style={styles.inputLabel}>Short description</Text>
                         <TextInput
-                            placeholder={"Describe your deal"}
+                            placeholder={"Describe your gig"}
                             style={styles.textInput}
                             value={description}
                             onChangeText={descriptionChangeHandler}
@@ -286,9 +291,9 @@ export function NewDeal ( props: any ) {
 
                     <View style={styles.button}>
                         {isValid() ? 
-                            <DefaultButton title={'Publish Deal'} onPress={handleSubmit} />
+                            <DefaultButton title={'Publish Gig'} onPress={handleSubmit} />
                         :
-                            <DisabledDefaultButton title={'Publish Deal'}/>
+                            <DisabledDefaultButton title={'Publish Gig'}/>
                         }
                     </View>
 

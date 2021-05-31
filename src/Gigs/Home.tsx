@@ -2,14 +2,14 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { GET_All_SKILLS } from '../lib/skill';
-import { GET_ALL_DEALS_FOR_PRODUCER, GET_ALL_DEALS } from '../lib/deal';
+import { GET_ALL_DEALS_FOR_PRODUCER, GET_ALL_GIGS, GET_ALL_GIGS_FOR_CONSUMER } from '../lib/gig';
 import { useQuery } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GigColors } from '../constants/colors';
 import { useSelector } from 'react-redux';
 import SearchBar from '../components/Search/SearchBar';
 import { SeeAllButton } from '../components/Button/SeeAllButton';
-import { NewDeal } from './NewDeal';
+import { NewGig } from './NewGig';
 
 export default function HomeScreen (props: any) {
 
@@ -19,31 +19,57 @@ export default function HomeScreen (props: any) {
   const isConsumer = () => { return type === 'consumer' }
 
   const { data, error, loading, refetch } = useQuery(GET_All_SKILLS);
-  const { data: dealData, error: dealError, loading: dealLoading, refetch: dealRefetch } = useQuery(GET_ALL_DEALS_FOR_PRODUCER, {variables: { userId: currentUserId }})
-  const { data: hotDealsData, error: hotDealsError, loading: hotDealsLoading, refetch: hotDealsRefetch } = useQuery(GET_ALL_DEALS)
+  //producer's deals
+  const { data: dealData, error: dealError, loading: dealLoading, refetch: dealRefetch } = useQuery(
+    GET_ALL_DEALS_FOR_PRODUCER, { variables: { userId: currentUserId }}
+  );
+  //gigs (either hotDeals or nowWanted)
+  const { data: gigData, error: gigsError, loading: gigsLoading, refetch: gigsRefetch } = useQuery(
+    GET_ALL_GIGS, { variables: { isAd: isConsumer() } }
+  );
+  //consumer's posts
+  const { data: postData, error: postError, loading: postLoading, refetch: postRefetch } = useQuery(
+    GET_ALL_GIGS_FOR_CONSUMER, { variables: { userId: currentUserId }}
+  );
+
 
   const [ skills, setSkills ] = useState();
   const [ deals, setDeals ] = useState();
-  const [ hotDeals, setHotDeals ] = useState();
+  const [ gigs, setGigs ] = useState();
+  const [ posts, setPosts ] = useState();
 
   const [ isAddMode, setIsAddMode ] = useState(false);
+  const [ isEditMode, setIsEditMode ] = useState(false);
+  
   const closeAddModal = () => setIsAddMode(false);
+  const closeEditModal = () => setIsEditMode(false);
 
   useMemo(() => {
     if (data && data?.getAllSkills) {
       setSkills(data?.getAllSkills)
     }
-    if (dealData && dealData?.getAllDealsForProducer) {
-      setDeals(dealData?.getAllDealsForProducer);
+    if (gigData && gigData?.getAllGigs) {
+      setGigs(gigData?.getAllGigs)
     }
-    if (hotDealsData && hotDealsData?.getAllDeals) {
-      setHotDeals(hotDealsData?.getAllDeals)
+
+    if (isConsumer()) {
+      if(postData && postData?.getAllGigsForConsumer) {
+        setPosts(postData?.getAllGigsForConsumer);
+      }
+    } else {
+      if (dealData && dealData?.getAllDealsForProducer) {
+        setDeals(dealData?.getAllDealsForProducer);
+      }
     }
-  },[ data, dealData, hotDealsData ]);
+    
+    console.log(postData)
+    
+  },[ data, dealData, gigData, postData ]);
 
   useEffect(() => {
     fetchSkills();
   }, []);
+
 
   const fetchSkills = async () => {
     // try {
@@ -84,7 +110,7 @@ export default function HomeScreen (props: any) {
       <ScrollView>
         <Text style={styles.h4Style}>{isConsumer() ? 'Hot deals' : 'Now wanted'}</Text>
         <FlatList
-          data={isConsumer() ? hotDeals : skills}
+          data={gigs}
           renderItem={isConsumer() ? renderDeal : renderItem}
           keyExtractor={item => item.id.toString()}
           horizontal
@@ -109,14 +135,21 @@ export default function HomeScreen (props: any) {
         </View>
         <View style={styles.deals}>
           <FlatList
-            data={deals}
+            data={isConsumer() ? posts : deals}
             renderItem={renderDeal}
             keyExtractor={item => item.id.toString()}
             horizontal
             style={styles.flatListHorizontal}
           />
         </View>
-        <NewDeal visible={isAddMode} onCancel={closeAddModal} refetchDeals={dealRefetch} />
+        <NewGig 
+          visible={isAddMode} 
+          onCancel={closeAddModal}
+          data={isConsumer() ? posts : gigs}
+          refetchDeals={dealRefetch} 
+          refetchGigs={gigsRefetch} 
+          refetchPosts={postRefetch}
+        />
       </ScrollView>
       </>}
     </SafeAreaView>

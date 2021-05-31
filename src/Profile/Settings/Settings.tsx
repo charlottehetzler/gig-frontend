@@ -24,13 +24,14 @@ export default function SettingsScreen(props: any) {
     const dispatch = useDispatch();
     const userId = useSelector( (state: any) => state.user.userId);
     const type = useSelector( (state: any) => state.user.userType);
+    const isConsumer = () => { return type === 'consumer' }
+
 
     const changeType = async (type: string) => {
         try {
             const { data, errors } = await doUserUpdate({
                 variables: { input: { userId: userId, type: type}}
             });
-            console.log(errors)
             if (data.userUpdate) {
                 dispatch({
                     type: USER_UPDATE, 
@@ -65,7 +66,7 @@ export default function SettingsScreen(props: any) {
                     <Text style={styles.title}>Notifications</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.setting} onPress={() => changeType(type)}>
-                    <Text style={[styles.title, {color: GigColors.Mustard}]}>Change to Consumer</Text>
+                    <Text style={[styles.title, {color: GigColors.Mustard}]}>Change to {isConsumer() ? 'Producer' : 'Consumer' }</Text>
                 </TouchableOpacity>
 
                 <EditProfile visible={isEditMode} onCancel={closeEditModal} user={user} initials={props.initials} />

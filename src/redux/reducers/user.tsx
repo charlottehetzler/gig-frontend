@@ -6,7 +6,7 @@ export const initialState = {
   isLoggedIn: true,
   firstName: 'Guest',
   lastName: 'User',
-  userType: 'producer'
+  userType: 'consumer'
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -39,6 +39,6 @@ export const userReducer = (state = initialState, action) => {
         isLoggedIn: false
       }
     }
-    default: { return state}
+    default: { return state }
   }
 } 
