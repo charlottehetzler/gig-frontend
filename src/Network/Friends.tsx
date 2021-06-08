@@ -37,7 +37,7 @@ export default function FriendsScreen(props: any) {
     return (
         <SafeAreaView style={styles.container}>
         <View>
-            <DefaultHeader title={'Friends'} navigation={props.navigation} goBack={true}/>
+            <DefaultHeader title={'Friends'} navigation={props.navigation} goBack={true} isConsumer={props.isConsumer}/>
         </View> 
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
         <View style={{marginHorizontal: 16}}>

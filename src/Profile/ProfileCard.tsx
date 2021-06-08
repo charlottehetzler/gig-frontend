@@ -12,32 +12,28 @@ import { ProfileActions } from './ProfileActions';
 export function ProfileCard (props: any) {
   
   const currentUserId = useSelector((state: any) => state.user.userId);
+  const type = useSelector( (state: any) => state.user.userType);
+  const isConsumer = () => { return type === 'consumer' }
 
   const languages = props.user.languages;
     
   const userId = props.user.id
-
-  const { data, loading, error } = useQuery(GET_COMMON_CHAT_ROOM, {variables: {currentUserId: currentUserId, userId: userId} });  
   
   const { data: reviewData, loading: reviewLoading, error: reviewError } = useQuery(GET_SUBMITTED_REVIEW, {variables: {query: { userId: userId, fromUserId: currentUserId, skillId: props.skillId}} });  
    
   const [ isEditMode, setIsEditMode ] = useState(false);
   
   const [ reviewDisabled, setReviewDisabled ] = useState(false);
-
-  const [ chatRoomId, setChatRoomId ] = useState();
   
   const closeEditModal = () => setIsEditMode(false);
 
 
+
   useMemo(() => {
-    if (data && data?.getCommonChatRoom) {
-      setChatRoomId(data?.getCommonChatRoom.id);
-    }
     if (reviewData && reviewData?.getSubmittedReview) {
       setReviewDisabled(reviewData?.getSubmittedReview);
     }
-  }, [data]);
+  }, [reviewData]);
 
   return (
     <View style={{backgroundColor: GigColors.White, borderRadius: 30, marginBottom: 35}}>
@@ -72,6 +68,7 @@ export function ProfileCard (props: any) {
             user={props.user}
             navigation={props.navigation}
             reviewDisabled={reviewDisabled}
+            isConsumer={isConsumer()}
           />
         }
       </View>

@@ -2,29 +2,30 @@ import React, { useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, AsyncStorage } from "react-native";
 import { useDispatch } from 'react-redux';
 import { AUTHENTICATE } from '../redux/actions/user';
+import { GigColors } from '../constants/colors';
 
 export default function LoadingScreen (props:any) {
   const dispatch = useDispatch();
 
   useEffect(() => {
     const tryLogin = async () => {
-      const userData : string = await AsyncStorage.getItem('userData');
+      const userData = await AsyncStorage.getItem('userData');
       if (!userData) {
-        props.navigation.navigate('Login');
         return;
       }
       const transformedData = JSON.parse(userData);
-      const { userId, token } = transformedData;
+      const { userId, token, userType } = transformedData;
       if (!userId || !token) {
-        props.navigation.navigate('Login');
         return;
       }
-      props.navigation.navigate('HomeScreen');
+      
+      // props.navigation.navigate('HomeScreen');
       dispatch({
         type: AUTHENTICATE, 
         token: token, 
         userId: userId, 
-        isLoggedIn: true
+        isLoggedIn: true,
+        userType: userType
       });
     }
     tryLogin();
@@ -32,8 +33,8 @@ export default function LoadingScreen (props:any) {
 
   return (
     <View style={styles.center}>
-      <Text style={styles.title}>Loading...</Text>
-      <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>
+      {/* <Text style={styles.title}>Loading...</Text> */}
+      <ActivityIndicator size="small" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>
     </View>
   );
 };

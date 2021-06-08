@@ -91,7 +91,12 @@ export default function ChatScreen (props: any) {
       <SafeAreaView style={styles.chatContainer}>
         <ScrollView>
           <View>
-            <DefaultHeader title={firstName + " " + lastName} navigation={props.navigation} goBack={true}/>
+            <DefaultHeader 
+              title={firstName + " " + lastName} 
+              navigation={props.navigation} 
+              goBack={true} 
+              isConsumer={props.isConsumer}
+            />
           </View> 
           {messages ? 
             <FlatList

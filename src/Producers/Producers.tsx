@@ -12,13 +12,14 @@ export default function ProducersScreen(props: any) {
 
   const currentUserId = useSelector((state: any) => state.user.userId);
     
-  const { skillId, skillName } = props.route.params;
+  const { skillId, skillName, isConsumer } = props.route.params;
   
-  const { data, loading, error } = useQuery(GET_PRODUCERS_FOR_SKILL, {variables: {query: {skillId: skillId, currentUserId: currentUserId}}});  
+  const { data, loading, error } = useQuery(GET_PRODUCERS_FOR_SKILL, { 
+    variables: {query: {skillId: skillId, currentUserId: currentUserId}
+  }});  
     
   let [ producers, setProducers ] = useState<any>()
 
-    
   useMemo(() => {
     if (data && data?.getProducersForSkill) {
       const producerList = (data?.getProducersForSkill.map((item: { firstName: string; lastName: string; avgRating: number; id: number; }) => {
@@ -40,13 +41,14 @@ export default function ProducersScreen(props: any) {
       userId={item["userId"]}
       navigation={props.navigation}
       skillId={skillId}
+      isConsumer={isConsumer}
     />
   );
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={skillName} navigation={props.navigation} goBack={true}/>
+        <DefaultHeader title={skillName} navigation={props.navigation} goBack={true} isConsumer={isConsumer}/>
       </View> 
       {loading &&  <ActivityIndicator size="small" color='#000000' style={{alignItems:'center', justifyContent:'center'}}/>}
 

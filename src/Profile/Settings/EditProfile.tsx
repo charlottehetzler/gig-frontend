@@ -197,9 +197,9 @@ export function EditProfile (props: any) {
                     </View>
                     
                     {changesMade ?
-                        <DefaultButton title={'update profile'} onPress={handleSubmit}/>
+                        <DefaultButton title={'update profile'} onPress={handleSubmit} isConsumer={props.isConsumer}/>
                     :
-                        <DisabledDefaultButton title={'update profile'}/>
+                        <DisabledDefaultButton title={'update profile'} isConsumer={props.isConsumer}/>
                     }
                     
                 </View>

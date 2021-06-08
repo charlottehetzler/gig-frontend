@@ -38,9 +38,12 @@ export function RequestButton (props: any) {
     }
 
     return (
-        <TouchableOpacity style={styles.requestButton} onPress={onUpdateRequest}>
+        <TouchableOpacity 
+            style={[styles.requestButton, { borderColor: props.isConsumer ? GigColors.Sky : GigColors.Mustard}]} 
+            onPress={onUpdateRequest}
+        >
             {updateRequestLoading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
-            <Text style={{color: GigColors.Mustard}}>{props.title}</Text>
+            <Text style={{color: props.isConsumer ? GigColors.Sky : GigColors.Mustard}}>{props.title}</Text>
         </TouchableOpacity>
     )
 }
@@ -48,7 +51,6 @@ export function RequestButton (props: any) {
 
 const styles = StyleSheet.create({
     requestButton: {
-        borderColor: GigColors.Mustard,
         borderWidth: 1,
         borderRadius: 4,
         paddingVertical: 5,

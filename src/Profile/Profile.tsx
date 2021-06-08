@@ -8,7 +8,7 @@ import { ProfileCard } from './ProfileCard';
 
 export default function ProfileScreen(props: any) {
 
-  const { userId, skillId } = props.route.params;
+  const { userId, skillId, isConsumer } = props.route.params;
 
   const { user, loading, error, fullName, initials } = useProfile(userId, skillId);
 
@@ -17,7 +17,7 @@ export default function ProfileScreen(props: any) {
     <SafeAreaView >
       
       <View>
-        <DefaultHeader title={fullName} navigation={props.navigation} goBack={true}/>
+        <DefaultHeader title={fullName} navigation={props.navigation} goBack={true} isConsumer={isConsumer}/>
       </View>
 
       {loading &&  <ActivityIndicator size="small" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
@@ -32,34 +32,3 @@ export default function ProfileScreen(props: any) {
   );
 }
 
-const styles = StyleSheet.create({
-  h4Style: {
-    marginTop: 15,
-    fontSize: 24,
-    textAlign: 'center',
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
-    marginVertical: 5,
-    marginBottom: 15,
-  },
-  moreButton: {
-    backgroundColor: GigColors.White,
-    color: GigColors.Black,
-    borderWidth: 1,
-    borderColor: GigColors.Black,
-    paddingVertical: 3,
-    paddingHorizontal: 5,
-    borderRadius: 5,
-    justifyContent: "center",
-    marginBottom: 0,
-    marginRight: 16
-  },
-  subHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between'
-  }
-});

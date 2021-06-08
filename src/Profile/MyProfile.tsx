@@ -11,35 +11,23 @@ import { ProfileCard } from './ProfileCard';
 
 export default function MyProfileScreen(props: any) {
   
-  const myUserId = useSelector((state: any) => state.user.userId);
-  
-  const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
-  
-  const { user, loading, error, fullName, initials } = useProfile(myUserId);
-
-  const guestFirstName = useSelector( (state: any) => state.user.firstName);
-  
-  const guestLastName = useSelector( (state: any) => state.user.lastName);
-
-  const guestFullName = guestFirstName + " " + guestLastName
-
-  const guestInitials = guestFirstName.charAt(0).toUpperCase() + " " + guestLastName.charAt(0).toUpperCase();
-  
+  const currentUserId = useSelector((state: any) => state.user.userId);
   const userType = useSelector( (state: any) => state.user.userType);
-  
   const isConsumer = () => { return userType === 'consumer' }
+    
+  const { user, loading, error, fullName, initials } = useProfile(currentUserId);
 
   return ( 
     <SafeAreaView>
       <View>
-        <DefaultHeader title={'Profile'} navigation={props.navigation}/>
+        <DefaultHeader title={'Profile'} navigation={props.navigation} isConsumer={isConsumer()}/>
       </View>
       
       {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       
       <ScrollView>
-        {!isLoggedIn && <GuestProfile initials={guestInitials} fullName={guestFullName} firstName={guestFirstName}/>}
-        {user && isLoggedIn && <>
+        
+        {user && <>
 
         <ProfileCard initials={initials} fullName={fullName} user={user} isMe={true} navigation={props.navigation}/>
         <View style={styles.sectionWrapper}>
@@ -47,14 +35,30 @@ export default function MyProfileScreen(props: any) {
             <View >
               <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user}/>
               <ProfileLink firstName={'My'} navigation={props.navigation} title={'friends'} icon={'people'} user={user}/>
-              <ProfileLink firstName={'My'} navigation={props.navigation} title={'settings'} icon={'settings'} user={user} initials={props.initials} />
+              <ProfileLink 
+                firstName={'My'} 
+                navigation={props.navigation} 
+                title={'settings'} 
+                icon={'settings'} 
+                user={user} 
+                initials={props.initials} 
+                isConsumer={isConsumer()}
+            />
           </View>
             :
             <View >
               <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user}/>
               <ProfileLink firstName={'My'} navigation={props.navigation} title={'skills'} icon={'lightbulb'} user={user}/>
               <ProfileLink firstName={'My'} navigation={props.navigation} title={'friends'} icon={'people'} user={user}/>
-              <ProfileLink firstName={'My'} navigation={props.navigation} title={'settings'} icon={'settings'} user={user} initials={props.initials} />
+              <ProfileLink 
+                firstName={'My'} 
+                navigation={props.navigation} 
+                title={'settings'} 
+                icon={'settings'} 
+                user={user} 
+                initials={props.initials} 
+                isConsumer={isConsumer()}
+            />
             </View>
           }
         </View>

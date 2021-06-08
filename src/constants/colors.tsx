@@ -9,5 +9,7 @@ export enum GigColors {
     Greyish = '#F2F2F2',
     Taupe = '#A8AABC',
     Mustard = '#D1A517',
-    Sun = '#F1E5C5'
+    Sun = 'rgba(209, 165, 23, 0.5)', 
+    Sky = '#538BFF', 
+    Lavender = '#B7C2FA'
 }

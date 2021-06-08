@@ -7,16 +7,21 @@ import HomeScreen from '../Gigs/Home';
 import MessagesScreen from '../Messages/Messages';
 import MyProfileScreen from '../Profile/MyProfile';
 import NetworkScreen from '../Network/Network';
+import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 export function Tabs(props: any) {
+    const type = useSelector( (state: any) => state.user.userType);
+    const isConsumer = () => { return type === 'consumer' }
+
     return (
         <Tab.Navigator
         screenOptions={({ route }) => ({
             tabBarIcon: ({ focused }) => {
                 let iconName : string;
-                let iconType = Platform.OS === 'ios' ? 'ionicon' : 'material'
-                let color = focused ? GigColors.Mustard : GigColors.Blue;
+                let iconType = Platform.OS === 'ios' ? 'ionicon' : 'material';
+                let colorType = isConsumer() ? GigColors.Sky : GigColors.Mustard;
+                let color = focused ? colorType : GigColors.Blue;
 
                 if (route.name === 'Home') {
                     iconName = 'home'
@@ -32,7 +37,7 @@ export function Tabs(props: any) {
         })}
 
         tabBarOptions={{
-            activeTintColor: GigColors.Mustard,
+            activeTintColor: isConsumer() ? GigColors.Sky : GigColors.Mustard,
             activeBackgroundColor: GigColors.Greyish,
             inactiveBackgroundColor: GigColors.Greyish,
             tabStyle: {

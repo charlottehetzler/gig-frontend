@@ -191,9 +191,9 @@ export default function EditLanguages (props: any) {
             </ScrollView>
             <View style={{paddingBottom: 50, backgroundColor: GigColors.Greyish, paddingHorizontal: 16}}>
                 {changesMade ?
-                    <DefaultButton title={'update languages'} onPress={handleSubmit}/>
+                    <DefaultButton title={'update languages'} onPress={handleSubmit} isConsumer={props.isConsumer}/>
                 :
-                    <DisabledDefaultButton title={'update languages'}/>
+                    <DisabledDefaultButton title={'update languages'} isConsumer={props.isConsumer}/>
                 }             
             </View>
         </Modal>

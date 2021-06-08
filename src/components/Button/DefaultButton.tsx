@@ -6,7 +6,10 @@ import { GigColors } from '../../constants/colors';
 
 export function DefaultButton (props: any) {
     return (
-        <TouchableOpacity style={styles.button} onPress={props.onPress} >
+        <TouchableOpacity 
+            style={[styles.button, { backgroundColor: props.isConsumer ? GigColors.Sky : GigColors.Mustard }]} 
+            onPress={props.onPress} 
+        >
             <Text style={styles.buttonText}>{props.title}</Text>
         </TouchableOpacity>
     )
@@ -14,7 +17,7 @@ export function DefaultButton (props: any) {
 
 export function DisabledDefaultButton (props: any) {
     return (
-        <View style={styles.disabled}>
+        <View style={[styles.disabled, { backgroundColor: props.isConsumer ? GigColors.Lavender : GigColors.Sun }]}>
             <Text style={styles.buttonText}>{props.title}</Text>
         </View>
     )
@@ -32,14 +35,12 @@ const styles = StyleSheet.create({
     button: {
         alignItems: 'center', 
         paddingVertical: 15,
-        backgroundColor: GigColors.Mustard,
         borderRadius: 10, 
         marginVertical: 5
     },
     disabled: {
         alignItems: 'center', 
         paddingVertical: 15,
-        backgroundColor: 'rgba(209, 165, 23, 0.5)',
         borderRadius: 10, 
         marginVertical: 5
     },

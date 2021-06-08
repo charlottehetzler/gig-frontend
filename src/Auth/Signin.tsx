@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Platform, StyleSheet, StatusBar, Alert, ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
-import { useTheme } from 'react-native-paper';
 import { GigColors } from '../constants/colors';
 import { Icon } from 'react-native-elements';
 import { useMutation } from '@apollo/client';
@@ -58,17 +57,6 @@ export default function SigninScreen (props: any ) {
         }
     }
     
-    const handlePasswordChange = (val: string) => {
-        if (val.trim().length > 6) {
-            setPassword(val);
-            setIsValidPassword(true)
-        } else {
-            setPassword(val);
-            setIsValidPassword(false)
-        }
-    }
-
-
     const handleLogin = async () => {
         try {
             const { data, errors } = await doUserLogin({
@@ -82,10 +70,10 @@ export default function SigninScreen (props: any ) {
                     isLoggedIn: true,
                     firstName: data.userLogin.firstName, 
                     lastName: data.userLogin.lastName,
-                    userType: ''
+                    userType: data.userLogin.isConsumer ? "consumer" : "producer"
                 });
-                saveUserDataToStorage(data.userLogin.userId,data.userLogin.token)
-                props.navigation.navigate('Home');
+                saveUserDataToStorage(data.userLogin.userId,data.userLogin.token, data.userLogin.userType)
+                props.navigation.navigate('HomeScreen');
             }
             if (errors) {
                 setLoginError(errors)
@@ -95,87 +83,76 @@ export default function SigninScreen (props: any ) {
         }
     }
 
-
-    const { colors } = useTheme();
-
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#FF6347' barStyle="light-content"/>
-            <View style={{marginTop: 60}}>
-                <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
-                    <Icon type='material' name='close' style={styles.icon} size={35} color={GigColors.White}/>
-                </TouchableWithoutFeedback>
-            </View>
+            <StatusBar backgroundColor={GigColors.White} barStyle="light-content"/>
             <View style={styles.header}>
-                <Text style={styles.text_header}>Welcome to Gig!</Text>
+                <Text style={styles.textHeader}>Welcome back!</Text>
             </View>
+
             {userLoginLoading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
-            <Animatable.View animation="fadeInUpBig" style={[styles.footer, {backgroundColor: colors.background}]}>
-                <Text style={[styles.text_footer, { color: colors.text}]}>Email</Text>
+            
+            <Animatable.View animation="fadeInUpBig" style={[styles.footer, {backgroundColor: GigColors.Greyish}]}>
+                <Text style={styles.textFooter}>Email</Text>
                 <View style={styles.action}>
                     <Icon 
                         name="person"
                         type='material'
-                        color={GigColors.Black}
+                        color={GigColors.Blue}
                         size={24}
                     />
                     <TextInput 
                         placeholder="Your Email"
-                        placeholderTextColor="#666666"
-                        style={[styles.textInput, {color: GigColors.Black}]}
+                        placeholderTextColor={GigColors.Taupe}
+                        style={[styles.textInput, {color: GigColors.Blue}]}
                         autoCapitalize="none"
                         onChangeText={(val) => emailChange(val)}
                         onEndEditing={(e) => handleValidEmail(e.nativeEvent.text)}
                     />
-                    {emailChange ? 
-                        <Animatable.View animation="bounceIn">
-                            <Feather name="check-circle" color="green" size={20} />
-                        </Animatable.View>
-                    : null}
-                </View>
+
                 { isEmailValid ? null : 
                     <Animatable.View animation="fadeInLeft" duration={500}>
                         <Text style={styles.errorMsg}>Not a valid email.</Text>
                     </Animatable.View>
                 }
+                </View>
             
-                <Text style={[styles.text_footer, { color: GigColors.Black, marginTop: 35}]}>Password</Text>
+                <Text style={styles.textFooter}>Password</Text>
                 <View style={styles.action}>
-                    <Icon name="lock" color={GigColors.Black} size={24} type='material'/>
+                    <Icon name="lock" color={GigColors.Blue} size={24} type='material'/>
                     <TextInput 
                         placeholder="Your Password"
-                        placeholderTextColor="#666666"
+                        placeholderTextColor={GigColors.Taupe}
                         secureTextEntry={secureTextEntry ? true : false}
-                        style={[styles.textInput, { color: GigColors.Black}]}
+                        style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => handlePasswordChange(val)}
+                        onChangeText={(val) => setPassword(val)}
                     />
-                    <TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => updateSecureTextEntry()}>
                     {secureTextEntry ? 
-                        <Feather name="eye-off" color="grey" size={20}/>
+                        <Feather name="eye-off" color={GigColors.Taupe} size={20}/>
                     :
-                    <Feather name="eye" color="grey" size={20}/>
+                        <Feather name="eye" color={GigColors.Taupe} size={20}/>
                     }
                     </TouchableOpacity>
                 </View>
-                {isValidPassword ? null : 
-                    <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
-                    </Animatable.View>
-                }
                 
                 <TouchableOpacity>
                     <Text style={{color: GigColors.DarkGrey, marginTop:15 }}>Forgot password?</Text>
                 </TouchableOpacity>
                 <View style={styles.button}>
-                    <TouchableOpacity style={styles.signIn} onPress={handleLogin}>
-                        <Text style={[styles.textSign, {color: GigColors.Black}]}>Sign In</Text>
+                    <TouchableOpacity 
+                        style={[styles.signIn, {backgroundColor: GigColors.Blue}]} 
+                        onPress={handleLogin}
+                    >
+                        <Text style={[styles.textSign, { color: GigColors.White}]}>Sign In</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         onPress={() => props.navigation.navigate('Signup')}
-                        style={[styles.signIn, { borderColor: '#FF6347', borderWidth: 1, marginTop: 15}]}>
-                        <Text style={[styles.textSign, { color: '#FF6347'}]}>Sign Up</Text>
+                        style={[styles.signIn, { backgroundColor: GigColors.White, borderWidth: 1, borderColor: GigColors.Blue, marginTop: 15}]}>
+                        <Text style={[styles.textSign, { color: GigColors.Blue}]}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
             </Animatable.View>
@@ -187,37 +164,37 @@ export default function SigninScreen (props: any ) {
 const styles = StyleSheet.create({
     container: {
       flex: 1, 
-      backgroundColor: GigColors.DarkGrey
+      backgroundColor: GigColors.White
     },
     header: {
         flex: 1,
         justifyContent: 'flex-end',
         paddingHorizontal: 20,
-        paddingBottom: 50
+        paddingBottom: 40
     },
     footer: {
         flex: 3,
-        backgroundColor: '#fff',
+        backgroundColor: GigColors.White,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
         paddingVertical: 30
     },
-    text_header: {
-        color: '#fff',
+    textHeader: {
+        color: GigColors.Blue,
         fontWeight: 'bold',
         fontSize: 30
     },
-    text_footer: {
-        color: '#05375a',
+    textFooter: {
+        color: GigColors.Blue,
         fontSize: 18
     },
     action: {
         flexDirection: 'row',
         marginTop: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
+        borderBottomColor: GigColors.Greyish,
+        paddingBottom: 25
     },
     actionError: {
         flexDirection: 'row',
@@ -230,7 +207,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
-        color: '#05375a',
+        color: GigColors.Blue,
     },
     errorMsg: {
         color: '#FF0000',

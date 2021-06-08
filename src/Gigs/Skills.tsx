@@ -8,10 +8,16 @@ export default function SkillsScreen(props: any) {
 
     const skills = props.route.params.skills;
     const categoryName = props.route.params.categoryName;
+    const isConsumer = props.route.params.isConsumer;
 
     const renderItem = ({ item } : any ) => (
         <View >
-          <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Producers', {skillId: item['id'], skillName: item['name']})} >
+          <TouchableOpacity 
+            style={styles.item} 
+            onPress={() => props.navigation.navigate('Producers', {
+                skillId: item['id'], skillName: item['name'], isConsumer: isConsumer
+            })}
+        >
             <Text style={styles.title}>{item['name']} </Text>
           </TouchableOpacity>
         </View>
@@ -20,7 +26,7 @@ export default function SkillsScreen(props: any) {
     return (
         <SafeAreaView style={styles.container}>
         <View>
-            <DefaultHeader title={categoryName} navigation={props.navigation} goBack={true}/>
+            <DefaultHeader title={categoryName} navigation={props.navigation} goBack={true} isConsumer={props.isConsumer}/>
         </View> 
         {skills && skills.length > 0 && <>
             <FlatList

@@ -4,58 +4,23 @@ import { StyleSheet, View, TouchableOpacity, StatusBar, ScrollView, TextInput, P
 import * as Animatable from 'react-native-animatable';
 import { GigColors } from '../constants/colors';
 import Feather from 'react-native-vector-icons/Feather';
-import { useMutation } from '@apollo/client';
-import { SIGNUP_USER } from '../lib/user';
-import { useDispatch } from 'react-redux';
-import { saveUserDataToStorage, AUTHENTICATE } from '../redux/actions/user'
-
 
 export default function SignupScreen ( props  : any ) {
-    const [firstName, setFirstName] = useState('');
-
-    const [lastName, setLastName] = useState('');
 
     const [email, setEmail] = useState('');
 
     const [password, setPassword] = useState('');
 
     const [passwordConfirm, setPasswordConfirm] = useState('');
-
-    const [isFirstValid, setIsFirstValid] = useState(false);
-    
-    const [isLastValid, setIsLastValid] = useState(false);
     
     const [isEmailValid, setIsEmailValid] = useState(false);
     
-    const [isValidPassword, setIsValidPassword] = useState(true);
+    const [isValidPassword, setIsValidPassword] = useState(false);
 
     const [secureTextEntry, setSecureTextEntry] = useState(true);
 
     const [confirmSecureTextEntry, setConfirmSecureTextEntry] = useState(true);
     
-    const [ doUserSignup, { loading: userSignupLoading } ] = useMutation(SIGNUP_USER);
-
-    const dispatch = useDispatch();
-
-    const firstNameChange = (val: string) => {
-        if (val.trim().length > 2) {
-            setFirstName(val);
-            setIsFirstValid(true);
-        } else {
-            setFirstName(val);
-            setIsFirstValid(false);
-        }
-    }
-
-    const lastNameChange = (val: string) => {
-        if (val.trim().length > 2) {
-            setLastName(val);
-            setIsLastValid(true);
-        } else {
-            setLastName(val);
-            setIsLastValid(false);
-        }
-    }
 
     const EmailChange = (val: string) => {
         if (val.trim().length) {
@@ -105,180 +70,131 @@ export default function SignupScreen ( props  : any ) {
     const updateConfirmSecureTextEntry = () => {
         setConfirmSecureTextEntry(confirmSecureTextEntry)
     }
-    
-    const handleSignup = async () => {
-        try {
-            const { data, errors } = await doUserSignup({
-                variables: { input: {
-                    firstName: firstName, lastName: lastName, email: email, password: password
-                }}
-            });
-            if (data.userSignup) {
-                dispatch({
-                    type: AUTHENTICATE, 
-                    token: data.userSignup.token, 
-                    userId: data.userSignup.userId, 
-                    isLoggedIn: true,
-                    firstName: data.userSignup.firstName, 
-                    lastName: data.userSignup.lastName,
-                    userType: ''
-                });
-                saveUserDataToStorage(data.userSignup.userId,data.userSignup.token)
-                props.navigation.navigate('Decision');
-            }
-        } catch (error) {
-            console.log(error)
-        }
+
+    const isValid = () => {
+        return isEmailValid && isValidPassword;
     }
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#FF6347' barStyle="light-content"/>
-            <View style={{marginTop: 60}}>
-                <TouchableWithoutFeedback onPress={() => props.navigation.navigate('HomeScreen')}>
-                    <Icon type='material' name='close' style={styles.icon} size={35} color={GigColors.White}/>
-                </TouchableWithoutFeedback>
-            </View>
+            <StatusBar backgroundColor={GigColors.White} barStyle="light-content"/>
             <View style={styles.header}>
-                <Text style={styles.text_header}>Register Now for Gig!</Text>
+                <Text style={styles.textHeader}>Signup now!</Text>
             </View>
-            {userSignupLoading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
             <Animatable.View animation="fadeInUpBig" style={styles.footer}>
-            <ScrollView>
-                <Text style={styles.text_footer}>First Name</Text>
-                <View style={styles.action}>
-                    <Icon name="person" color={GigColors.Black} size={20}/>
-                    <TextInput 
-                        placeholder="Your first name"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => firstNameChange(val)}
-                    />
-                    {isFirstValid ? 
-                        <Animatable.View animation="bounceIn">
-                            <Feather name="check-circle" color="green" size={20}/>
+                <ScrollView>
+                    <Text style={[styles.textFooter, {marginTop: 20}]}>Email</Text>
+                    <View style={styles.action}>
+                        <Icon name="person" color={GigColors.Black} size={20}/>
+                        <TextInput 
+                            placeholder="Your Email"
+                            style={styles.textInput}
+                            autoCapitalize="none"
+                            onChangeText={(val) => EmailChange(val)}
+                            onEndEditing={(e) => handleValidEmail(e.nativeEvent.text)}
+                        />
+                        {isEmailValid ? null : 
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={styles.errorMsg}>Not a valid email.</Text>
                         </Animatable.View>
-                    : null}
-                </View>
-                <Text style={[styles.text_footer, {marginTop: 35}]}>Last Name</Text>
-                <View style={styles.action}>
-                    <Icon name="person" color={GigColors.Black} size={20}/>
-                    <TextInput 
-                        placeholder="Your last name"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => lastNameChange(val)}
-                    />
-                    {isLastValid ? 
-                        <Animatable.View animation="bounceIn">
-                            <Feather name="check-circle" color="green" size={20}/>
-                        </Animatable.View>
-                    : null}
-                </View>
-                <Text style={[styles.text_footer, {marginTop: 35}]}>Email</Text>
-                <View style={styles.action}>
-                    <Icon name="person" color={GigColors.Black} size={20}/>
-                    <TextInput 
-                        placeholder="Your Email"
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => EmailChange(val)}
-                        onEndEditing={(e) => handleValidEmail(e.nativeEvent.text)}
-                    />
-                    {isEmailValid ? 
-                        <Animatable.View animation="bounceIn">
-                            <Feather name="check-circle" color="green" size={20}/>
-                        </Animatable.View>
-                    : 
-                    <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Not a valid email.</Text>
-                    </Animatable.View>
-                    }
-                </View>
+                        }
+                    </View>
 
-                <Text style={[styles.text_footer, {marginTop: 35}]}>Password</Text>
-                <View style={styles.action}>
-                    <Feather name="lock" color="#05375a" size={20}/>
-                    <TextInput 
-                        placeholder="Your Password"
-                        secureTextEntry={secureTextEntry ? true : false}
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) =>  handlePasswordChange(val)}
-                    />
-                    <TouchableOpacity onPress={() => updateSecureTextEntry}>
-                    {secureTextEntry ? 
-                        <Feather  name="eye-off" color="grey" size={20}/>
-                    :
-                        <Feather name="eye" color="grey" size={20}/>
-                    }
-                    </TouchableOpacity>
-                </View>
+                    <Text style={[styles.textFooter, {marginTop: 20}]}>Password</Text>
+                    <View style={styles.action}>
+                        <Feather name="lock" color="#05375a" size={20}/>
+                        <TextInput 
+                            placeholder="Your Password"
+                            secureTextEntry={secureTextEntry ? true : false}
+                            style={styles.textInput}
+                            autoCapitalize="none"
+                            onChangeText={(val) => handlePasswordChange(val)}
+                        />
+                        <TouchableOpacity onPress={() => updateSecureTextEntry}>
+                        {secureTextEntry ? 
+                            <Feather  name="eye-off" color="grey" size={20}/>
+                        :
+                            <Feather name="eye" color="grey" size={20}/>
+                        }
+                        </TouchableOpacity>
+                    </View>
 
-                <Text style={[styles.text_footer, {marginTop: 35}]}>Confirm Password</Text>
-                <View style={styles.action}>
-                    <Feather name="lock" color="#05375a" size={20}/>
-                    <TextInput 
-                        placeholder="Confirm Your Password"
-                        secureTextEntry={confirmSecureTextEntry}
-                        style={styles.textInput}
-                        autoCapitalize="none"
-                        onChangeText={(val) => handleConfirmPasswordChange(val)}
-                    />
-                    <TouchableOpacity onPress={() => updateConfirmSecureTextEntry}>
-                    {confirmSecureTextEntry ? 
-                        <Feather name="eye-off"color="grey"size={20}/>
-                    :
-                        <Feather name="eye"color="grey"size={20}/>
-                    }
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.textPrivate}>
-                    <Text style={styles.color_textPrivate}>By signing up you agree to our</Text>
-                    <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Terms of service</Text>
-                    <Text style={styles.color_textPrivate}>{" "}and</Text>
-                    <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Privacy policy</Text>
-                </View>
-                <View style={styles.button}>
-                    <TouchableOpacity style={styles.signIn} onPress={handleSignup}>
-                        <Text style={[styles.textSign, {color: GigColors.Black}]}>Sign Up</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => props.navigation.navigate('Login')} >
-                        <Text style={[{color: '#FF6347'}]}>Sign In</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
-        </Animatable.View>
-    </View>
-  );
+                    <Text style={[styles.textFooter, {marginTop: 20}]}>Confirm Password</Text>
+                    <View style={styles.action}>
+                        <Feather name="lock" color="#05375a" size={20}/>
+                        <TextInput 
+                            placeholder="Confirm Your Password"
+                            secureTextEntry={confirmSecureTextEntry}
+                            style={styles.textInput}
+                            autoCapitalize="none"
+                            onChangeText={(val) => handleConfirmPasswordChange(val)}
+                        />
+                        <TouchableOpacity onPress={() => updateConfirmSecureTextEntry}>
+                        {confirmSecureTextEntry ? 
+                            <Feather name="eye-off"color="grey"size={20}/>
+                        :
+                            <Feather name="eye"color="grey"size={20}/>
+                        }
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.textPrivate}>
+                        <Text style={styles.color_textPrivate}>By signing up you agree to our</Text>
+                        <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Terms of service</Text>
+                        <Text style={styles.color_textPrivate}>{" "}and</Text>
+                        <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Privacy policy</Text>
+                    </View>
+                    <View style={styles.button}>
+                        {isValid() ? 
+                            <TouchableOpacity 
+                                style={[styles.signIn, {backgroundColor: GigColors.Blue}]} 
+                                onPress={() => props.navigation.navigate('ProfileCreation', {email: email, password: password})}
+                            >
+                                <Text style={[styles.textSign, {color: GigColors.White}]}>Sign Up</Text>
+                            </TouchableOpacity>
+                        : 
+                            <View style={[styles.signIn, {backgroundColor: GigColors.Taupe}]} >
+                                <Text style={[styles.textSign, {color: GigColors.White}]}>Sign Up</Text>
+                            </View>
+                        }
+
+                        <TouchableOpacity
+                            onPress={() => props.navigation.navigate('Login')}
+                            style={[styles.signIn, { backgroundColor: GigColors.White, borderWidth: 1, borderColor: GigColors.Blue, marginTop: 15}]}>
+                            <Text style={[styles.textSign, { color: GigColors.Blue}]}>Sign In</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </Animatable.View>
+        </View>
+    );
 }
 
 
 const styles = StyleSheet.create({
     container: {
       flex: 1, 
-      backgroundColor: GigColors.DarkGrey
+      backgroundColor: GigColors.White
     },
     header: {
         flex: 1,
         justifyContent: 'flex-end',
         paddingHorizontal: 20,
-        paddingBottom: 50
+        paddingBottom: 40
     },
     footer: {
-        flex: Platform.OS === 'ios' ? 3 : 5,
-        backgroundColor: '#fff',
+        flex: 5,
+        backgroundColor: GigColors.Greyish,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingHorizontal: 20,
         paddingVertical: 30
     },
-    text_header: {
-        color: '#fff',
+    textHeader: {
+        color: GigColors.Blue,
         fontWeight: 'bold',
         fontSize: 30
     },
-    text_footer: {
+    textFooter: {
         color: '#05375a',
         fontSize: 18
     },
@@ -313,7 +229,7 @@ const styles = StyleSheet.create({
     textPrivate: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginTop: 20
+        marginVertical: 20
     },
     color_textPrivate: {
         color: 'grey'

@@ -1,12 +1,13 @@
-import {USER_SIGNUP, USER_LOGOUT, USER_UPDATE, AUTHENTICATE } from '../actions/user'
+import {USER_SIGNUP, USER_LOGOUT, USER_UPDATE, AUTHENTICATE, SET_DID_TRY_AL } from '../actions/user'
 
 export const initialState = {
-  token: '',
-  userId: 4,
-  isLoggedIn: true,
-  firstName: 'Guest',
-  lastName: 'User',
-  userType: 'consumer'
+  token: null,
+  userId: null,
+  isLoggedIn: false,
+  // firstName: 'Guest',
+  // lastName: 'User',
+  userType: 'consumer',
+  didTryAutoLogin: false
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -17,9 +18,10 @@ export const userReducer = (state = initialState, action) => {
         isLoggedIn: true, 
         token: action.token,
         userId: action.userId,
-        firstName: action.firstName, 
-        lastName: action.lastName,
-        userType: action.userType
+        // firstName: action.firstName, 
+        // lastName: action.lastName,
+        userType: action.userType,
+        didTryAutoLogin: true
       }
     }
     case USER_UPDATE: {
@@ -28,15 +30,22 @@ export const userReducer = (state = initialState, action) => {
         isLoggedIn: true, 
         token: action.token,
         userId: action.userId,
-        firstName: action.firstName, 
-        lastName: action.lastName, 
-        userType: action.userType
+        // firstName: action.firstName, 
+        // lastName: action.lastName, 
+        userType: action.userType,
+        didTryAutoLogin: true
       }
     }
-    case USER_LOGOUT: {
+    case SET_DID_TRY_AL:
       return {
         ...state,
-        isLoggedIn: false
+        userType: action.userType,
+        didTryAutoLogin: true
+      };
+    case USER_LOGOUT: {
+      return {
+        ...initialState,
+        didTryAutoLogin: true
       }
     }
     default: { return state }

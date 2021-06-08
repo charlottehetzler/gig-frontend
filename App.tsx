@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { GigColors } from './src/constants/colors';
 import { createStore, combineReducers } from 'redux'
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import { userReducer } from './src/redux/reducers/user';
-import { MainStackScreen } from './src/navigation/Main';
 import { registerRootComponent, AppLoading } from 'expo'
 import * as Font from 'expo-font'
+import { AppNavigator } from './src/navigation/App';
 
 const rootReducer = combineReducers({
   user: userReducer
@@ -41,21 +39,14 @@ export default function App () {
 
   const Drawer = createDrawerNavigator();
 
-  const MyTheme = {
-    colors: {
-      background: GigColors.Greyish,
-    },
-  };
-
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-        <NavigationContainer theme={MyTheme}>
-          <Drawer.Navigator initialRouteName="Home" drawerContentOptions={{activeTintColor: GigColors.Black}}>
-            <Drawer.Screen name="Home" component={MainStackScreen}/>
+          {/* <Drawer.Navigator initialRouteName="Home" drawerContentOptions={{activeTintColor: GigColors.Black}}>
+            <Drawer.Screen name="Home" component={MainStackScreen}/> */}
             {/* <Drawer.Screen name="Logout" component={AuthStackScreen} /> */}
-          </Drawer.Navigator> 
-      </NavigationContainer>
+          {/* </Drawer.Navigator>  */}
+          <AppNavigator/>
       </Provider>
     </ApolloProvider>
   );

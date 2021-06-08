@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, ActivityIndicator, AsyncStorage } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { GET_All_SKILLS } from '../lib/skill';
 import { GET_ALL_DEALS_FOR_PRODUCER, GET_ALL_GIGS, GET_ALL_GIGS_FOR_CONSUMER } from '../lib/gig';
@@ -13,7 +13,6 @@ import { NewGig } from './NewGig';
 
 export default function HomeScreen (props: any) {
 
-  const isLoggedIn = useSelector( (state: any) => state.user.isLoggedIn);
   const currentUserId = useSelector((state: any) => state.user.userId);
   const type = useSelector( (state: any) => state.user.userType);
   const isConsumer = () => { return type === 'consumer' }
@@ -31,7 +30,6 @@ export default function HomeScreen (props: any) {
   const { data: postData, error: postError, loading: postLoading, refetch: postRefetch } = useQuery(
     GET_ALL_GIGS_FOR_CONSUMER, { variables: { userId: currentUserId }}
   );
-
 
   const [ skills, setSkills ] = useState();
   const [ deals, setDeals ] = useState();
@@ -60,10 +58,7 @@ export default function HomeScreen (props: any) {
       if (dealData && dealData?.getAllDealsForProducer) {
         setDeals(dealData?.getAllDealsForProducer);
       }
-    }
-    
-    console.log(postData)
-    
+    }    
   },[ data, dealData, gigData, postData ]);
 
   useEffect(() => {
@@ -83,7 +78,12 @@ export default function HomeScreen (props: any) {
 
   const renderItem = ({ item } : any ) => (
     <View>
-      <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Producers', {skillId: item['id'], skillName: item['name']})} >
+      <TouchableOpacity 
+        style={styles.item} 
+        onPress={() => props.navigation.navigate('Producers', { 
+          skillId: item['id'], skillName: item['name'], isConsumer: isConsumer()
+        })} 
+      >
         <Text style={styles.title}>{item['name']} </Text>
       </TouchableOpacity>
     </View>
@@ -101,7 +101,7 @@ export default function HomeScreen (props: any) {
     
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={'Home'} navigation={props.navigation} goBack={false}/>
+        <DefaultHeader title={'Home'} navigation={props.navigation} goBack={false} isConsumer={isConsumer()}/>
       </View>
       {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       
@@ -110,15 +110,15 @@ export default function HomeScreen (props: any) {
       <ScrollView>
         <Text style={styles.h4Style}>{isConsumer() ? 'Hot deals' : 'Now wanted'}</Text>
         <FlatList
-          data={gigs}
-          renderItem={isConsumer() ? renderDeal : renderItem}
+          data={isConsumer() ? deals : gigs}
+          renderItem={renderDeal}
           keyExtractor={item => item.id.toString()}
           horizontal
           style={styles.flatListHorizontal}
         />
         <View style={styles.subHeader}>
           <Text style={styles.h4Style}>New gigs</Text>
-          <SeeAllButton case={'categories'} navigation={props.navigation}/>
+          <SeeAllButton case={'categories'} navigation={props.navigation} isConsumer={isConsumer()}/>
         </View>
         <FlatList
           data={skills}

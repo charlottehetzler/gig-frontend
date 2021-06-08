@@ -41,7 +41,8 @@ export function Message (props: any) {
     return (
         <TouchableWithoutFeedback style={styles.card} onPress={() => navigate('Chat', {
             chatRoomId: props.chatRoom.id, userId: otherUser.id,
-            firstName: otherUser.firstName, lastName: otherUser.lastName
+            firstName: otherUser.firstName, lastName: otherUser.lastName,
+            isConsumer: props.isConsumer
         })}>
             <Avatar title={getInitials(otherUser.firstName, otherUser.lastName)} containerStyle={styles.avatar} size={60} />
         

@@ -9,7 +9,7 @@ export function SeeAllButton (props: any) {
     if (props.case === 'reviews') {
       props.navigation.navigate('Reviews', { userId: props.userId, firstName: props.firstName })
     } else if (props.case === 'categories') {
-      props.navigation.navigate('Categories')
+      props.navigation.navigate('Categories', {isConsumer: props.isConsumer})
     }
   }
 

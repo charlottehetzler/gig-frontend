@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../constants/colors';
-import { DefaultButton, DisabledDefaultButton, WhiteDefaultButton } from '../components/Button/DefaultButton';
+import { DefaultButton, DisabledDefaultButton } from '../components/Button/DefaultButton';
 import { ADD_REVIEW } from '../lib/review';
 import { useMutation, useQuery } from '@apollo/client';
 import { Icon, AirbnbRating } from 'react-native-elements';

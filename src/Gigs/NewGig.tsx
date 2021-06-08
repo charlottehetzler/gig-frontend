@@ -165,7 +165,6 @@ export function NewGig ( props: any ) {
         return catError;
     }, [catError]);
     
-
     return (
         <Modal visible={props.visible} animationType='slide'>
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
@@ -263,7 +262,7 @@ export function NewGig ( props: any ) {
                                 zIndex={5000}
                                 arrowColor={GigColors.Blue}
                                 labelStyle={{color: GigColors.Blue, textTransform:'uppercase'}}
-                                activeLabelStyle={{color: GigColors.Mustard}}
+                                activeLabelStyle={{color: isConsumer() ? GigColors.Sky : GigColors.Mustard}}
                                 dropDownMaxHeight={600}
                                 searchable={true}
                             />
@@ -282,7 +281,7 @@ export function NewGig ( props: any ) {
                                 zIndex={5000}
                                 arrowColor={GigColors.Blue}
                                 labelStyle={{color: GigColors.Blue, textTransform:'uppercase'}}
-                                activeLabelStyle={{color: GigColors.Mustard}}
+                                activeLabelStyle={{color: isConsumer() ? GigColors.Sky : GigColors.Mustard}}
                                 dropDownMaxHeight={600}
                                 searchable={true}
                             />
@@ -291,9 +290,9 @@ export function NewGig ( props: any ) {
 
                     <View style={styles.button}>
                         {isValid() ? 
-                            <DefaultButton title={'Publish Gig'} onPress={handleSubmit} />
+                            <DefaultButton title={'Publish Gig'} onPress={handleSubmit} isConsumer={isConsumer()}/>
                         :
-                            <DisabledDefaultButton title={'Publish Gig'}/>
+                            <DisabledDefaultButton title={'Publish Gig'} isConsumer={isConsumer()}/>
                         }
                     </View>
 

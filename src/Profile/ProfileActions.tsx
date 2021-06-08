@@ -20,26 +20,52 @@ export function ProfileActions (props: any) {
     return (
         <View style={styles.profileActions}>
             {props.user.isCallable ?
-                <TouchableOpacity style={[styles.profileAction, styles.active]} onPress={() => Communications.phonecall(props.user.phoneNumber, true)}>
+                <TouchableOpacity 
+                    style={[styles.profileAction, props.isConsumer ? styles.activeC : styles.activeP]} 
+                    onPress={() => Communications.phonecall(props.user.phoneNumber, true)}
+                >
                     <Icon type='material' name='call' color={GigColors.White}/>
                 </TouchableOpacity>
             :
-                <View style={[styles.profileAction, styles.inActive]}>
-                    <Icon type='material' name='call' color={GigColors.Mustard}/>
+                <View style={[styles.profileAction, props.isConsumer ? styles.inActiveC : styles.inActiveP]}>
+                    <Icon type='material' name='call' color={GigColors.White}/>
                 </View>
             }
 
-            <MessageButton title={'Message'} userId={props.userId} firstName={props.user.firstName} lastName={props.user.lastName} navigation={props.navigation} isSearchBar={false}/>
+            <MessageButton 
+                title={'Message'} 
+                userId={props.userId} 
+                firstName={props.user.firstName} 
+                lastName={props.user.lastName} 
+                navigation={props.navigation} 
+                isSearchBar={false}
+                isConsumer={props.isConsumer}
+            />
             
             {reviewDisabled ? 
-                <View style={[styles.profileAction, styles.inActive]}>
+                <View style={[styles.profileAction, props.isConsumer ? styles.inActiveC : styles.inActiveP]}>
                     <Icon type='material' name='star-outline' color={GigColors.Mustard}/>
-                    <NewReview visible={isAddMode} onCancel={closeModal} userId={props.userId} firstName={props.user.firstName} disable={reviewDisabled}/>
+                    <NewReview 
+                        visible={isAddMode} 
+                        onCancel={closeModal} 
+                        userId={props.userId} 
+                        firstName={props.user.firstName} 
+                        disable={reviewDisabled}
+                    />
                 </View>
             : 
-                <TouchableOpacity style={[styles.profileAction, styles.active]} onPress={() => setIsAddMode(true)}>
+                <TouchableOpacity 
+                    style={[styles.profileAction, props.isConsumer ? styles.inActiveC : styles.inActiveP]} 
+                    onPress={() => setIsAddMode(true)}
+                >
                     <Icon type='material' name='star-outline' color={GigColors.White}/>
-                    <NewReview visible={isAddMode} onCancel={closeModal} userId={props.userId} firstName={props.user.firstName} disable={disableReview}/>
+                    <NewReview 
+                        visible={isAddMode} 
+                        onCancel={closeModal} 
+                        userId={props.userId} 
+                        firstName={props.user.firstName} 
+                        disable={disableReview}
+                    />
                 </TouchableOpacity>
             }
 
@@ -60,10 +86,18 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         padding: 10
     },
-    active: {
+    activeC: {
+        backgroundColor: GigColors.Sky
+    },
+    activeP: {
         backgroundColor: GigColors.Mustard
     },
-    inActive: {
+    inActiveC: {
+        backgroundColor: GigColors.Lavender,
+        borderColor: GigColors.Sky,
+        borderWidth: 1
+    },
+    inActiveP: {
         backgroundColor: GigColors.Sun,
         borderColor: GigColors.Mustard,
         borderWidth: 1

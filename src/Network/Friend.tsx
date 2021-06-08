@@ -8,7 +8,6 @@ import { RequestButton } from '../components/Button/RequestButton';
 import { GigColors } from '../constants/colors';
 
 
-
 export function Friend (props: any) {
     
     const [ doUpdateRequest, { loading: updateRequestLoading } ] = useMutation(ACCEPT_OR_DECLINE_REQUEST);
@@ -33,7 +32,12 @@ export function Friend (props: any) {
     }
 
     return ( <>
-        <TouchableOpacity style={styles.card} onPress={() => props.navigation.navigate('Profile', { userId: props.userId, isMe: false, skillId: null, navigation: props.navigation})}> 
+        <TouchableOpacity 
+            style={styles.card} 
+            onPress={() => props.navigation.navigate('Profile', { 
+                userId: props.userId, isMe: false, skillId: null, navigation: props.navigation
+            })}
+        > 
             <View style={styles.cardName}>
                 <Avatar title={getInitials(props.firstName, props.lastName)} containerStyle={styles.avatar} size={60} />
                 <Text style={styles.name}>{props.firstName + " " + props.lastName}</Text>
@@ -43,13 +47,31 @@ export function Friend (props: any) {
             }
             {!props.isFriend && !props.isNew && 
                 <View style={styles.requestButtons}>
-                    <RequestButton userId={props.userId} title={'Accept'} status={'accept'} onUpdate={props.onUpdate}/>
-                    <RequestButton userId={props.userId} title={'Decline'} status={'decline'} onUpdate={props.onUpdate}/>
+                    <RequestButton 
+                        userId={props.userId} 
+                        title={'Accept'} 
+                        status={'accept'} 
+                        onUpdate={props.onUpdate}
+                        isConsumer={props.isConsumer}
+                    />
+                    <RequestButton 
+                        userId={props.userId} 
+                        title={'Decline'} 
+                        status={'decline'} 
+                        onUpdate={props.onUpdate}
+                        isConsumer={props.isConsumer}
+                    />
                 </View>
             }
             {!props.isFriend && props.isNew &&
                 <TouchableOpacity>
-                    <RequestButton userId={props.userId} title={'Connect'} status={'connect'} onUpdate={props.onUpdate}/>
+                    <RequestButton 
+                        userId={props.userId} 
+                        title={'Connect'} 
+                        status={'connect'} 
+                        onUpdate={props.onUpdate} 
+                        isConsumer={props.isConsumer}
+                    />
                 </TouchableOpacity>
             }
         </TouchableOpacity>

@@ -14,16 +14,14 @@ import { NewMessage } from './NewMessage';
 
 export default function MessagesScreen (props: any) {
 
-  const isLoggedIn = useSelector( (state: any) => state.user.isLoggedIn);
-
   const currentUser = {
     id: useSelector( (state: any) => state.user.userId),
-    firstName: useSelector( (state: any) => state.user.firstName),
-    lastName: useSelector( (state: any) => state.user.lastName)
+    type: useSelector( (state: any) => state.user.userType)
   };
 
+  const isConsumer = () => { return currentUser.type === 'consumer' }
+
   const { data, loading, refetch, error } = useQuery(GET_USER, {variables: { query: {userId: currentUser.id }}});
-  console.log(currentUser)
   const [chatRooms, setChatRooms] = useState();
   const isFocused = props.navigation.isFocused();
   const [ isAddMode, setIsAddMode ] = useState(false);
@@ -48,7 +46,6 @@ export default function MessagesScreen (props: any) {
       console.log(e)
     }
   }
-
   const closeModal = () => setIsAddMode(false);
 
   const closeModal2 = () => setIsAddMode(false);
@@ -56,17 +53,14 @@ export default function MessagesScreen (props: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={'Messages'} navigation={props.navigation}/>
+        <DefaultHeader title={'Messages'} navigation={props.navigation} isConsumer={isConsumer()}/>
       </View>
       {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       <View>
-        {!isLoggedIn &&
-          <AuthPlaceholder title={'you have not received any messages yet. Signup or Login to get started!'}/>
-        }
-        
+
         <TouchableOpacity style={styles.newMessage}  onPress={() => setIsAddMode(true)}>
-          <Icon type='material' name='edit' color={GigColors.Mustard} size={25}/>
-          <Text style={{color: GigColors.Mustard, fontSize: 16, paddingLeft: 3}}>New Messaage</Text>
+          <Icon type='material' name='edit' color={isConsumer() ? GigColors.Sky  : GigColors.Mustard} size={25}/>
+          <Text style={{color: isConsumer() ? GigColors.Sky  : GigColors.Mustard, fontSize: 16, paddingLeft: 3}}>New Messaage</Text>
           <NewMessage visible={isAddMode} onCancel={closeModal} onSelect={closeModal2} navigation={props.navigation}/>
         </TouchableOpacity>
 
@@ -74,7 +68,7 @@ export default function MessagesScreen (props: any) {
           <ScrollView>
             {chatRooms.map((chatRoom: any) => { return (
               <View style={styles.gigWrapper} key={chatRoom.id}>
-                <Message chatRoom={chatRoom} currentUser={currentUser} navigation={props.navigation}/>
+                <Message chatRoom={chatRoom} currentUser={currentUser} navigation={props.navigation} isConsumer={isConsumer()}/>
               </View>
             )})
             }
@@ -89,7 +83,6 @@ const styles = StyleSheet.create({
   container: {
     marginTop: StatusBar.currentHeight || 0,
     flex: 1,
-    
   },
   h4Style: {
     marginTop: 15,

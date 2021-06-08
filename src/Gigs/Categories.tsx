@@ -20,7 +20,12 @@ export default function CategoriesScreen(props: any) {
 
   const renderItem = ({ item } : any ) => (
     <View style={styles.categoryWrapper}>
-      <TouchableOpacity style={styles.item} onPress={() => props.navigation.navigate('Skills', {categoryName: item['name'], skills: item['categorySkills']})} >
+      <TouchableOpacity 
+        style={styles.item} 
+        onPress={() => props.navigation.navigate('Skills', {
+          categoryName: item['name'], skills: item['categorySkills'], isConsumer: props.isConsumer
+        })} 
+      >
         <Text style={styles.title}>{item['name']} </Text>
       </TouchableOpacity>
     </View>
@@ -29,7 +34,7 @@ export default function CategoriesScreen(props: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={'Categories'} navigation={props.navigation} goBack={true}/>
+        <DefaultHeader title={'Categories'} navigation={props.navigation} goBack={true} isConsumer={props.isConsumer}/>
       </View> 
       {catLoading &&  <ActivityIndicator size="small" color='#000000' style={{alignItems:'center', justifyContent:'center'}}/>}
 

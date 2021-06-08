@@ -7,9 +7,9 @@ import { GET_AVG_RATING_FOR_SKILL } from '../lib/review';
 import { GigColors } from '../constants/colors';
 
 
-type Props = { firstName: string, lastName: string, userId: number, navigation: any, skillId: number }
+type Props = { firstName: string, lastName: string, userId: number, navigation: any, skillId: number, isConsumer: boolean }
 
-export function Producer ({firstName, lastName, userId, navigation, skillId} : Props) {
+export function Producer ({firstName, lastName, userId, navigation, skillId, isConsumer} : Props) {
     
     const { data, loading, error } = useQuery(GET_AVG_RATING_FOR_SKILL, {variables: {query: {skillId: skillId, userId: userId} }});  
     
@@ -32,7 +32,12 @@ export function Producer ({firstName, lastName, userId, navigation, skillId} : P
     return ( <>
         {loading &&  <ActivityIndicator size="small" color='#000000' style={{alignItems:'center', justifyContent:'center'}}/>}
 
-        <TouchableOpacity style={styles.card} onPress={() => navigate('Profile', { userId: userId, isMe: false, skillId: skillId, navigation: navigation})}>
+        <TouchableOpacity 
+            style={styles.card} 
+            onPress={() => navigate('Profile', { 
+                userId: userId, isMe: false, skillId: skillId, navigation: navigation, isConsumer: isConsumer
+            })}
+        >
             <Avatar title={getInitials(firstName, lastName)} containerStyle={styles.avatar} size={60} />
         
             <View style={styles.text}>

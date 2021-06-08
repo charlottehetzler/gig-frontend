@@ -13,6 +13,8 @@ import { Friend } from './Friend';
 export default function NetworkScreen(props: any) {
 
     const currentUserId = useSelector((state: any) => state.user.userId);
+    const type = useSelector( (state: any) => state.user.userType);
+    const isConsumer = () => { return type === 'consumer' }
     
     const { data: friendData, loading: friendLoading, error: friendError, refetch: friendRefetch } = useQuery(GET_NUMBER_OF_FRIENDS, {variables: {query: {currentUserId: currentUserId } }});
     const { data: requestData, loading: requestLoading, error: requestError, refetch: requestRefetch } = useQuery(GET_FRIEND_REQUESTS, {variables: {query: {currentUserId: currentUserId} }});
@@ -91,6 +93,7 @@ export default function NetworkScreen(props: any) {
           isFriend={false}
           isNew={false}
           navigation={props.navigation}
+          isConsumer={isConsumer()}
         />
     );
 
@@ -104,25 +107,34 @@ export default function NetworkScreen(props: any) {
           isFriend={false}
           isNew={true}
           navigation={props.navigation}
+          isConsumer={isConsumer()}
+
         />
     );
 
     return (
         <SafeAreaView style={styles.container}>
             <View>
-                <DefaultHeader title={'Network'} navigation={props.navigation} goBack={false}/>
+                <DefaultHeader title={'Network'} navigation={props.navigation} goBack={false} isConsumer={isConsumer}/>
             </View> 
             {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
 
             {numberOfFriends !== 0 ?  
-                <TouchableOpacity style={styles.friendsButton} onPress={() => props.navigation.navigate('Friends')}>
+                <TouchableOpacity 
+                    style={styles.friendsButton} 
+                    onPress={() => props.navigation.navigate('Friends', { isConsumer: isConsumer() })}
+                >
                     <Text style={styles.h4Style}>All ({numberOfFriends})</Text>
-                    <Icon type='material' name='keyboard-arrow-right' color={GigColors.Mustard} size={35}/>
+                    <Icon 
+                        type='material' 
+                        name='keyboard-arrow-right' 
+                        color={isConsumer() ? GigColors.Sky : GigColors.Mustard} size={35}
+                    />
                 </TouchableOpacity>
             :
                 <View style={styles.friendsButton}>
                     <Text style={styles.h4Style}>All ({numberOfFriends})</Text>
-                    <Icon type='material' name='keyboard-arrow-right' />
+                    {/* <Icon type='material' name='keyboard-arrow-right' /> */}
                 </View>
             }
             <View style={styles.friendSection}>
