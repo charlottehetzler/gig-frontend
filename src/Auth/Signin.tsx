@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Platform, StyleSheet, StatusBar, Alert, ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
@@ -27,6 +27,8 @@ export default function SigninScreen (props: any ) {
     const [isValidPassword, setIsValidPassword] = useState(true);
     
     const [loginError, setLoginError] = useState();
+    
+    const [errorMessage, setErrorMessage] = useState();
 
     const dispatch = useDispatch();
 
@@ -62,6 +64,7 @@ export default function SigninScreen (props: any ) {
             const { data, errors } = await doUserLogin({
                 variables: { input: { email: email, password: password}}
             });
+
             if (data.userLogin) {
                 dispatch({
                     type: AUTHENTICATE, 
@@ -75,11 +78,8 @@ export default function SigninScreen (props: any ) {
                 saveUserDataToStorage(data.userLogin.userId,data.userLogin.token, data.userLogin.userType)
                 props.navigation.navigate('HomeScreen');
             }
-            if (errors) {
-                setLoginError(errors)
-            }
         } catch (error) {
-            console.log(error)
+            setLoginError(error)
         }
     }
 
@@ -110,11 +110,11 @@ export default function SigninScreen (props: any ) {
                         onEndEditing={(e) => handleValidEmail(e.nativeEvent.text)}
                     />
 
-                { isEmailValid ? null : 
+                {/* { isEmailValid ? null : 
                     <Animatable.View animation="fadeInLeft" duration={500}>
                         <Text style={styles.errorMsg}>Not a valid email.</Text>
                     </Animatable.View>
-                }
+                } */}
                 </View>
             
                 <Text style={styles.textFooter}>Password</Text>
@@ -137,6 +137,11 @@ export default function SigninScreen (props: any ) {
                     }
                     </TouchableOpacity>
                 </View>
+                    {loginError &&
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={styles.errorMsg}>Invalid email or password.</Text>
+                        </Animatable.View>
+                    }
                 
                 <TouchableOpacity>
                     <Text style={{color: GigColors.DarkGrey, marginTop:15 }}>Forgot password?</Text>

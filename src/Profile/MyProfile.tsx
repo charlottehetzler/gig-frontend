@@ -42,7 +42,6 @@ export default function MyProfileScreen(props: any) {
                 icon={'settings'} 
                 user={user} 
                 initials={props.initials} 
-                isConsumer={isConsumer()}
             />
           </View>
             :
@@ -57,7 +56,6 @@ export default function MyProfileScreen(props: any) {
                 icon={'settings'} 
                 user={user} 
                 initials={props.initials} 
-                isConsumer={isConsumer()}
             />
             </View>
           }

@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
 
 export function DefaultHeader (props: any) {
+    console.log(props)
 
     return (
         <View>

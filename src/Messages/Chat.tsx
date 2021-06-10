@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 export default function ChatScreen (props: any) {
 
     const currentUserId = useSelector((state: any) => state.user.userId);
-    const { chatRoomId, firstName, lastName, userId } = props.route.params;
+    const { chatRoomId, firstName, lastName, userId, isConsumer } = props.route.params;
 
     const [ currentChatRoomId, setCurrentChatRoomId ] = useState(chatRoomId);
     const [ messages, setMessages ] = useState();
@@ -95,7 +95,7 @@ export default function ChatScreen (props: any) {
               title={firstName + " " + lastName} 
               navigation={props.navigation} 
               goBack={true} 
-              isConsumer={props.isConsumer}
+              isConsumer={isConsumer}
             />
           </View> 
           {messages ? 

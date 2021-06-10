@@ -12,16 +12,16 @@ export function AppNavigator (props: any) {
     const didTryAutoLogin = useSelector((state: any) => state.user.didTryAutoLogin);
 
     const MyTheme = {
-        colors: {
-          background: GigColors.Greyish,
-        }
-      };
+      colors: {
+        background: GigColors.Greyish,
+      }
+    };
 
     return (
-        <NavigationContainer theme={MyTheme}>
-            {isAuth && <MainNavigator/>}
-            {!isAuth && didTryAutoLogin && <AuthNavigator/>}
-            {!isAuth && !didTryAutoLogin && <LoadingScreen/> }
-        </NavigationContainer>
+      <NavigationContainer theme={MyTheme}>
+        {isAuth && <MainNavigator/>}
+        {!isAuth && didTryAutoLogin && <AuthNavigator/>}
+        {!isAuth && !didTryAutoLogin && <LoadingScreen/> }
+      </NavigationContainer>
     );
 }

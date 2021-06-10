@@ -16,8 +16,9 @@ export default function HomeScreen (props: any) {
   const currentUserId = useSelector((state: any) => state.user.userId);
   const type = useSelector( (state: any) => state.user.userType);
   const isConsumer = () => { return type === 'consumer' }
-
+  
   const { data, error, loading, refetch } = useQuery(GET_All_SKILLS);
+
   //producer's deals
   const { data: dealData, error: dealError, loading: dealLoading, refetch: dealRefetch } = useQuery(
     GET_ALL_DEALS_FOR_PRODUCER, { variables: { userId: currentUserId }}
@@ -74,7 +75,6 @@ export default function HomeScreen (props: any) {
     //   console.log(e)
     // }
   }
-
 
   const renderItem = ({ item } : any ) => (
     <View>

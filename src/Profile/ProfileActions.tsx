@@ -44,7 +44,7 @@ export function ProfileActions (props: any) {
             
             {reviewDisabled ? 
                 <View style={[styles.profileAction, props.isConsumer ? styles.inActiveC : styles.inActiveP]}>
-                    <Icon type='material' name='star-outline' color={GigColors.Mustard}/>
+                    <Icon type='material' name='star-outline' color={GigColors.White}/>
                     <NewReview 
                         visible={isAddMode} 
                         onCancel={closeModal} 

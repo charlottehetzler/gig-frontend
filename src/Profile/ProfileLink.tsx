@@ -15,13 +15,13 @@ export function ProfileLink (props: any) {
     
     const navigation = () => {
         if (props.title === 'reviews') {
-            props.navigation.navigate('Reviews', { userId: props.user.id, firstName: props.firstName, isConsumer: props.isConsumer });
+            props.navigation.navigate('Reviews', { userId: props.user.id, firstName: props.firstName, isConsumer: isConsumer() });
         } else if (props.title === 'friends') {
             props.navigation.navigate('Friends', { navigation: props.navigation});
         } else if (props.title === 'skills') {
             setIsEditMode(true)
         } else {
-            props.navigation.navigate('Settings', { navigation: props.navigation, user: props.user, isConsumer: props.isConsumer })
+            props.navigation.navigate('Settings', { navigation: props.navigation, user: props.user, isConsumer: isConsumer() })
         }
     }
 

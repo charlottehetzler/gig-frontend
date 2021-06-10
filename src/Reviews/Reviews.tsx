@@ -9,7 +9,7 @@ import { Review } from './Review';
 
 export default function ReviewsScreen(props: any) {
   
-  const { userId, firstName } = props.route.params;
+  const { userId, firstName, isConsumer } = props.route.params;
 
   const { data, loading, error } = useQuery(GET_REVIEWS_FOR_USER, {variables: {query: {userId: userId} } });
   
@@ -18,7 +18,7 @@ export default function ReviewsScreen(props: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <DefaultHeader title={`${firstName} Reviews`} navigation={props.navigation} goBack={true}/>
+        <DefaultHeader title={`${firstName} Reviews`} navigation={props.navigation} goBack={true} isConsumer={isConsumer}/>
       </View>
       {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
       <ScrollView>

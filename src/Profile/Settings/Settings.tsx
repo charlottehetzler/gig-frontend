@@ -18,20 +18,20 @@ export default function SettingsScreen(props: any) {
     const [ isEditLangMode, setIsEditLangMode ] = useState(false);
     const closeEditLangModal = () => setIsEditLangMode(false);
 
-    const user = props.route.params.user;
+    const { user, isConsumer } = props.route.params;
 
     const [ doUserUpdate, { loading: userUpdateLoading } ] = useMutation(UPDATE_USER);
     const dispatch = useDispatch();
     const userId = useSelector( (state: any) => state.user.userId);
     const type = useSelector( (state: any) => state.user.userType);
     
-    const isConsumer = () => { return type === 'consumer' }
 
     const changeType = async (type: string) => {
         try {
-
+            const userType = type === "consumer" ? "producer" : "consumer";
+  
             const { data, errors } = await doUserUpdate({
-                variables: { input: { userId: userId, type: type}}
+                variables: { input: { userId: userId, type: userType}}
             });
 
             if (data.userUpdate) {
@@ -55,7 +55,7 @@ export default function SettingsScreen(props: any) {
     return (
         <SafeAreaView style={styles.container}>
             <View>
-                <DefaultHeader title={'My Settings'} navigation={props.navigation} goBack={true}/>
+                <DefaultHeader title={'My Settings'} navigation={props.navigation} goBack={true} isConsumer={isConsumer}/>
             </View> 
 
             <View >
@@ -69,17 +69,19 @@ export default function SettingsScreen(props: any) {
                     <Text style={styles.title}>Notifications</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.setting} onPress={() => changeType(type)}>
-                    <Text style={[styles.title, {color: isConsumer() ? GigColors.Sky : GigColors.Mustard}]}>Change to {isConsumer() ? 'Producer' : 'Consumer' }</Text>
+                    <Text style={[styles.title, {color: isConsumer ? GigColors.Mustard : GigColors.Sky}]}>Change to {isConsumer ? 'Producer' : 'Consumer' }</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                     style={styles.setting} 
-                    onPress={() => { dispatch({type: USER_LOGOUT})}}
+                    onPress={() => { 
+                        dispatch({type: USER_LOGOUT});
+                    }}
                 >
                     <Text style={styles.title}>Logout</Text>
                 </TouchableOpacity>
 
-                <EditProfile visible={isEditMode} onCancel={closeEditModal} user={user} initials={props.initials} isConsumer={isConsumer()}/>
-                <EditLanguages visible={isEditLangMode} onCancel={closeEditLangModal} user={user} isConsumer={isConsumer()}/>
+                <EditProfile visible={isEditMode} onCancel={closeEditModal} user={user} initials={props.initials} isConsumer={isConsumer}/>
+                <EditLanguages visible={isEditLangMode} onCancel={closeEditLangModal} user={user} isConsumer={isConsumer}/>
             </View>
 
         </SafeAreaView>

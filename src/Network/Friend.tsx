@@ -35,7 +35,7 @@ export function Friend (props: any) {
         <TouchableOpacity 
             style={styles.card} 
             onPress={() => props.navigation.navigate('Profile', { 
-                userId: props.userId, isMe: false, skillId: null, navigation: props.navigation
+                userId: props.userId, isMe: false, skillId: null, navigation: props.navigation, isConsumer: props.isConsumer
             })}
         > 
             <View style={styles.cardName}>

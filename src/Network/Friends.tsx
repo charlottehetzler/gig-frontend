@@ -10,6 +10,8 @@ import { Friend } from './Friend';
 export default function FriendsScreen(props: any) {
     
     const currentUserId = useSelector((state: any) => state.user.userId);
+    const { isConsumer } = props.route.params;
+
 
     const { data, loading, error, refetch } = useQuery(GET_FRIENDS, {variables: {query: { currentUserId: currentUserId } }});
 
@@ -31,13 +33,14 @@ export default function FriendsScreen(props: any) {
           isFriend={true}
           isNew={false}
           navigation={props.navigation}
+          isConsumer={isConsumer}
         />
     );
 
     return (
         <SafeAreaView style={styles.container}>
         <View>
-            <DefaultHeader title={'Friends'} navigation={props.navigation} goBack={true} isConsumer={props.isConsumer}/>
+            <DefaultHeader title={'Friends'} navigation={props.navigation} goBack={true} isConsumer={isConsumer}/>
         </View> 
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
         <View style={{marginHorizontal: 16}}>
