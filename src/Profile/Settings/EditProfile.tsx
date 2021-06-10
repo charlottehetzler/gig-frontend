@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, Switch, Platform } from 'react-native';
+import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, Switch, Platform, Alert } from 'react-native';
 import { StyleSheet, Text } from "react-native";
 import { GigColors } from '../../constants/colors';
 import { useMutation } from '@apollo/client';
@@ -10,32 +10,28 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { DefaultButton, DisabledDefaultButton } from '../../components/Button/DefaultButton';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+import { FileSystem } from 'expo';
 
 
 export function EditProfile (props: any) {
 
     const user  = props.user;
-
     const currentUserId = useSelector((state: any) => state.user.userId);
 
     const [ doSaveProfile, { loading: saveProfileLoading } ] = useMutation(UPDATE_PROFILE);
         
     const [ firstName, setFirstName ] = useState(user.firstName);
-    
     const [ lastName, setLastName ] = useState(user.lastName);
-    
     const [ email, setEmail ] = useState(user.email);
-    
     const [ birthday, setBirthday ] = useState(user.birthday);
-    
     const [ phoneNumber, setPhoneNumber ] = useState(user.phoneNumber);
-    
+    const [ pickedImage, setPickedImage ] = useState();
+
     const [ changesMade, setChangesMade ] = useState(false);
-
     const [ isEnabled, setIsEnabled ] = useState(user.isCallable);
-
     const [mode, setMode] = useState();
-    
     const [show, setShow] = useState(false);
     
     const toggleSwitch = () => {
@@ -81,10 +77,18 @@ export function EditProfile (props: any) {
 
     const handleSubmit = async () => {
         try {
+            const fileName = pickedImage.split('/').pop();
+            const newPath = FileSystem.documentDirectory + fileName;
+            
+            // await FileSystem.moveAsync({
+            //     from: pickedImage,
+            //     to: newPath
+            // });
+
             await doSaveProfile({
                 variables: { input: {
                     userId: currentUserId, firstName: firstName, lastName: lastName, 
-                    phoneNumber: phoneNumber, isCallable: isEnabled
+                    phoneNumber: phoneNumber, isCallable: isEnabled, profilePicture: newPath
                 }}
             });
             setChangesMade(false);
@@ -104,6 +108,36 @@ export function EditProfile (props: any) {
     }, [ saveProfileLoading ]);
       
 
+    const verifyPermissions = async () => {
+      const result = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (result.status !== 'granted') {
+        Alert.alert(
+          'Insufficient permissions!',
+          'You need to grant camera permissions to use this app.',
+          [{ text: 'Okay' }]
+        );
+        return false;
+      }
+      return true;
+    };
+  
+    const takeImageHandler = async () => {
+        const hasPermission = await verifyPermissions();
+            if (!hasPermission) {
+            return;
+        }
+        const result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [16, 9],
+            quality: 0.5
+        });
+  
+        if (result.cancelled === false) {
+            setPickedImage(result.uri);
+            setChangesMade(true)
+        }
+    };
+    console.log(pickedImage)
     return (
         <Modal visible={props.visible} animationType='slide'>
         {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
@@ -122,8 +156,13 @@ export function EditProfile (props: any) {
 
                 <View style={styles.container}>
                     <View style={styles.avatarWrapper} >
-                        <Avatar containerStyle={styles.avatar} size={90} title={props.initials}/>
-                        <TouchableOpacity>
+                        <Avatar 
+                            containerStyle={styles.avatar} 
+                            size={90} 
+                            title={props.initials}
+                            source={pickedImage}
+                        />
+                        <TouchableOpacity onPress={() => takeImageHandler()}>
                             <Icon type='material' name='edit' color={GigColors.Blue}/>
                         </TouchableOpacity>
                     </View>
