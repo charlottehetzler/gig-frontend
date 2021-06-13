@@ -6,6 +6,7 @@ import { GET_PRODUCERS_FOR_SKILL } from '../lib/user';
 import { useSelector } from 'react-redux';
 import { NoDataText } from '../components/Placeholder/NoDataText';
 import { Producer } from './Producer';
+import { GigColors } from '../constants/colors';
 
 
 export default function ProducersScreen(props: any) {
@@ -50,7 +51,7 @@ export default function ProducersScreen(props: any) {
       <View>
         <DefaultHeader title={skillName} navigation={props.navigation} goBack={true} isConsumer={isConsumer}/>
       </View> 
-      {loading &&  <ActivityIndicator size="small" color='#000000' style={{alignItems:'center', justifyContent:'center'}}/>}
+      {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
 
       {producers && producers.length > 0 && <>
         <FlatList

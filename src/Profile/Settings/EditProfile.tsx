@@ -1,41 +1,37 @@
 import React, { useState, useMemo } from 'react';
-import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, Switch, Platform } from 'react-native';
-import { StyleSheet, Text } from "react-native";
+import { View, Modal, TextInput, ActivityIndicator, TouchableWithoutFeedback, TouchableOpacity, Switch, Platform, Alert } from 'react-native';
+import { StyleSheet, Text, Image } from "react-native";
 import { GigColors } from '../../constants/colors';
 import { useMutation } from '@apollo/client';
-import { Icon, Avatar } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { UPDATE_PROFILE } from '../../lib/user';
 import { ScrollView } from 'react-native-gesture-handler';
 import { DefaultButton, DisabledDefaultButton } from '../../components/Button/DefaultButton';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+import * as FileSystem from 'expo-file-system'
 
 
 export function EditProfile (props: any) {
 
     const user  = props.user;
-
     const currentUserId = useSelector((state: any) => state.user.userId);
 
     const [ doSaveProfile, { loading: saveProfileLoading } ] = useMutation(UPDATE_PROFILE);
-        
+
     const [ firstName, setFirstName ] = useState(user.firstName);
-    
     const [ lastName, setLastName ] = useState(user.lastName);
-    
     const [ email, setEmail ] = useState(user.email);
-    
     const [ birthday, setBirthday ] = useState(user.birthday);
-    
     const [ phoneNumber, setPhoneNumber ] = useState(user.phoneNumber);
-    
+    const [ profilePicture, setProfilePicture ] = useState(user.profilePicture);
+
     const [ changesMade, setChangesMade ] = useState(false);
-
     const [ isEnabled, setIsEnabled ] = useState(user.isCallable);
-
     const [mode, setMode] = useState();
-    
     const [show, setShow] = useState(false);
     
     const toggleSwitch = () => {
@@ -81,10 +77,18 @@ export function EditProfile (props: any) {
 
     const handleSubmit = async () => {
         try {
+            const fileName = profilePicture.split('/').pop();
+            const newPath = FileSystem.documentDirectory + fileName;
+            
+            await FileSystem.moveAsync({
+                from: profilePicture,
+                to: newPath
+            });
+
             await doSaveProfile({
                 variables: { input: {
                     userId: currentUserId, firstName: firstName, lastName: lastName, 
-                    phoneNumber: phoneNumber, isCallable: isEnabled
+                    phoneNumber: phoneNumber, isCallable: isEnabled, profilePicture: newPath
                 }}
             });
             setChangesMade(false);
@@ -104,9 +108,48 @@ export function EditProfile (props: any) {
     }, [ saveProfileLoading ]);
       
 
+    const verifyPermissions = async () => {
+      const result = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (result.status !== 'granted') {
+        Alert.alert(
+          'Insufficient permissions!',
+          'You need to grant camera permissions to use this app.',
+          [{ text: 'Okay' }]
+        );
+        return false;
+      }
+      return true;
+    };
+  
+    const takeImageHandler = async () => {
+        const hasPermission = await verifyPermissions();
+            if (!hasPermission) {
+            return;
+        }
+        const result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            quality: 0.5
+        });
+
+        if (result.cancelled === false) {
+            setProfilePicture(result.uri);
+            setChangesMade(true)
+        }
+    };
+
+    const hasPicture = () => {
+        return profilePicture !== undefined;
+    }
+    useMemo(async () => {
+        const file = await FileSystem.getInfoAsync(profilePicture)
+        console.log(file)
+        
+    }, [profilePicture])
+
+
     return (
         <Modal visible={props.visible} animationType='slide'>
-        {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+        {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
             
             <ScrollView style={styles.inputContainer}>
                 
@@ -119,11 +162,22 @@ export function EditProfile (props: any) {
                     </TouchableWithoutFeedback>
 
                 </View>
-
+                
                 <View style={styles.container}>
                     <View style={styles.avatarWrapper} >
-                        <Avatar containerStyle={styles.avatar} size={90} title={props.initials}/>
-                        <TouchableOpacity>
+                        {hasPicture() &&
+                            <Image style={styles.profilePicture} source={{uri: profilePicture}}/>
+                        // :
+                        //     <Avatar 
+                        //         containerStyle={styles.avatar} 
+                        //         size={90} 
+                        //         title={props.initials}
+                        //         source={user.profilePicture}
+                        //     /> 
+
+                        }
+
+                        <TouchableOpacity onPress={() => takeImageHandler()}>
                             <Icon type='material' name='edit' color={GigColors.Blue}/>
                         </TouchableOpacity>
                     </View>
@@ -254,6 +308,11 @@ const styles = StyleSheet.create({
     avatar: {
         backgroundColor: GigColors.Taupe, 
         borderRadius: 50,
+    },
+    profilePicture: {
+        width: 100,
+        height: 100,
+        borderRadius: 50
     },
     inputLabel: {
         textTransform: 'uppercase',

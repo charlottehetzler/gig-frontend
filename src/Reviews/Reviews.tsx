@@ -20,7 +20,7 @@ export default function ReviewsScreen(props: any) {
       <View>
         <DefaultHeader title={`${firstName} Reviews`} navigation={props.navigation} goBack={true} isConsumer={isConsumer}/>
       </View>
-      {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+      {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
       <ScrollView>
         {reviews.map((review : any) => { return (
           <View style={styles.gigWrapper}>

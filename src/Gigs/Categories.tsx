@@ -36,7 +36,7 @@ export default function CategoriesScreen(props: any) {
       <View>
         <DefaultHeader title={'Categories'} navigation={props.navigation} goBack={true} isConsumer={props.isConsumer}/>
       </View> 
-      {catLoading &&  <ActivityIndicator size="small" color='#000000' style={{alignItems:'center', justifyContent:'center'}}/>}
+      {catLoading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
 
       {categories && categories.length > 0 && <>
         <FlatList

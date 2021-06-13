@@ -15,31 +15,20 @@ export function NewReview ( props: any ) {
     const userId = props.userId
     
     const currentUserId = useSelector((state: any) => state.user.userId);
-    
     const currentUserState = useSelector((state: any) => state.user.userType);
 
     const [ doSaveReview, { loading: saveReviewLoading } ] = useMutation(ADD_REVIEW);
-
     const { data: catData, error: catError, loading: catLoading } = useQuery(GET_All_CATEGORIES);
     
     const [ rating, setRating ] = useState();
-    
     const [ comment, setComment ] = useState();
-    
     const [ commentIsValid, setCommentIsValid ] = useState(false);
-
     const [ categories, setCategories ] = useState()
-    
     const [ categoriesD, setCategoriesD ] = useState()
-    
     const [ category, setCategory ] = useState();
-    
     const [ skill, setSkill ] = useState();
-    
     const [ skillId, setSkillId ] = useState();
-
     const [ skillIsValid, setSkillIsValid ] = useState(false);
-        
     const [ categorySkills, setCategorySkills ] = useState();
 
     useMemo(() => {

@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { SafeAreaView, View, StyleSheet, StatusBar, ScrollView, ActivityIndicator, Text } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { Message } from './Message';
 import { useQuery } from '@apollo/client';
 import { GET_USER } from '../lib/chat';
 import { useSelector } from 'react-redux';
-import AuthPlaceholder from '../components/Placeholder/AuthPlaceholder';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon } from 'react-native-elements';
 import { GigColors } from '../constants/colors';
@@ -55,7 +54,7 @@ export default function MessagesScreen (props: any) {
       <View>
         <DefaultHeader title={'Messages'} navigation={props.navigation} isConsumer={isConsumer()}/>
       </View>
-      {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+      {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
       <View>
 
         <TouchableOpacity style={styles.newMessage}  onPress={() => setIsAddMode(true)}>

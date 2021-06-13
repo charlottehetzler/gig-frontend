@@ -5,15 +5,15 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
 
 export function DefaultHeader (props: any) {
-    console.log(props)
 
     return (
         <View>
             <View style={styles.headerWrapper}>
                 {!props.goBack ? 
-                    <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
-                        <Icon name='menu' color={props.isConsumer ? GigColors.Sky : GigColors.Mustard} size={40}/>
-                    </TouchableOpacity>
+                    // <TouchableOpacity onPress={() => props.navigation.toggleDrawer()}>
+                    //     <Icon name='menu' color={props.isConsumer ? GigColors.Sky : GigColors.Mustard} size={40}/>
+                    // </TouchableOpacity>
+                    <View></View>
 
                 :
                     <TouchableOpacity style={styles.iconWrapper} onPress={() => props.navigation.goBack()}>

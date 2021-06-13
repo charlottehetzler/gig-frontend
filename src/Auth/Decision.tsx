@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from "react-native";
 import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';

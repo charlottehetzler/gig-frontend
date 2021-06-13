@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useQuery, useMutation} from '@apollo/client';
 import { GET_MESSAGES_BY_CHAT_ROOM, CREATE_MESSAGE, UPDATE_CHAT_ROOM_LAST_MESSAGE, CREATE_CHAT_ROOM } from '../lib/chat';
-import { View, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, Platform, ScrollView } from 'react-native';
+import { View, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { ChatMessage } from './ChatMessage';
 import { GigColors } from '../constants/colors';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
@@ -11,109 +11,114 @@ import { useSelector } from 'react-redux';
 
 export default function ChatScreen (props: any) {
 
-    const currentUserId = useSelector((state: any) => state.user.userId);
-    const { chatRoomId, firstName, lastName, userId, isConsumer } = props.route.params;
+  const currentUserId = useSelector((state: any) => state.user.userId);
+  const { chatRoomId, firstName, lastName, userId, isConsumer } = props.route.params;
 
-    const [ currentChatRoomId, setCurrentChatRoomId ] = useState(chatRoomId);
-    const [ messages, setMessages ] = useState();
-    const [ message, setMessage ] = useState('');
+  const [ currentChatRoomId, setCurrentChatRoomId ] = useState(chatRoomId);
+  const [ messages, setMessages ] = useState();
+  const [ message, setMessage ] = useState('');
 
-    const { data, loading, error, refetch } = useQuery(GET_MESSAGES_BY_CHAT_ROOM, {variables: {query: {chatRoomId: currentChatRoomId }}, pollInterval: 500});
-    const [ doSaveMessage, { loading: saveMessageLoading } ] = useMutation(CREATE_MESSAGE);
-    const [ doUpdateChatRoom, { loading: updateChatRoomLoading } ] = useMutation(UPDATE_CHAT_ROOM_LAST_MESSAGE);
-    const [ doCreateChatRoom, { loading: createChatRoom } ] = useMutation(CREATE_CHAT_ROOM);
+  const { data, loading: messagesLoading, error, refetch } = useQuery(GET_MESSAGES_BY_CHAT_ROOM, {variables: {query: {chatRoomId: currentChatRoomId }}, pollInterval: 500});
+  const [ doSaveMessage, { loading: saveMessageLoading } ] = useMutation(CREATE_MESSAGE);
+  const [ doUpdateChatRoom, { loading: updateChatRoomLoading } ] = useMutation(UPDATE_CHAT_ROOM_LAST_MESSAGE);
+  const [ doCreateChatRoom, { loading: createChatRoom } ] = useMutation(CREATE_CHAT_ROOM);
     
 
-    useEffect(() => {
-      fetchMessages();
-    }, [ data ]);
+  useEffect(() => {
+    fetchMessages();
+  }, [ data ]);
 
-    useMemo(() => {
-      if (data && data?.getMessagesByChatRoom) {
-        setMessages(data?.getMessagesByChatRoom)
-      }
-    }, [data]);
-
-    const fetchMessages = async () => {
-      try {
-        const newMessages = await refetch();
-        if (newMessages) {
-          setMessages(newMessages.data?.getMessagesByChatRoom);
-        }
-      } catch (e) {
-        console.log(e)
-      }
+  useMemo(() => {
+    if (data && data?.getMessagesByChatRoom) {
+      setMessages(data?.getMessagesByChatRoom)
     }
+  }, [data]);
 
-    const updateChatRoomLastMessage = async (messageId: number) => {
-      try {
-        const data = await doUpdateChatRoom({
-          variables: {input: {lastMessageId: messageId} }
-        });
-        return data;
-      } catch (e) {
-        console.log(e);
+  const fetchMessages = async () => {
+    try {
+      const newMessages = await refetch();
+      if (newMessages) {
+        setMessages(newMessages.data?.getMessagesByChatRoom);
       }
+    } catch (e) {
+      console.log(e)
     }
+  }
 
-    const onSendPress = async () => {
-      try {
-        let newChatRoomId;
-        if (!messages) {
-          const { data, errors } = await doCreateChatRoom({
-            variables: { input: { currentUserId: currentUserId, userId: userId }}
-          });
+  const updateChatRoomLastMessage = async (messageId: number) => {
+    try {
+      const data = await doUpdateChatRoom({
+        variables: {input: {lastMessageId: messageId} }
+      });
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
-          if (data && data?.createChatRoom) {
-            newChatRoomId = data.createChatRoom.id;
-          }
-        }
-
-        let chatRoomID = newChatRoomId ? newChatRoomId : chatRoomId;
-        setCurrentChatRoomId(chatRoomID)
-
-        const { data, errors } = await doSaveMessage({
-          variables: { input: {content: message, chatRoomId: chatRoomID, userId: currentUserId } }
+  const onSendPress = async () => {
+    try {
+      let newChatRoomId;
+      if (!messages) {
+        const { data, errors } = await doCreateChatRoom({
+          variables: { input: { currentUserId: currentUserId, userId: userId }}
         });
 
-        if (data?.createMessage) {
-          const test = await updateChatRoomLastMessage(data?.createMessage.id);
-          await fetchMessages();
+        if (data && data?.createChatRoom) {
+          newChatRoomId = data.createChatRoom.id;
         }
-
-      } catch (e) {
-        console.log(e);
       }
-      setMessage('');
-    }
 
-    return (
-      <SafeAreaView style={styles.chatContainer}>
-        <ScrollView>
-          <View>
-            <DefaultHeader 
-              title={firstName + " " + lastName} 
-              navigation={props.navigation} 
-              goBack={true} 
-              isConsumer={isConsumer}
-            />
-          </View> 
-          {messages ? 
-            <FlatList
-              data={messages}
-              renderItem={({ item }) => <ChatMessage myId={currentUserId} message={item} />}
-              inverted
-              keyExtractor={item => item.id.toString()}
-            />
-          :
+      let chatRoomID = newChatRoomId ? newChatRoomId : chatRoomId;
+      setCurrentChatRoomId(chatRoomID)
+
+      const { data, errors } = await doSaveMessage({
+        variables: { input: {content: message, chatRoomId: chatRoomID, userId: currentUserId } }
+      });
+
+      if (data?.createMessage) {
+        const test = await updateChatRoomLastMessage(data?.createMessage.id);
+        await fetchMessages();
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+    setMessage('');
+  }
+
+  const loading = useMemo(() => {
+    return saveMessageLoading || updateChatRoomLoading || createChatRoom || messagesLoading
+  }, [ saveMessageLoading, updateChatRoomLoading, createChatRoom, messagesLoading])
+
+  return (
+    <SafeAreaView style={styles.chatContainer}>
+      <ScrollView>
+        {loading && <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
+        <View>
+          <DefaultHeader 
+            title={firstName + " " + lastName} 
+            navigation={props.navigation} 
+            goBack={true} 
+            isConsumer={isConsumer}
+          />
+        </View> 
+        {messages ? 
+          <FlatList
+            data={messages}
+            renderItem={({ item }) => <ChatMessage myId={currentUserId} message={item} />}
+            inverted
+            keyExtractor={item => item.id.toString()}
+          />
+        :
           <View></View>
-          }
-        </ScrollView>
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-          // keyboardVerticalOffset={100}
-          style={{width: '100%'}}
-        >
+        }
+      </ScrollView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS == "ios" ? "padding" : "height"}
+        // keyboardVerticalOffset={100}
+        style={{width: '100%'}}
+      >
         <View style={styles.actions}>
           <Icon name="add" size={30} color={GigColors.Mustard} style={{marginRight: 5}} />
           <View style={styles.messageInput}>
@@ -124,16 +129,16 @@ export default function ChatScreen (props: any) {
               value={message}
               onChangeText={setMessage}
             /> 
-              { message === '' ? 
-                <Text style={{color: GigColors.Taupe}}>Send</Text>
-              : 
-                <TouchableOpacity onPress={onSendPress}>
-                  <Text style={ {color: GigColors.Mustard}}>Send</Text>
-                </TouchableOpacity>
-              }
-            </View>
+            { message === '' ? 
+              <Text style={{color: GigColors.Taupe}}>Send</Text>
+            : 
+              <TouchableOpacity onPress={onSendPress}>
+                <Text style={ {color: GigColors.Mustard}}>Send</Text>
+              </TouchableOpacity>
+            }
+          </View>
         </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
     </SafeAreaView >
   );
 }

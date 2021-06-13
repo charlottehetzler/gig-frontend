@@ -10,21 +10,14 @@ import { Icon } from 'react-native-elements';
 export default function SearchBar (props: any) {
 
   const { data: skillsData, error: skillsErros, loading: skillsLoading } = useQuery(GET_All_SKILLS);
-
   const { data, error, loading: availableSkillsLoading, refetch } = useQuery(GET_AVAILABLE_SKILLS_FOR_PRODUCER, {variables: {query: {userId: props.currentUserId} }});
 
   const [ skills, setSkills ] = useState()
-  
   const [filtered, setFiltered] = useState();
-
   const [searching, setSearching] = useState(false);
-
   const [ isAddMode, setIsAddMode ] = useState(false);
-
   const [ addedSkill, setAddedSkill ] = useState();
-  
   const [ iconVisible, setIconVisible ] = useState(false);
-  
   const [ searchText, setSearchText ] = useState('');
 
   const closeModal = () => { setIsAddMode(false) }
@@ -106,7 +99,7 @@ export default function SearchBar (props: any) {
         </TouchableWithoutFeedback>
       </View>
 
-      {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+      {loading && <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
 
       {searching &&
         <View style={styles.subContainer}>

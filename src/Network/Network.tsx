@@ -108,16 +108,15 @@ export default function NetworkScreen(props: any) {
           isNew={true}
           navigation={props.navigation}
           isConsumer={isConsumer()}
-
         />
     );
 
     return (
         <SafeAreaView style={styles.container}>
             <View>
-                <DefaultHeader title={'Network'} navigation={props.navigation} goBack={false} isConsumer={isConsumer}/>
+                <DefaultHeader title={'Network'} navigation={props.navigation} goBack={false} isConsumer={isConsumer()}/>
             </View> 
-            {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+            {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
 
             {numberOfFriends !== 0 ?  
                 <TouchableOpacity 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, StyleSheet, StatusBar, TouchableOpacity, Text, TextInput, ActivityIndicator, Modal } from 'react-native';
+import { View, StyleSheet, StatusBar, TouchableOpacity, Text, Modal } from 'react-native';
 import { GigColors } from '../../constants/colors';
 import { NoDataText } from '../../components/Placeholder/NoDataText';
 import DropDownPicker from 'react-native-dropdown-picker';

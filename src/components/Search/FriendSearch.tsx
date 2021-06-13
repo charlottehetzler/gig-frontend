@@ -81,7 +81,7 @@ export default function FriendSearch (props: any) {
             </View>
             {searching &&
             <View style={styles.subContainer}>
-                {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+                {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
                     
                 {filtered.length > 0 ?
                     filtered.map((item: any) => {

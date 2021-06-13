@@ -42,7 +42,7 @@ export function RequestButton (props: any) {
             style={[styles.requestButton, { borderColor: props.isConsumer ? GigColors.Sky : GigColors.Mustard}]} 
             onPress={onUpdateRequest}
         >
-            {updateRequestLoading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+            {updateRequestLoading && <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
             <Text style={{color: props.isConsumer ? GigColors.Sky : GigColors.Mustard}}>{props.title}</Text>
         </TouchableOpacity>
     )

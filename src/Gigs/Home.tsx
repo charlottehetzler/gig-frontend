@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, ActivityIndicator, AsyncStorage } from 'react-native';
+import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { GET_All_SKILLS } from '../lib/skill';
 import { GET_ALL_DEALS_FOR_PRODUCER, GET_ALL_GIGS, GET_ALL_GIGS_FOR_CONSUMER } from '../lib/gig';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import SearchBar from '../components/Search/SearchBar';
 import { SeeAllButton } from '../components/Button/SeeAllButton';
 import { NewGig } from './NewGig';
+import { GigCard } from './GigCard';
 
 export default function HomeScreen (props: any) {
 
@@ -89,13 +90,26 @@ export default function HomeScreen (props: any) {
     </View>
   );
 
-  const renderDeal = ({ item } : any ) => (
-    <View>
-      <TouchableOpacity style={styles.item} >
-        <Text style={styles.title}>{item['title']} </Text>
-      </TouchableOpacity>
-    </View>
+  const renderMyGigs = ({ item } : any ) => (
+    <GigCard 
+      gig={item} 
+      isMine={true} 
+      isConsumer={isConsumer()} 
+      navigation={props.navigation}
+      isList={false}
+    />
   );
+
+  const renderGigs = ({ item } : any ) => (
+    <GigCard 
+      gig={item} 
+      isMine={false} 
+      isConsumer={isConsumer()} 
+      navigation={props.navigation} 
+      isList={false}
+    />
+  );
+    
     
   return (
     
@@ -103,18 +117,22 @@ export default function HomeScreen (props: any) {
       <View>
         <DefaultHeader title={'Home'} navigation={props.navigation} goBack={false} isConsumer={isConsumer()}/>
       </View>
-      {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+      {loading && <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
       
       {!loading &&  <>
       <SearchBar navigation={props.navigation} isPersonal={false} refetchSkills={fetchSkills} profileMode={false}/>
       <ScrollView>
-        <Text style={styles.h4Style}>{isConsumer() ? 'Hot deals' : 'Now wanted'}</Text>
+
+        <View style={styles.subHeader}>
+          <Text style={styles.h4Style}>{isConsumer() ? 'Hot deals' : 'Now wanted'}</Text>
+          <SeeAllButton case={'gigs'} navigation={props.navigation} isConsumer={isConsumer()}/>
+        </View>
         <FlatList
           data={isConsumer() ? deals : gigs}
-          renderItem={renderDeal}
+          renderItem={renderGigs}
           keyExtractor={item => item.id.toString()}
           horizontal
-          style={styles.flatListHorizontal}
+          style={{ height: 200 }}
         />
         <View style={styles.subHeader}>
           <Text style={styles.h4Style}>New gigs</Text>
@@ -125,7 +143,7 @@ export default function HomeScreen (props: any) {
           renderItem={renderItem}
           keyExtractor={item => item.id.toString()}
           horizontal
-          style={styles.flatListHorizontal}
+          style={{ height: 160 }}
         />
         <View style={styles.subHeader}>
           <Text style={styles.h4Style}>{isConsumer() ? 'My gigs' : 'My deals'}</Text>
@@ -136,10 +154,10 @@ export default function HomeScreen (props: any) {
         <View style={styles.deals}>
           <FlatList
             data={isConsumer() ? posts : deals}
-            renderItem={renderDeal}
+            renderItem={renderMyGigs}
             keyExtractor={item => item.id.toString()}
             horizontal
-            style={styles.flatListHorizontal}
+            style={{ height: 200 }}
           />
         </View>
         <NewGig 
@@ -166,9 +184,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
     marginHorizontal: 16,
     color: GigColors.Blue  
-  },
-  flatListHorizontal: {
-    height: 125
   },
   item: {
     backgroundColor: GigColors.White,
@@ -211,5 +226,17 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     textDecorationColor: GigColors.Blue, 
     fontSize: 16,
+  },
+  gig: {
+    width: 300, 
+    backgroundColor: GigColors.White,
+    borderRadius: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    marginVertical: 8,
+    marginHorizontal: 10,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });

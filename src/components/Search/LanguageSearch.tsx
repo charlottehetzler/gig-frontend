@@ -3,23 +3,17 @@ import { View, StyleSheet, Text, TextInput, TouchableOpacity, ActivityIndicator 
 import { GigColors } from '../../constants/colors';
 import { NoDataText } from '../Placeholder/NoDataText';
 import { useQuery } from '@apollo/client';
-import { GET_FRIENDS } from '../../lib/friend';
 import { useSelector } from 'react-redux';
-import { MessageButton } from '../Button/MessageButton';
 import { GET_ALL_AVAILABLE_LANGUAGES_FOR_USER } from '../../lib/language';
 
 export default function LanguageSearch (props: any) {
 
     const currentUserId = useSelector((state: any) => state.user.userId);
-
     const { data, loading, error, refetch } = useQuery(GET_ALL_AVAILABLE_LANGUAGES_FOR_USER, {variables: {query: {currentUserId: currentUserId } }});
 
     const [ languages, setLanguages ] = useState();
-
     const [ addedLanguage, setAddedLanguage ] = useState();
-        
     const [filtered, setFiltered] = useState();
-
     const [searching, setSearching] = useState(false);
 
     useMemo(() => {
@@ -68,7 +62,7 @@ export default function LanguageSearch (props: any) {
             />
             {searching &&
             <View style={styles.subContainer}>
-                {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+                {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
                     
                 {filtered.length > 0 ?
                     filtered.map((item: any) => {

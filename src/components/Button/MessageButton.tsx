@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {StyleSheet, View, Text, ActivityIndicator} from 'react-native';
+import {StyleSheet, Text, ActivityIndicator} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
 import { GET_COMMON_CHAT_ROOM } from '../../lib/chat';
@@ -34,7 +34,7 @@ export function MessageButton (props: any) {
     }
 
     return (<>
-        {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+        {loading && <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
 
         <TouchableOpacity 
             style={[
