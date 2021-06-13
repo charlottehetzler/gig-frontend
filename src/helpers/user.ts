@@ -6,22 +6,21 @@ import { useMemo, useState } from "react";
 
 export default function useProfile (userId: number, skillId?: number) {
 
-    const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {variables: {query: {userId: userId} }});
-
-    const { data: skillData, loading: skillLoading, error: skillError, refetch: skillRefetch } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {variables: {query: {userId: userId} }});
-  
-    const { data: reviewData, loading: reviewLoading, error: reviewError, refetch: reviewRefetch } = useQuery(GET_LAST_REVIEWS_FOR_USER, {variables: {query: {userId: userId, skillId: skillId} }});
+    const { data: userData, loading: userLoading, error: userError } = useQuery(GET_USER, {
+        variables: {query: {userId: userId} }
+    });
+    const { data: skillData, loading: skillLoading, error: skillError, refetch: skillRefetch } = useQuery(GET_All_SKILLS_FOR_PRODUCER, {
+        variables: {query: {userId: userId} }
+    });
+    const { data: reviewData, loading: reviewLoading, error: reviewError, refetch: reviewRefetch } = useQuery(GET_LAST_REVIEWS_FOR_USER, {
+        variables: {query: {userId: userId, skillId: skillId} }
+    });
 
     const [fullName, setFullName] = useState();
-  
     const [skills, setSkills] = useState([]);
-  
     const [user, setUser] = useState();
-  
     const [lastReviews, setLastReviews] = useState();
-    
     const [initials, setInitials] = useState();
-   
     const [firstName, setFirstName] = useState();
 
     useMemo(() => {

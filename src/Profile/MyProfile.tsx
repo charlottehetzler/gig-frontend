@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { GigColors } from '../constants/colors';
 import { useSelector } from 'react-redux';
-import GuestProfile  from '../components/Placeholder/GuestProfile'
 import useProfile from '../helpers/user';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { ProfileLink } from './ProfileLink';
@@ -23,7 +22,7 @@ export default function MyProfileScreen(props: any) {
         <DefaultHeader title={'Profile'} navigation={props.navigation} isConsumer={isConsumer()}/>
       </View>
       
-      {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+      {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
       
       <ScrollView>
         

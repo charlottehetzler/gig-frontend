@@ -4,17 +4,17 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
 
 export function AuthButtons (props: any) {
-    return (
-        <View style={styles.buttons}>
-            <TouchableOpacity onPress={() => props.navigation.navigate('Signup')}>
-                <Text style={styles.signupText}>Signup here</Text>
-            </TouchableOpacity>
-            <Text style={{textAlign: 'center', color: GigColors.DarkGrey, marginTop: 25, marginBottom: 5}}>Already have an account?</Text>
-            <TouchableOpacity onPress={() => props.navigation.navigate('Login')}>
-                <Text style={styles.loginText}>Login</Text>
-            </TouchableOpacity>
-         </View>
-    )
+  return (
+    <View style={styles.buttons}>
+      <TouchableOpacity onPress={() => props.navigation.navigate('Signup')}>
+        <Text style={styles.signupText}>Signup here</Text>
+      </TouchableOpacity>
+      <Text style={{textAlign: 'center', color: GigColors.DarkGrey, marginTop: 25, marginBottom: 5}}>Already have an account?</Text>
+      <TouchableOpacity onPress={() => props.navigation.navigate('Login')}>
+        <Text style={styles.loginText}>Login</Text>
+      </TouchableOpacity>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({

@@ -11,6 +11,7 @@ import SkillsScreen from '../Gigs/Skills';
 import NetworkScreen from '../Network/Network';
 import FriendsScreen from '../Network/Friends';
 import SettingsScreen from '../Profile/Settings/Settings';
+import GigsScreen from '../Gigs/Gigs';
 
 
 const MainStackNavigator = createStackNavigator();
@@ -20,6 +21,7 @@ export function MainNavigator() {
             <MainStackNavigator.Screen name="HomeScreen" component={Tabs} options={{ headerShown: false }}/>
             <MainStackNavigator.Screen name="Categories" component={CategoriesScreen} options={{ headerShown: false }}/>
             <MainStackNavigator.Screen name="Skills" component={SkillsScreen} options={{ headerShown: false }}/>
+            <MainStackNavigator.Screen name="Gigs" component={GigsScreen} options={{ headerShown: false }}/>
             <MainStackNavigator.Screen name="Producers" component={ProducersScreen} options={{ headerShown: false }}/>
             <MainStackNavigator.Screen name="Network" component={NetworkScreen} options={{ headerShown: false }}/>
             <MainStackNavigator.Screen name="Friends" component={FriendsScreen} options={{ headerShown: false }}/>

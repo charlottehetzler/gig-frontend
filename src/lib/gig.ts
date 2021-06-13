@@ -8,6 +8,7 @@ query getAllGigs($isAd: Boolean!) {
         description,
         fromDate, 
         toDate,
+        isClosed,
         skill {
             id
             name

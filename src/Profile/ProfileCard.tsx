@@ -1,9 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { Avatar, Icon, AirbnbRating } from 'react-native-elements';
+import { View, StyleSheet, Text, Image } from 'react-native';
+import { Avatar, AirbnbRating } from 'react-native-elements';
 import { useQuery } from '@apollo/client';
 import { useSelector } from 'react-redux';
-import { GET_COMMON_CHAT_ROOM } from '../lib/chat';
 import { GET_SUBMITTED_REVIEW } from '../lib/review';
 import { GigColors } from '../constants/colors';
 import { ProfileActions } from './ProfileActions';
@@ -28,7 +27,6 @@ export function ProfileCard (props: any) {
   const closeEditModal = () => setIsEditMode(false);
 
 
-
   useMemo(() => {
     if (reviewData && reviewData?.getSubmittedReview) {
       setReviewDisabled(reviewData?.getSubmittedReview);
@@ -39,9 +37,19 @@ export function ProfileCard (props: any) {
     <View style={{backgroundColor: GigColors.White, borderRadius: 30, marginBottom: 35}}>
 
       <View style={styles.profile}>
-
-        <Avatar containerStyle={styles.avatar} size={100} title={props.initials}/>
+        {props.user.profilePicture ? 
+          <Image style={styles.profilePicture} source={{uri: props.user.profilePicture}}/>
+        : 
+          <Avatar 
+            containerStyle={styles.avatar} 
+            size={90} 
+            title={props.initials}
+            source={props.user.profilePicture}
+          /> 
+        }
+        
         <Text style={styles.h4Style}>{props.fullName}</Text>
+        
         <View style={styles.overview}> 
           <Text style={styles.underline}> {props.user.nativeLanguage} </Text> 
           {languages.length > 0 &&
@@ -106,6 +114,11 @@ const styles = StyleSheet.create({
   },
   avatar: {
     backgroundColor: GigColors.Taupe, 
+    borderRadius: 50,
+  },
+  profilePicture: {
+    width: 100,
+    height: 100,
     borderRadius: 50
   },
   icon: {

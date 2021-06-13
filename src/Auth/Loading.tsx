@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, AsyncStorage } from "react-native";
+import { View, ActivityIndicator, StyleSheet, AsyncStorage } from "react-native";
 import { useDispatch } from 'react-redux';
 import { AUTHENTICATE } from '../redux/actions/user';
 import { GigColors } from '../constants/colors';
@@ -34,7 +34,7 @@ export default function LoadingScreen (props:any) {
   return (
     <View style={styles.center}>
       {/* <Text style={styles.title}>Loading...</Text> */}
-      <ActivityIndicator size="small" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>
+      <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>
     </View>
   );
 };

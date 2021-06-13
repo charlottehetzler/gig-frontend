@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Text, Icon } from 'react-native-elements';
 import { StyleSheet, View, TouchableOpacity, StatusBar, ScrollView, TextInput, Platform, ActivityIndicator, TouchableWithoutFeedback, ViewPropTypes } from 'react-native';
 import * as Animatable from 'react-native-animatable';

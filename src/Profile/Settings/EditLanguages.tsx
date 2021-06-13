@@ -153,7 +153,7 @@ export default function EditLanguages (props: any) {
                         keyboardType={'default'}
                     />
                 </View>
-                {loading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+                {loading && <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
                 <View style={[styles.input, {marginTop: 20}]}>
                     <Text style={styles.inputLabel}>more languages</Text>
                     <View >

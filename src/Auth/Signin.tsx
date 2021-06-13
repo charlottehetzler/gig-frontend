@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Platform, StyleSheet, StatusBar, Alert, ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, TextInput, Platform, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import { GigColors } from '../constants/colors';
@@ -90,7 +90,7 @@ export default function SigninScreen (props: any ) {
                 <Text style={styles.textHeader}>Welcome back!</Text>
             </View>
 
-            {userLoginLoading && <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+            {userLoginLoading && <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
             
             <Animatable.View animation="fadeInUpBig" style={[styles.footer, {backgroundColor: GigColors.Greyish}]}>
                 <Text style={styles.textFooter}>Email</Text>

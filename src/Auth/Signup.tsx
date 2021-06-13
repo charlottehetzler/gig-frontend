@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Text, Icon } from 'react-native-elements';
-import { StyleSheet, View, TouchableOpacity, StatusBar, ScrollView, TextInput, Platform, ActivityIndicator, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, StatusBar, ScrollView, TextInput, Platform } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { GigColors } from '../constants/colors';
 import Feather from 'react-native-vector-icons/Feather';
@@ -8,20 +8,13 @@ import Feather from 'react-native-vector-icons/Feather';
 export default function SignupScreen ( props  : any ) {
 
     const [email, setEmail] = useState('');
-
     const [password, setPassword] = useState('');
-
     const [passwordConfirm, setPasswordConfirm] = useState('');
-    
     const [isEmailValid, setIsEmailValid] = useState(false);
-    
     const [isValidPassword, setIsValidPassword] = useState(false);
-
     const [secureTextEntry, setSecureTextEntry] = useState(true);
-
     const [confirmSecureTextEntry, setConfirmSecureTextEntry] = useState(true);
     
-
     const EmailChange = (val: string) => {
         if (val.trim().length) {
             setEmail(val);

@@ -9,8 +9,6 @@ export function GeneralStatusBarColor ({ backgroundColor, ...props }: any) {
     )
 }
 
-
-
 const styles = StyleSheet.create({
     statusBar: {}
 

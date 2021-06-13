@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GigColors } from '../../constants/colors';
 
@@ -10,6 +10,8 @@ export function SeeAllButton (props: any) {
       props.navigation.navigate('Reviews', { userId: props.userId, firstName: props.firstName })
     } else if (props.case === 'categories') {
       props.navigation.navigate('Categories', {isConsumer: props.isConsumer})
+    } else if (props.case === 'gigs') {
+      props.navigation.navigate('Gigs', {isConsumer: props.isConsumer})
     }
   }
 

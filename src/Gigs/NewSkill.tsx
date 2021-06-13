@@ -16,23 +16,15 @@ export function NewSkill ( props: any ) {
     const currentUserId = useSelector((state: any) => state.user.userId);
 
     const { data: catData, error: catError, loading: catLoading } = useQuery(GET_All_CATEGORIES);
-            
     const [ doSaveSkill, { loading: saveSkillLoading } ] = useMutation(ADD_SKILL);
             
-    const [ categories, setCategories] = useState()
-    
+    const [ categories, setCategories] = useState();
     const [category, setCategory] = useState();
-    
     const [categoryIsValid, setCategoryIsValid] = useState(false);
-    
     const [skill, setSkill] = useState();
-    
     const [skillIsValid, setSkillIsValid] = useState(false);
-    
     const [description, setDescription] = useState();
-    
     const [ isPersonal, setIsPersonal ] =  useState(false);
-    
     
     const skillChangeHandler = (skill: string) => {
         if (skill.trim().length < 5) {
@@ -88,7 +80,7 @@ export function NewSkill ( props: any ) {
 
     return (
         <Modal visible={props.visible} animationType='slide'>
-        {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+        {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
             <View style={styles.inputContainer}>
                 
                 <View style={styles.headerWrapper}>

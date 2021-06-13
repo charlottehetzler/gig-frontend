@@ -6,13 +6,9 @@ import { useQuery } from '@apollo/client';
 import { GET_AVG_RATING_FOR_SKILL } from '../lib/review';
 import { GigColors } from '../constants/colors';
 
+export function Producer ( props: any ) {
 
-type Props = { firstName: string, lastName: string, userId: number, navigation: any, skillId: number, isConsumer: boolean }
-
-export function Producer ({firstName, lastName, userId, navigation, skillId, isConsumer} : Props) {
-    
-    const { data, loading, error } = useQuery(GET_AVG_RATING_FOR_SKILL, {variables: {query: {skillId: skillId, userId: userId} }});  
-    
+    const { data, loading, error } = useQuery(GET_AVG_RATING_FOR_SKILL, {variables: {query: {skillId: props.skillId, userId: props.userId} }});  
     const [ avgRating, setAvgRating ] = useState(0);
 
     useMemo(() => {
@@ -26,22 +22,22 @@ export function Producer ({firstName, lastName, userId, navigation, skillId, isC
         let last = lastName.charAt(0).toUpperCase();
         return first + last;
     }
-    const { navigate } = navigation;
 
+    const handlePress = () => {
+        // if (props.onClose) await props.onClose;
+        props.navigation.navigate('Profile', { 
+            userId: props.userId, isMe: false, skillId: props.skillId, navigation: props.navigation, isConsumer: props.isConsumer
+        });
+    }
     
     return ( <>
-        {loading &&  <ActivityIndicator size="small" color='#000000' style={{alignItems:'center', justifyContent:'center'}}/>}
+        {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
 
-        <TouchableOpacity 
-            style={styles.card} 
-            onPress={() => navigate('Profile', { 
-                userId: userId, isMe: false, skillId: skillId, navigation: navigation, isConsumer: isConsumer
-            })}
-        >
-            <Avatar title={getInitials(firstName, lastName)} containerStyle={styles.avatar} size={60} />
+        <TouchableOpacity style={styles.card} onPress={handlePress}>
+            <Avatar title={getInitials(props.firstName, props.lastName)} containerStyle={styles.avatar} size={60} />
         
             <View style={styles.text}>
-                <Text style={styles.name}>{firstName + " " + lastName}</Text>
+                <Text style={styles.name}>{props.firstName + " " + props.lastName}</Text>
                 <AirbnbRating
                     count={5}
                     selectedColor={GigColors.Blue}

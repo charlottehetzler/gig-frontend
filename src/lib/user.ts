@@ -13,6 +13,7 @@ query getUser($query: UserQuery!) {
         phoneNumber,
         isCallable,
         totalFriends,
+        profilePicture,
         languages {
             id,
             name

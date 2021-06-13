@@ -167,7 +167,8 @@ export function NewGig ( props: any ) {
     
     return (
         <Modal visible={props.visible} animationType='slide'>
-        {loading &&  <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>}
+
+        {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
             <View style={styles.inputContainer}>
                 
                 <View >
