@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Image } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { GigColors } from '../constants/colors';
 import moment from "moment";
@@ -8,7 +8,6 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 export function Message (props: any) {
     
     const { navigate } = props.navigation;
-    
     const [ otherUser, setOtherUser] = useState();
 
     const isMe = () => { return props.chatRoom.lastMessage.user.id !== otherUser.id; }
@@ -36,7 +35,7 @@ export function Message (props: any) {
         return messageDate.split('T')[0] === today.toISOString().split('T')[0]
     }
 
-    if (!otherUser) return null
+    if (!otherUser) return null;
 
     return (
         <TouchableWithoutFeedback style={styles.card} onPress={() => navigate('Chat', {
@@ -44,7 +43,11 @@ export function Message (props: any) {
             firstName: otherUser.firstName, lastName: otherUser.lastName,
             isConsumer: props.isConsumer
         })}>
-            <Avatar title={getInitials(otherUser.firstName, otherUser.lastName)} containerStyle={styles.avatar} size={60} />
+            {otherUser.profilePicture ? 
+                <Image style={styles.profilePicture} source={{uri: props.user.profilePicture}}/>
+            :
+                <Avatar title={getInitials(otherUser.firstName, otherUser.lastName)} containerStyle={styles.avatar} size={60} />
+            }
         
             <View style={styles.text}>
                 <Text style={styles.username}>{otherUser.firstName + " " + otherUser.lastName }</Text>
@@ -102,5 +105,10 @@ const styles = StyleSheet.create({
     username: {
         fontWeight: '400',
         fontSize: 18,
+    },
+    profilePicture: {
+        width: 60,
+        height: 60,
+        borderRadius: 50
     },
 });

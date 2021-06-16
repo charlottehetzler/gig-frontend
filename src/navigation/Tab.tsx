@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements';
 import { GigColors } from '../constants/colors';
-import HomeScreen from '../Gigs/Home';
+import HomeScreen from '../Home';
 import MessagesScreen from '../Messages/Messages';
 import MyProfileScreen from '../Profile/MyProfile';
 import NetworkScreen from '../Network/Network';

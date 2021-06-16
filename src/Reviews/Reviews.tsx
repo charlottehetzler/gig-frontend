@@ -1,5 +1,5 @@
-import React from 'react';
-import { SafeAreaView, View, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
+import React, { useCallback } from 'react';
+import { SafeAreaView, View, StyleSheet, StatusBar, ActivityIndicator, RefreshControl } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/client';
@@ -11,9 +11,17 @@ export default function ReviewsScreen(props: any) {
   
   const { userId, firstName, isConsumer } = props.route.params;
 
-  const { data, loading, error } = useQuery(GET_REVIEWS_FOR_USER, {variables: {query: {userId: userId} } });
+  const { data, loading, error, refetch } = useQuery(GET_REVIEWS_FOR_USER, {variables: {query: {userId: userId} } });
   
   const reviews = data?.getReviewsForUser || [];
+
+  const [ refreshing, setRefreshing ] = useState(false)
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch()
+    setRefreshing(false)
+  }, [refreshing]);
   
   return (
     <SafeAreaView style={styles.container}>
@@ -21,7 +29,7 @@ export default function ReviewsScreen(props: any) {
         <DefaultHeader title={`${firstName} Reviews`} navigation={props.navigation} goBack={true} isConsumer={isConsumer}/>
       </View>
       {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
-      <ScrollView>
+      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         {reviews.map((review : any) => { return (
           <View style={styles.gigWrapper}>
             <Review 

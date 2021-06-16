@@ -36,6 +36,7 @@ query getProducersForSkill($query: UserQuery!) {
                 id,
                 firstName, 
                 lastName, 
+                profilePicture,
                 avgRating,
                 reviews {
                     rating,

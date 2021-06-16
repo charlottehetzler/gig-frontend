@@ -23,11 +23,12 @@ export default function ProducersScreen(props: any) {
 
   useMemo(() => {
     if (data && data?.getProducersForSkill) {
-      const producerList = (data?.getProducersForSkill.map((item: { firstName: string; lastName: string; avgRating: number; id: number; }) => {
+      const producerList = (data?.getProducersForSkill.map((item: { firstName: string; lastName: string; avgRating: number; id: number; profilePicture: string;}) => {
         return {
           firstName: item.firstName,
           lastName: item.lastName,
-          userId: item.id
+          userId: item.id,
+          profilePicture: item.profilePicture
         }
       }));
       producerList.sort((a, b) => (a.avgRating > b.avgRating) ? -1 : 1)
@@ -40,6 +41,7 @@ export default function ProducersScreen(props: any) {
       firstName={item["firstName"]} 
       lastName={item["lastName"]} 
       userId={item["userId"]}
+      profilePicture={item["profilePicture"]}
       navigation={props.navigation}
       skillId={skillId}
       isConsumer={isConsumer}

@@ -67,7 +67,12 @@ export default function MessagesScreen (props: any) {
           <ScrollView>
             {chatRooms.map((chatRoom: any) => { return (
               <View style={styles.gigWrapper} key={chatRoom.id}>
-                <Message chatRoom={chatRoom} currentUser={currentUser} navigation={props.navigation} isConsumer={isConsumer()}/>
+                <Message 
+                  chatRoom={chatRoom} 
+                  currentUser={currentUser} 
+                  navigation={props.navigation} 
+                  isConsumer={isConsumer()}
+                />
               </View>
             )})
             }

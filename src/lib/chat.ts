@@ -33,7 +33,8 @@ query getUser($query: UserQuery!) {
     getUser(query: $query) {
         id,
         createdAt,
-        firstName, 
+        firstName,
+        profilePicture
         allChatRooms {
             id, 
             members {
@@ -41,7 +42,8 @@ query getUser($query: UserQuery!) {
                 user {
                     id,
                     firstName,
-                    lastName
+                    lastName,
+                    profilePicture
                 }
             },
             lastMessageId,
@@ -51,7 +53,8 @@ query getUser($query: UserQuery!) {
                 user {
                     id,
                     firstName,
-                    lastName
+                    lastName,
+                    profilePicture
                 }
             }
         }

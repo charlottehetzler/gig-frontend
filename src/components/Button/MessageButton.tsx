@@ -26,7 +26,7 @@ export function MessageButton (props: any) {
 
     const handleSelect = () => {
         navigate('Chat', {
-            chatRoomId: chatRoomId, userId: props.userId, firstName: props.firstName, lastName: props.lastName
+            chatRoomId: chatRoomId, userId: props.userId, firstName: props.firstName, lastName: props.lastName, isConsumer: props.isConsumer
         });
         if (props.isSearchBar) {
             props.onSelect();

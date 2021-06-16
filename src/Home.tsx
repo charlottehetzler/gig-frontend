@@ -1,16 +1,16 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { DefaultHeader } from '../components/Header/DefaultHeader';
-import { GET_All_SKILLS } from '../lib/skill';
-import { GET_ALL_DEALS_FOR_PRODUCER, GET_ALL_GIGS, GET_ALL_GIGS_FOR_CONSUMER } from '../lib/gig';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { StyleSheet, View, FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
+import { DefaultHeader } from './components/Header/DefaultHeader';
+import { GET_All_SKILLS } from './lib/skill';
+import { GET_ALL_DEALS_FOR_PRODUCER, GET_ALL_GIGS, GET_ALL_GIGS_FOR_CONSUMER } from './lib/gig';
 import { useQuery } from '@apollo/client';
 import { ScrollView } from 'react-native-gesture-handler';
-import { GigColors } from '../constants/colors';
+import { GigColors } from './constants/colors';
 import { useSelector } from 'react-redux';
-import SearchBar from '../components/Search/SearchBar';
-import { SeeAllButton } from '../components/Button/SeeAllButton';
-import { NewGig } from './NewGig';
-import { GigCard } from './GigCard';
+import SearchBar from './components/Search/SearchBar';
+import { SeeAllButton } from './components/Button/SeeAllButton';
+import { NewGig } from './Gigs/NewGig';
+import { GigCard } from './Gigs/GigCard';
 
 export default function HomeScreen (props: any) {
 
@@ -37,7 +37,7 @@ export default function HomeScreen (props: any) {
   const [ deals, setDeals ] = useState();
   const [ gigs, setGigs ] = useState();
   const [ posts, setPosts ] = useState();
-
+  const [ refreshing, setRefreshing ] = useState(false);
   const [ isAddMode, setIsAddMode ] = useState(false);
   const [ isEditMode, setIsEditMode ] = useState(false);
   
@@ -77,6 +77,19 @@ export default function HomeScreen (props: any) {
     // }
   }
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    if (isConsumer()) {
+      await postRefetch();
+    }
+    if (!isConsumer()) {
+      await dealRefetch();
+    }
+    await refetch();
+    await gigsRefetch();
+    setRefreshing(false)
+  }, [refreshing]);
+
   const renderItem = ({ item } : any ) => (
     <View>
       <TouchableOpacity 
@@ -109,8 +122,7 @@ export default function HomeScreen (props: any) {
       isList={false}
     />
   );
-    
-    
+
   return (
     
     <SafeAreaView style={styles.container}>
@@ -121,7 +133,7 @@ export default function HomeScreen (props: any) {
       
       {!loading &&  <>
       <SearchBar navigation={props.navigation} isPersonal={false} refetchSkills={fetchSkills} profileMode={false}/>
-      <ScrollView>
+      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
 
         <View style={styles.subHeader}>
           <Text style={styles.h4Style}>{isConsumer() ? 'Hot deals' : 'Now wanted'}</Text>
@@ -151,7 +163,6 @@ export default function HomeScreen (props: any) {
             <Text style={styles.underline}>{isConsumer() ? 'Add gig' : 'Add deal'}</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.deals}>
           <FlatList
             data={isConsumer() ? posts : deals}
             renderItem={renderMyGigs}
@@ -159,7 +170,6 @@ export default function HomeScreen (props: any) {
             horizontal
             style={{ height: 200 }}
           />
-        </View>
         <NewGig 
           visible={isAddMode} 
           onCancel={closeAddModal}

@@ -13,7 +13,6 @@ export default function FriendsScreen(props: any) {
     const currentUserId = useSelector((state: any) => state.user.userId);
     const { isConsumer } = props.route.params;
 
-
     const { data, loading, error, refetch } = useQuery(GET_FRIENDS, {variables: {query: { currentUserId: currentUserId } }});
 
     const [ friends, setFriends ] = useState();
@@ -30,6 +29,7 @@ export default function FriendsScreen(props: any) {
           firstName={item["firstName"]} 
           lastName={item["lastName"]} 
           userId={item["id"]}
+          profilePicture={item["profilePicture"]}
           currentUserId={currentUserId}
           isFriend={true}
           isNew={false}
@@ -54,7 +54,6 @@ export default function FriendsScreen(props: any) {
                     style={{paddingTop: 20}}
                 />
             </>}
-
         </View>
         </SafeAreaView>
     );

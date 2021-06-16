@@ -30,7 +30,7 @@ export default function MyProfileScreen(props: any) {
 
         <ProfileCard initials={initials} fullName={fullName} user={user} isMe={true} navigation={props.navigation}/>
         <View style={styles.sectionWrapper}>
-          {isConsumer() ? 
+          {isConsumer && 
             <View >
               <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user}/>
               <ProfileLink firstName={'My'} navigation={props.navigation} title={'friends'} icon={'people'} user={user}/>
@@ -41,9 +41,10 @@ export default function MyProfileScreen(props: any) {
                 icon={'settings'} 
                 user={user} 
                 initials={props.initials} 
-            />
-          </View>
-            :
+              />
+            </View>
+          }
+          {!isConsumer && 
             <View >
               <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user}/>
               <ProfileLink firstName={'My'} navigation={props.navigation} title={'skills'} icon={'lightbulb'} user={user}/>

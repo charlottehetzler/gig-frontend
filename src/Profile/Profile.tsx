@@ -12,7 +12,6 @@ export default function ProfileScreen(props: any) {
 
   const { user, loading, error, fullName, initials } = useProfile(userId, skillId);
 
-
   return ( 
     <SafeAreaView >
       
@@ -24,8 +23,22 @@ export default function ProfileScreen(props: any) {
       
       <ScrollView>
         {user && <>
-        <ProfileCard initials={initials} fullName={fullName} user={user} isMe={false} skillId={skillId} navigation={props.navigation} />
-        <ProfileLink firstName={user.firstName + "'s"} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user}/>
+          <ProfileCard 
+            initials={initials} 
+            fullName={fullName} 
+            user={user} 
+            isMe={false} 
+            skillId={skillId} 
+            navigation={props.navigation} 
+            isConsumer={isConsumer}
+          />
+
+          <ProfileLink 
+            firstName={user.firstName + "'s"} 
+            navigation={props.navigation} 
+            title={'reviews'} icon={'star-outline'} 
+            user={user}
+          />
       </>}
     </ScrollView>
   </SafeAreaView>

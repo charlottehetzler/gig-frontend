@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator, Image } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useMutation } from '@apollo/client';
@@ -30,7 +30,6 @@ export function Friend (props: any) {
           console.log(e);
         }
     }
-
     return ( <>
         <TouchableOpacity 
             style={styles.card} 
@@ -39,12 +38,18 @@ export function Friend (props: any) {
             })}
         > 
             <View style={styles.cardName}>
-                <Avatar title={getInitials(props.firstName, props.lastName)} containerStyle={styles.avatar} size={60} />
+                {props.profilePicture ? 
+                    <Image style={styles.profilePicture} source={{uri: props.user.profilePicture}}/>
+                :
+                    <Avatar title={getInitials(props.firstName, props.lastName)} containerStyle={styles.avatar} size={60} />
+                }
                 <Text style={styles.name}>{props.firstName + " " + props.lastName}</Text>
             </View>
+
             {updateRequestLoading &&  
                 <ActivityIndicator size="small" color="#0000ff" style={{alignItems:'center', justifyContent:'center'}}/>
             }
+
             {!props.isFriend && !props.isNew && 
                 <View style={styles.requestButtons}>
                     <RequestButton 
@@ -116,5 +121,10 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         padding: 5,
         marginLeft: 5
+    },
+    profilePicture: {
+        width: 60,
+        height: 60,
+        borderRadius: 50
     },
 });

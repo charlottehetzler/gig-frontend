@@ -23,6 +23,7 @@ export function GigCard (props: any) {
         }
     }, [ data ])
 
+
     return (
         <View >
             <TouchableOpacity 
@@ -84,7 +85,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20, 
         marginHorizontal: 16,
         marginTop: 8,
-        position: 'relative', 
     },
     header: {
         justifyContent: 'space-between',

@@ -93,16 +93,16 @@ export default function ChatScreen (props: any) {
 
   return (
     <SafeAreaView style={styles.chatContainer}>
+      <View>
+        <DefaultHeader 
+          title={firstName + " " + lastName} 
+          navigation={props.navigation} 
+          goBack={true} 
+          isConsumer={isConsumer}
+        />
+      </View> 
       <ScrollView>
         {loading && <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
-        <View>
-          <DefaultHeader 
-            title={firstName + " " + lastName} 
-            navigation={props.navigation} 
-            goBack={true} 
-            isConsumer={isConsumer}
-          />
-        </View> 
         {messages ? 
           <FlatList
             data={messages}
@@ -120,7 +120,7 @@ export default function ChatScreen (props: any) {
         style={{width: '100%'}}
       >
         <View style={styles.actions}>
-          <Icon name="add" size={30} color={GigColors.Mustard} style={{marginRight: 5}} />
+          <Icon name="add" size={30} color={isConsumer ? GigColors.Sky : GigColors.Mustard} style={{marginRight: 5}} />
           <View style={styles.messageInput}>
             <TextInput
               placeholder={"Type a message"}

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, StatusBar, ActivityIndicator, ScrollView } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { GigColors } from '../constants/colors';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
@@ -41,12 +41,12 @@ export default function GigsScreen(props: any) {
       </View> 
 
       {gigsLoading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
-      
+
       <FlatList
         data={gigs}
         renderItem={renderGigs}
         keyExtractor={item => item.id.toString()}
-        style={{marginHorizontal: 16}}
+        style={{marginRight: 16}}
       />
 
     </SafeAreaView>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, StatusBar, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, StatusBar, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { GigColors } from '../constants/colors';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { NoDataText } from '../components/Placeholder/NoDataText';
@@ -25,21 +25,23 @@ export default function SkillsScreen(props: any) {
 
     return (
         <SafeAreaView style={styles.container}>
-        <View>
-            <DefaultHeader title={categoryName} navigation={props.navigation} goBack={true} isConsumer={props.isConsumer}/>
-        </View> 
-        {skills && skills.length > 0 && <>
-            <FlatList
-            data={skills}
-            renderItem={renderItem}
-            keyExtractor={item => item.id.toString()}
-            />
-        </>}
-        {skills && skills.length === 0 &&
-            <View style={{marginLeft: 10}}>
-                <NoDataText text={`We couldn\'t find any skills for ${categoryName}.`}/>
-          </View>
-        }
+            <View>
+                <DefaultHeader title={categoryName} navigation={props.navigation} goBack={true} isConsumer={props.isConsumer}/>
+            </View> 
+            {skills && skills.length === 0 &&
+                <View style={{marginLeft: 10}}>
+                    <NoDataText text={`We couldn\'t find any skills for ${categoryName}.`}/>
+                </View>
+            }
+            <ScrollView>
+                {skills && skills.length > 0 && <>
+                    <FlatList
+                    data={skills}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id.toString()}
+                    />
+                </>}
+            </ScrollView>
         </SafeAreaView>
     );
 }

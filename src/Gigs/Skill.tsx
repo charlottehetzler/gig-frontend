@@ -7,6 +7,7 @@ import { GigColors } from '../constants/colors';
 export function Skill (props: any) {
     
     const iconColor = props.darkMode ? GigColors.White : GigColors.Black;
+    
     const handleDelete = () => {
         if (!props.isAddMode) {
             props.onDelete(props.id);

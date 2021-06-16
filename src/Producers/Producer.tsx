@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator, Image } from 'react-native';
 import { Avatar, AirbnbRating } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useQuery } from '@apollo/client';
@@ -34,7 +34,11 @@ export function Producer ( props: any ) {
         {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
 
         <TouchableOpacity style={styles.card} onPress={handlePress}>
-            <Avatar title={getInitials(props.firstName, props.lastName)} containerStyle={styles.avatar} size={60} />
+            {props.profilePicture ?
+                <Image style={styles.profilePicture} source={{uri: props.user.profilePicture}}/>
+            :
+                <Avatar title={getInitials(props.firstName, props.lastName)} containerStyle={styles.avatar} size={60} />
+            }
         
             <View style={styles.text}>
                 <Text style={styles.name}>{props.firstName + " " + props.lastName}</Text>
@@ -81,5 +85,10 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         fontWeight: '300',
         color: GigColors.Grey
-    }
+    },
+    profilePicture: {
+        width: 60,
+        height: 60,
+        borderRadius: 50
+    },
 });

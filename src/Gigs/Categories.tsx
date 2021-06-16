@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, StatusBar, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, StatusBar, ActivityIndicator, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useQuery } from '@apollo/client';
 import { GigColors } from '../constants/colors';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
@@ -37,15 +37,16 @@ export default function CategoriesScreen(props: any) {
         <DefaultHeader title={'Categories'} navigation={props.navigation} goBack={true} isConsumer={props.isConsumer}/>
       </View> 
       {catLoading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
-
-      {categories && categories.length > 0 && <>
-        <FlatList
-          data={categories}
-          renderItem={renderItem}
-          keyExtractor={item => item.id.toString()}
-          numColumns={2}
-        />
-      </>}
+      <ScrollView>
+        {categories && categories.length > 0 && <>
+          <FlatList
+            data={categories}
+            renderItem={renderItem}
+            keyExtractor={item => item.id.toString()}
+            numColumns={2}
+          />
+        </>}
+      </ScrollView>
     </SafeAreaView>
   );
 }

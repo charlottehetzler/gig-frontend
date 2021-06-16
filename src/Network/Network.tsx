@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, StatusBar, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { SafeAreaView, View, FlatList, StyleSheet, StatusBar, Text, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { GET_FRIEND_REQUESTS, GET_NUMBER_OF_FRIENDS, GET_NEW_USERS} from '../lib/friend';
 import { useQuery } from '@apollo/client';
@@ -23,6 +23,7 @@ export default function NetworkScreen(props: any) {
     const [ numberOfFriends, setNumberOfFriends ] = useState(0);
     const [ requests, setRequests ] = useState();
     const [ newUsers, setNewUsers ] = useState();
+    const [ refreshing, setRefreshing ] = useState(false);
 
     useEffect(() => {
         onUpdate()
@@ -78,6 +79,12 @@ export default function NetworkScreen(props: any) {
         fetchNumberOfFriends();
         fetchNewUsers();
     }
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await newUserRefetch()
+        setRefreshing(false)
+      }, [refreshing]);
   
     const loading = useMemo(() => {
         return friendLoading || requestLoading || newUserLoading;
@@ -158,6 +165,7 @@ export default function NetworkScreen(props: any) {
                         data={newUsers}
                         renderItem={renderNewUser}
                         keyExtractor={item => item.id.toString()}
+                        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                     />
                 }
                 {newUsers && newUsers.length === 0 &&

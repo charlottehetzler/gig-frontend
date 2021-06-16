@@ -5,7 +5,8 @@ query getFriendsForUser($query: FriendQuery!) {
     getFriendsForUser(query: $query) {
         id,
         firstName, 
-        lastName
+        lastName,
+        profilePicture
     }
 }
 `;
@@ -15,7 +16,8 @@ query getNewUsers($query: UserQuery!) {
     getNewUsers(query: $query) {
         id,
         firstName, 
-        lastName
+        lastName,
+        profilePicture
     } 
 }
 `;
@@ -31,7 +33,8 @@ query getFriendRequestsForUser($query: FriendQuery!) {
     getFriendRequestsForUser(query: $query) {
         id,
         firstName, 
-        lastName
+        lastName,
+        profilePicture
     }
 }
 `;
