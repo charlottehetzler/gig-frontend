@@ -2,20 +2,21 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Platform, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
+
 import { GigColors } from '../constants/colors';
 import { Icon } from 'react-native-elements';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../lib/user';
 import { useAuthCookies } from '../lib/cookies';
-import { saveUserDataToStorage, AUTHENTICATE } from '../redux/actions/user';
+// import { saveUserDataToStorage, AUTHENTICATE } from '../redux/actions/user';
 import { useDispatch } from 'react-redux';
 
-export default function SigninScreen (props: any ) {
+export default function SigninScreen(props: any) {
 
-    const [ doUserLogin, { loading: userLoginLoading } ] = useMutation(LOGIN_USER);
+    const [doUserLogin, { loading: userLoginLoading }] = useMutation(LOGIN_USER);
 
     const { setAuthCookies } = useAuthCookies();
-    
+
     const [email, setEmail] = useState('');
 
     const [password, setPassword] = useState('');
@@ -23,11 +24,11 @@ export default function SigninScreen (props: any ) {
     const [isEmailValid, setIsEmailValid] = useState(true);
 
     const [secureTextEntry, setSecureTextEntry] = useState(true);
-        
+
     const [isValidPassword, setIsValidPassword] = useState(true);
-    
+
     const [loginError, setLoginError] = useState();
-    
+
     const [errorMessage, setErrorMessage] = useState();
 
     const dispatch = useDispatch();
@@ -40,7 +41,7 @@ export default function SigninScreen (props: any ) {
         const re = /\S+@\S+\.\S+/;
         return re.test(email);
     }
-    
+
     const emailChange = (val: string) => {
         if (val.trim().length > 4) {
             setEmail(val);
@@ -50,7 +51,7 @@ export default function SigninScreen (props: any ) {
             setIsEmailValid(false);
         }
     }
-    
+
     const handleValidEmail = (val: string) => {
         if (validateEmail(val)) {
             setIsEmailValid(true);
@@ -58,69 +59,70 @@ export default function SigninScreen (props: any ) {
             setIsEmailValid(false);
         }
     }
-    
-    const handleLogin = async () => {
-        try {
-            const { data, errors } = await doUserLogin({
-                variables: { input: { email: email, password: password}}
-            });
 
-            if (data.userLogin) {
-                dispatch({
-                    type: AUTHENTICATE, 
-                    token: data.userLogin.token, 
-                    userId: data.userLogin.userId, 
-                    isLoggedIn: true,
-                    firstName: data.userLogin.firstName, 
-                    lastName: data.userLogin.lastName,
-                    userType: data.userLogin.isConsumer ? "consumer" : "producer"
-                });
-                saveUserDataToStorage(data.userLogin.userId,data.userLogin.token, data.userLogin.userType)
-                props.navigation.navigate('HomeScreen');
-            }
-        } catch (error) {
-            setLoginError(error)
-        }
+    const handleLogin = async () => {
+     
+        // try {
+        //     const { data, errors } = await doUserLogin({
+        //         variables: { input: { email: email, password: password}}
+        //     });
+
+        //     if (data.userLogin) {
+        //         dispatch({
+        //             type: AUTHENTICATE, 
+        //             token: data.userLogin.token, 
+        //             userId: data.userLogin.userId, 
+        //             isLoggedIn: true,
+        //             firstName: data.userLogin.firstName, 
+        //             lastName: data.userLogin.lastName,
+        //             userType: data.userLogin.isConsumer ? "consumer" : "producer"
+        //         });
+        //         saveUserDataToStorage(data.userLogin.userId,data.userLogin.token, data.userLogin.userType)
+        //         props.navigation.navigate('HomeScreen');
+        //     }
+        // } catch (error) {
+        //     setLoginError(error)
+        // }
     }
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor={GigColors.White} barStyle="light-content"/>
+            <StatusBar backgroundColor={GigColors.White} barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.textHeader}>Welcome back!</Text>
             </View>
 
-            {userLoginLoading && <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
-            
-            <Animatable.View animation="fadeInUpBig" style={[styles.footer, {backgroundColor: GigColors.Greyish}]}>
+            {userLoginLoading && <ActivityIndicator size="large" color={GigColors.Blue} style={{ alignItems: 'center', justifyContent: 'center' }} />}
+
+            <Animatable.View animation="fadeInUpBig" style={[styles.footer, { backgroundColor: GigColors.Greyish }]}>
                 <Text style={styles.textFooter}>Email</Text>
                 <View style={styles.action}>
-                    <Icon 
+                    <Icon
                         name="person"
                         type='material'
                         color={GigColors.Blue}
                         size={24}
                     />
-                    <TextInput 
+                    <TextInput
                         placeholder="Your Email"
                         placeholderTextColor={GigColors.Taupe}
-                        style={[styles.textInput, {color: GigColors.Blue}]}
+                        style={[styles.textInput, { color: GigColors.Blue }]}
                         autoCapitalize="none"
                         onChangeText={(val) => emailChange(val)}
                         onEndEditing={(e) => handleValidEmail(e.nativeEvent.text)}
                     />
 
-                {/* { isEmailValid ? null : 
+                    {/* { isEmailValid ? null : 
                     <Animatable.View animation="fadeInLeft" duration={500}>
                         <Text style={styles.errorMsg}>Not a valid email.</Text>
                     </Animatable.View>
                 } */}
                 </View>
-            
+
                 <Text style={styles.textFooter}>Password</Text>
                 <View style={styles.action}>
-                    <Icon name="lock" color={GigColors.Blue} size={24} type='material'/>
-                    <TextInput 
+                    <Icon name="lock" color={GigColors.Blue} size={24} type='material' />
+                    <TextInput
                         placeholder="Your Password"
                         placeholderTextColor={GigColors.Taupe}
                         secureTextEntry={secureTextEntry ? true : false}
@@ -130,34 +132,34 @@ export default function SigninScreen (props: any ) {
                     />
 
                     <TouchableOpacity onPress={() => updateSecureTextEntry()}>
-                    {secureTextEntry ? 
-                        <Feather name="eye-off" color={GigColors.Taupe} size={20}/>
-                    :
-                        <Feather name="eye" color={GigColors.Taupe} size={20}/>
-                    }
+                        {secureTextEntry ?
+                            <Feather name="eye-off" color={GigColors.Taupe} size={20} />
+                            :
+                            <Feather name="eye" color={GigColors.Taupe} size={20} />
+                        }
                     </TouchableOpacity>
                 </View>
-                    {loginError &&
-                        <Animatable.View animation="fadeInLeft" duration={500}>
-                            <Text style={styles.errorMsg}>Invalid email or password.</Text>
-                        </Animatable.View>
-                    }
-                
+                {loginError &&
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Invalid email or password.</Text>
+                    </Animatable.View>
+                }
+
                 <TouchableOpacity>
-                    <Text style={{color: GigColors.DarkGrey, marginTop:15 }}>Forgot password?</Text>
+                    <Text style={{ color: GigColors.DarkGrey, marginTop: 15 }}>Forgot password?</Text>
                 </TouchableOpacity>
                 <View style={styles.button}>
-                    <TouchableOpacity 
-                        style={[styles.signIn, {backgroundColor: GigColors.Blue}]} 
+                    <TouchableOpacity
+                        style={[styles.signIn, { backgroundColor: GigColors.Blue }]}
                         onPress={handleLogin}
                     >
-                        <Text style={[styles.textSign, { color: GigColors.White}]}>Sign In</Text>
+                        <Text style={[styles.textSign, { color: GigColors.White }]}>Sign In</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         onPress={() => props.navigation.navigate('Signup')}
-                        style={[styles.signIn, { backgroundColor: GigColors.White, borderWidth: 1, borderColor: GigColors.Blue, marginTop: 15}]}>
-                        <Text style={[styles.textSign, { color: GigColors.Blue}]}>Sign Up</Text>
+                        style={[styles.signIn, { backgroundColor: GigColors.White, borderWidth: 1, borderColor: GigColors.Blue, marginTop: 15 }]}>
+                        <Text style={[styles.textSign, { color: GigColors.Blue }]}>Sign Up</Text>
                     </TouchableOpacity>
                 </View>
             </Animatable.View>
@@ -168,8 +170,8 @@ export default function SigninScreen (props: any ) {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1, 
-      backgroundColor: GigColors.White
+        flex: 1,
+        backgroundColor: GigColors.White
     },
     header: {
         flex: 1,
@@ -232,9 +234,9 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontWeight: 'bold'
-    }, 
+    },
     icon: {
-        alignItems:'flex-end',
+        alignItems: 'flex-end',
         marginRight: 20
     },
-  });
+});

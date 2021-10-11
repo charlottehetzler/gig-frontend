@@ -1,66 +1,71 @@
 import React from 'react';
-import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { SafeAreaView, View, StyleSheet, ScrollView, ActivityIndicator, Button } from 'react-native';
 import { GigColors } from '../constants/colors';
-import { useSelector } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import useProfile from '../helpers/user';
 import { DefaultHeader } from '../components/Header/DefaultHeader';
 import { ProfileLink } from './ProfileLink';
 import { ProfileCard } from './ProfileCard';
+import { LogOut } from '../redux/middlewares/user';
 
 
-export default function MyProfileScreen(props: any) {
-  
+function MyProfileScreen(props: any) {
+
   const currentUserId = useSelector((state: any) => state.user.userId);
-  const userType = useSelector( (state: any) => state.user.userType);
+  const userType = useSelector((state: any) => state.user.userType);
   const isConsumer = () => { return userType === 'consumer' }
-    
+
   const { user, loading, error, fullName, initials } = useProfile(currentUserId);
 
-  return ( 
+  return (
     <SafeAreaView>
+
       <View>
-        <DefaultHeader title={'Profile'} navigation={props.navigation} isConsumer={isConsumer()}/>
+        <DefaultHeader title={'Profile'} navigation={props.navigation} isConsumer={isConsumer()} />
       </View>
-      
-      {loading &&  <ActivityIndicator size="large" color={GigColors.Blue} style={{alignItems:'center', justifyContent:'center'}}/>}
-      
+
+      {loading && <ActivityIndicator size="large" color={GigColors.Blue} style={{ alignItems: 'center', justifyContent: 'center' }} />}
+
       <ScrollView>
-        
+      <Button
+        onPress={() => props.LogOutAction()}
+        title="Logout"
+        color="red"
+      />
         {user && <>
 
-        <ProfileCard initials={initials} fullName={fullName} user={user} isMe={true} navigation={props.navigation}/>
-        <View style={styles.sectionWrapper}>
-          {isConsumer && 
-            <View >
-              <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user}/>
-              <ProfileLink firstName={'My'} navigation={props.navigation} title={'friends'} icon={'people'} user={user}/>
-              <ProfileLink 
-                firstName={'My'} 
-                navigation={props.navigation} 
-                title={'settings'} 
-                icon={'settings'} 
-                user={user} 
-                initials={props.initials} 
-              />
-            </View>
-          }
-          {!isConsumer && 
-            <View >
-              <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user}/>
-              <ProfileLink firstName={'My'} navigation={props.navigation} title={'skills'} icon={'lightbulb'} user={user}/>
-              <ProfileLink firstName={'My'} navigation={props.navigation} title={'friends'} icon={'people'} user={user}/>
-              <ProfileLink 
-                firstName={'My'} 
-                navigation={props.navigation} 
-                title={'settings'} 
-                icon={'settings'} 
-                user={user} 
-                initials={props.initials} 
-            />
-            </View>
-          }
-        </View>
-      </>}
+          <ProfileCard initials={initials} fullName={fullName} user={user} isMe={true} navigation={props.navigation} />
+          <View style={styles.sectionWrapper}>
+            {isConsumer() ?
+              <View >
+                <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user} />
+                <ProfileLink firstName={'My'} navigation={props.navigation} title={'friends'} icon={'people'} user={user} />
+                <ProfileLink
+                  firstName={'My'}
+                  navigation={props.navigation}
+                  title={'settings'}
+                  icon={'settings'}
+                  user={user}
+                  initials={props.initials}
+                />
+              </View>
+              :
+              <View >
+                <ProfileLink firstName={'My'} navigation={props.navigation} title={'reviews'} icon={'star-outline'} user={user} />
+                <ProfileLink firstName={'My'} navigation={props.navigation} title={'skills'} icon={'lightbulb'} user={user} />
+                <ProfileLink firstName={'My'} navigation={props.navigation} title={'friends'} icon={'people'} user={user} />
+                <ProfileLink
+                  firstName={'My'}
+                  navigation={props.navigation}
+                  title={'settings'}
+                  icon={'settings'}
+                  user={user}
+                  initials={props.initials}
+                />
+              </View>
+            }
+          </View>
+        </>}
       </ScrollView>
     </SafeAreaView>
   );
@@ -84,7 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: GigColors.White
   },
   avatar: {
-    backgroundColor: GigColors.DarkGrey, 
+    backgroundColor: GigColors.DarkGrey,
     borderRadius: 50
   },
   infos: {
@@ -144,3 +149,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   }
 });
+function mapDispatchToProps(dispatch: any) {
+  return ({
+    // logout
+    LogOutAction: () => { dispatch(LogOut()) },
+  })
+}
+export default connect(null, mapDispatchToProps)(MyProfileScreen);

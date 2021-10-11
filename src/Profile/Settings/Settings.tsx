@@ -7,7 +7,7 @@ import EditLanguages from './EditLanguages';
 import { useMutation } from '@apollo/client';
 import { UPDATE_USER } from '../../lib/user';
 import { useDispatch, useSelector } from 'react-redux';
-import { USER_UPDATE, USER_LOGOUT, saveUserDataToStorage } from '../../redux/actions/user';
+// import { USER_UPDATE, USER_LOGOUT, saveUserDataToStorage } from '../../redux/actions/user';
 
 
 export default function SettingsScreen(props: any) {
@@ -34,19 +34,19 @@ export default function SettingsScreen(props: any) {
                 variables: { input: { userId: userId, type: userType}}
             });
 
-            if (data.userUpdate) {
-                dispatch({
-                    type: USER_UPDATE, 
-                    token: data.userUpdate.token, 
-                    userId: data.userUpdate.userId, 
-                    isLoggedIn: true,
-                    firstName: data.userUpdate.firstName, 
-                    lastName: data.userUpdate.lastName,
-                    userType: data.userUpdate.userType
-                });
-                saveUserDataToStorage(data.userUpdate.userId,data.userUpdate.token, data.userUpdate.userType);
-                props.navigation.navigate('HomeScreen');
-            }
+            // if (data.userUpdate) {
+            //     dispatch({
+            //         type: USER_UPDATE, 
+            //         token: data.userUpdate.token, 
+            //         userId: data.userUpdate.userId, 
+            //         isLoggedIn: true,
+            //         firstName: data.userUpdate.firstName, 
+            //         lastName: data.userUpdate.lastName,
+            //         userType: data.userUpdate.userType
+            //     });
+            //     saveUserDataToStorage(data.userUpdate.userId,data.userUpdate.token, data.userUpdate.userType);
+            //     props.navigation.navigate('HomeScreen');
+            // }
         } catch (error) {
             console.log(error)
         }
@@ -74,7 +74,7 @@ export default function SettingsScreen(props: any) {
                 <TouchableOpacity 
                     style={styles.setting} 
                     onPress={() => { 
-                        dispatch({type: USER_LOGOUT});
+                        // dispatch({type: USER_LOGOUT});
                     }}
                 >
                     <Text style={styles.title}>Logout</Text>
