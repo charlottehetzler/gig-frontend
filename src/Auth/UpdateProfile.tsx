@@ -15,9 +15,9 @@ function UpdateProfileScreen(props: any) {
 
     const [lastName, setLastName] = useState('');
 
-    
 
-    const [nativeLanguage, setNativeLanguage] = useState();
+
+    const [nativeLanguage, setNativeLanguage] = useState('');
 
     const [isFirstValid, setIsFirstValid] = useState(false);
 
@@ -25,9 +25,9 @@ function UpdateProfileScreen(props: any) {
 
     const [isBirthdayValid, setIsBirthdayValid] = useState(false);
 
-    const [phoneNumber, setPhoneNumber] = useState();
+    const [phoneNumber, setPhoneNumber] = useState('');
 
-    const [mode, setMode] = useState();
+    const [mode, setMode] = useState<any>('');
 
     const [show, setShow] = useState(false);
 
@@ -38,11 +38,11 @@ function UpdateProfileScreen(props: any) {
     let year = new Date().setFullYear(new Date().getFullYear() - 18);
     let month = new Date(year).setMonth(11);
     let date = new Date(month).setDate(31);
-    const [birthday, setBirthday] = useState(date);
-    
+    const [birthday, setBirthday] = useState<any>(date);
+
     const signUpLoader = useSelector((state: any) => state.user.signUpLoader);
     const selectedUserRole = useSelector((state: any) => state.user.selected_user_role);
-    
+
     const showMode = (currentMode: string) => {
         setShow(true);
         setMode(currentMode);
@@ -98,7 +98,9 @@ function UpdateProfileScreen(props: any) {
         props.UserSignUpAction(email, password, user)
 
     }
-
+    const isValid = () => {
+        return firstName && lastName && birthday && phoneNumber && nativeLanguage && selectedUserRole;
+    }
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor={GigColors.White} barStyle="light-content" />
@@ -190,7 +192,7 @@ function UpdateProfileScreen(props: any) {
                     </View>
 
                     <View style={styles.button}>
-                        {
+                        {isValid() ?
                             signUpLoader === true ?
                                 <ActivityIndicator size={35} color={GigColors.Blue} />
                                 :
@@ -199,6 +201,10 @@ function UpdateProfileScreen(props: any) {
                                 >
                                     <Text style={[styles.textSign, { color: GigColors.White }]}>Sign Up</Text>
                                 </TouchableOpacity>
+                            :
+                            <View style={[styles.signIn, { backgroundColor: GigColors.Taupe }]} >
+                                <Text style={[styles.textSign, { color: GigColors.White }]}>Sign Up</Text>
+                            </View>
                         }
                     </View>
                 </ScrollView>
