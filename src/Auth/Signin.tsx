@@ -1,37 +1,29 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Platform, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Platform, StyleSheet, StatusBar, ActivityIndicator, Dimensions } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 
 import { GigColors } from '../constants/colors';
 import { Icon } from 'react-native-elements';
-import { useMutation } from '@apollo/client';
-import { LOGIN_USER } from '../lib/user';
-import { useAuthCookies } from '../lib/cookies';
-// import { saveUserDataToStorage, AUTHENTICATE } from '../redux/actions/user';
-import { useDispatch } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
+import { UserSignIn } from '../redux/middlewares/user';
 
-export default function SigninScreen(props: any) {
-
-    const [doUserLogin, { loading: userLoginLoading }] = useMutation(LOGIN_USER);
-
-    const { setAuthCookies } = useAuthCookies();
+function SigninScreen(props: any) {
 
     const [email, setEmail] = useState('');
 
     const [password, setPassword] = useState('');
 
-    const [isEmailValid, setIsEmailValid] = useState(true);
+    const [isEmailValid, setIsEmailValid] = useState(false);
 
     const [secureTextEntry, setSecureTextEntry] = useState(true);
 
-    const [isValidPassword, setIsValidPassword] = useState(true);
+    const [isValidPassword, setIsValidPassword] = useState(false);
 
     const [loginError, setLoginError] = useState();
 
     const [errorMessage, setErrorMessage] = useState();
-
-    const dispatch = useDispatch();
+    const signInLoader = useSelector((state: any) => state.user.signInLoader);
 
     const updateSecureTextEntry = () => {
         setSecureTextEntry(!secureTextEntry)
@@ -43,7 +35,7 @@ export default function SigninScreen(props: any) {
     }
 
     const emailChange = (val: string) => {
-        if (val.trim().length > 4) {
+        if (val.trim().length) {
             setEmail(val);
             setIsEmailValid(true);
         } else {
@@ -59,40 +51,27 @@ export default function SigninScreen(props: any) {
             setIsEmailValid(false);
         }
     }
-
-    const handleLogin = async () => {
-     
-        // try {
-        //     const { data, errors } = await doUserLogin({
-        //         variables: { input: { email: email, password: password}}
-        //     });
-
-        //     if (data.userLogin) {
-        //         dispatch({
-        //             type: AUTHENTICATE, 
-        //             token: data.userLogin.token, 
-        //             userId: data.userLogin.userId, 
-        //             isLoggedIn: true,
-        //             firstName: data.userLogin.firstName, 
-        //             lastName: data.userLogin.lastName,
-        //             userType: data.userLogin.isConsumer ? "consumer" : "producer"
-        //         });
-        //         saveUserDataToStorage(data.userLogin.userId,data.userLogin.token, data.userLogin.userType)
-        //         props.navigation.navigate('HomeScreen');
-        //     }
-        // } catch (error) {
-        //     setLoginError(error)
-        // }
+    const handlePasswordChange = (val: string) => {
+        if (val.length >= 6) {
+            setPassword(val)
+            setIsValidPassword(true)
+        } else {
+            setPassword(val)
+            setIsValidPassword(false)
+        }
     }
-
+    const handleLogin = () => {
+        props.UserSignInAction(email, password)
+    }
+    const isValid = () => {
+        return isEmailValid && isValidPassword;
+    }
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor={GigColors.White} barStyle="light-content" />
             <View style={styles.header}>
                 <Text style={styles.textHeader}>Welcome back!</Text>
             </View>
-
-            {userLoginLoading && <ActivityIndicator size="large" color={GigColors.Blue} style={{ alignItems: 'center', justifyContent: 'center' }} />}
 
             <Animatable.View animation="fadeInUpBig" style={[styles.footer, { backgroundColor: GigColors.Greyish }]}>
                 <Text style={styles.textFooter}>Email</Text>
@@ -112,11 +91,11 @@ export default function SigninScreen(props: any) {
                         onEndEditing={(e) => handleValidEmail(e.nativeEvent.text)}
                     />
 
-                    {/* { isEmailValid ? null : 
-                    <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Not a valid email.</Text>
-                    </Animatable.View>
-                } */}
+                    {isEmailValid ? null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={styles.errorMsg}>Not a valid email.</Text>
+                        </Animatable.View>
+                    }
                 </View>
 
                 <Text style={styles.textFooter}>Password</Text>
@@ -128,7 +107,7 @@ export default function SigninScreen(props: any) {
                         secureTextEntry={secureTextEntry ? true : false}
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => setPassword(val)}
+                        onChangeText={(val) => handlePasswordChange(val)}
                     />
 
                     <TouchableOpacity onPress={() => updateSecureTextEntry()}>
@@ -149,12 +128,23 @@ export default function SigninScreen(props: any) {
                     <Text style={{ color: GigColors.DarkGrey, marginTop: 15 }}>Forgot password?</Text>
                 </TouchableOpacity>
                 <View style={styles.button}>
-                    <TouchableOpacity
-                        style={[styles.signIn, { backgroundColor: GigColors.Blue }]}
-                        onPress={handleLogin}
-                    >
-                        <Text style={[styles.textSign, { color: GigColors.White }]}>Sign In</Text>
-                    </TouchableOpacity>
+
+
+                    {isValid() ?
+                        signInLoader === true ?
+                            <ActivityIndicator size={35} color={GigColors.Blue} />
+                            :
+                            <TouchableOpacity
+                                style={[styles.signIn, { backgroundColor: GigColors.Blue }]}
+                                onPress={handleLogin}
+                            >
+                                <Text style={[styles.textSign, { color: GigColors.White }]}>Sign In</Text>
+                            </TouchableOpacity>
+                        :
+                        <View style={[styles.signIn, { backgroundColor: GigColors.Taupe }]} >
+                            <Text style={[styles.textSign, { color: GigColors.White }]}>Sign In</Text>
+                        </View>
+                    }
 
                     <TouchableOpacity
                         onPress={() => props.navigation.navigate('Signup')}
@@ -198,10 +188,18 @@ const styles = StyleSheet.create({
     },
     action: {
         flexDirection: 'row',
-        marginTop: 10,
         borderBottomWidth: 1,
-        borderBottomColor: GigColors.Greyish,
-        paddingBottom: 25
+        borderBottomColor: '#f2f2f2',
+        paddingBottom: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: Dimensions.get('window').height / 16
+    },
+    textInput: {
+        flex: 1,
+        paddingLeft: 10,
+        color: '#05375a',
+
     },
     actionError: {
         flexDirection: 'row',
@@ -209,12 +207,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#FF0000',
         paddingBottom: 5
-    },
-    textInput: {
-        flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
-        paddingLeft: 10,
-        color: GigColors.Blue,
     },
     errorMsg: {
         color: '#FF0000',
@@ -240,3 +232,10 @@ const styles = StyleSheet.create({
         marginRight: 20
     },
 });
+function mapDispatchToProps(dispatch: any) {
+    return ({
+        UserSignInAction: (email: string, password: string) => { dispatch(UserSignIn(email, password)) },
+
+    })
+}
+export default connect(null, mapDispatchToProps)(SigninScreen);

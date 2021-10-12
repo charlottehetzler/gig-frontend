@@ -20,7 +20,12 @@ export default (state = InitialState, action: any) => {
         signUpLoader: action.payload.signupLoader,
         uid: action.payload.userUID
       };
-
+    case ActionTypes.USER_SIGN_IN:
+      return {
+        ...state,
+        signInLoader: action.payload.signinLoader,
+        uid: action.payload.userUID
+      };
     case ActionTypes.GET_DATA_FROM_ASYNCSTORAGE:
       const { role } = action.payload?.data?.store;
       return {

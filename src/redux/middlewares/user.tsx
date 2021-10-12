@@ -59,6 +59,24 @@ export function UserSignUp(email: string, password: string, userDetails: any) {
 
     }
 }
+
+export function UserSignIn(email: string, password: string) {
+    return (dispatch: any) => {
+        dispatch({ type: ActionTypes.USER_SIGN_IN, payload: { signinLoader: true, userUID: '' } })
+        auth.signInWithEmailAndPassword(email, password).then((userCredential: any) => {
+            const user = userCredential.user;
+            dispatch(GetUserDetails(user.uid))
+            dispatch({ type: ActionTypes.USER_SIGN_IN, payload: { signinLoader: false, userUID: user.uid } })
+        }).catch((error: any) => {
+            dispatch({ type: ActionTypes.USER_SIGN_IN, payload: { signinLoader: false, userUID: '' } })
+
+            alert(error.message)
+        })
+
+
+    }
+}
+
 export function SetUserDetails(userUID: string, userDetails: any) {
     return (dispatch: any) => {
         const user = Object.assign({}, userDetails, { uid: userUID })

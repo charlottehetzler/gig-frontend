@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import { AuthNavigator } from './Auth';
 import LoadingScreen from '../Auth/Loading';
 import MainNavigator from './Main';
 import { NavigationContainer } from '@react-navigation/native';
 import { GigColors } from '../constants/colors';
 
-import { GetUserDetails } from '../redux/middlewares/user'; // importing middleware functions
 import firebase from 'firebase';
 
 function AppNavigator(props: any) {
@@ -34,7 +32,7 @@ function AppNavigator(props: any) {
       background: GigColors.Greyish,
     }
   };
- 
+
   if (loader) {
     return <LoadingScreen />
 
@@ -50,10 +48,5 @@ function AppNavigator(props: any) {
     </NavigationContainer>
   );
 }
-function mapDispatchToProps(dispatch: any) {
-  return ({
-    // get user data from asyncstorage
-    GetUserDetailsAction: (uid: string) => { dispatch(GetUserDetails(uid)); },
-  })
-}
-export default connect(null, mapDispatchToProps)(AppNavigator);
+
+export default AppNavigator;
