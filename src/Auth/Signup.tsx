@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Text, Icon } from 'react-native-elements';
-import { StyleSheet, View, TouchableOpacity, StatusBar, ScrollView, TextInput, Platform } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, StatusBar, ScrollView, TextInput, Platform, Dimensions } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { GigColors } from '../constants/colors';
 import Feather from 'react-native-vector-icons/Feather';
-import { useDispatch } from 'react-redux';
 function SignupScreen(props: any) {
 
     const [email, setEmail] = useState('');
@@ -14,7 +13,6 @@ function SignupScreen(props: any) {
     const [isValidPassword, setIsValidPassword] = useState(false);
     const [secureTextEntry, setSecureTextEntry] = useState(true);
     const [confirmSecureTextEntry, setConfirmSecureTextEntry] = useState(true);
-    const dispatch = useDispatch();
     const EmailChange = (val: string) => {
         if (val.trim().length) {
             setEmail(val);
@@ -53,7 +51,7 @@ function SignupScreen(props: any) {
 
     const validateEmail = (val: string) => {
         const re = /\S+@\S+\.\S+/;
-        return re.test(email);
+        return re.test(val);
     }
 
     const updateSecureTextEntry = () => {
@@ -61,7 +59,7 @@ function SignupScreen(props: any) {
     }
 
     const updateConfirmSecureTextEntry = () => {
-        setConfirmSecureTextEntry(confirmSecureTextEntry)
+        setConfirmSecureTextEntry(!confirmSecureTextEntry)
     }
 
     const isValid = () => {
@@ -103,7 +101,7 @@ function SignupScreen(props: any) {
                             autoCapitalize="none"
                             onChangeText={(val) => handlePasswordChange(val)}
                         />
-                        <TouchableOpacity onPress={() => updateSecureTextEntry}>
+                        <TouchableOpacity onPress={() => updateSecureTextEntry()}>
                             {secureTextEntry ?
                                 <Feather name="eye-off" color="grey" size={20} />
                                 :
@@ -122,7 +120,7 @@ function SignupScreen(props: any) {
                             autoCapitalize="none"
                             onChangeText={(val) => handleConfirmPasswordChange(val)}
                         />
-                        <TouchableOpacity onPress={() => updateConfirmSecureTextEntry}>
+                        <TouchableOpacity onPress={() => updateConfirmSecureTextEntry()}>
                             {confirmSecureTextEntry ?
                                 <Feather name="eye-off" color="grey" size={20} />
                                 :
@@ -195,16 +193,18 @@ const styles = StyleSheet.create({
     },
     action: {
         flexDirection: 'row',
-        marginTop: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
+        paddingBottom: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: Dimensions.get('window').height / 16
     },
     textInput: {
         flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
         color: '#05375a',
+
     },
     button: {
         alignItems: 'center',

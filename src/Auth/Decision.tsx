@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, SafeAreaView, ScrollView, ActivityIndicator } from "react-native";
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 
 import { SetUserRole, RetrieveDataAssyncStorage } from '../redux/middlewares/user'; // importing middleware functions
 import { GigColors } from '../constants/colors';
 import * as Animatable from 'react-native-animatable';
+import { ActionTypes } from '../redux/actions/user';
 
 function DecisionScreen(props: any) {
     const [userUID, setUserUID] = useState<string>('');
 
     const getUserUID = useSelector((state: any) => state.user.uid);
- 
+    const dispatch = useDispatch();
+    const { isSignUp } = props.route.params;
     useEffect(() => {
         props.RetrieveDataAssyncStorageAction();
 
@@ -27,7 +29,15 @@ function DecisionScreen(props: any) {
     };
     const selectRole = async (val: string) => {
         let uid = userUID || getUserUID;
-        props.SetUserRoleAction(val, uid);
+        if (isSignUp) {
+            dispatch({
+                type: ActionTypes.SELECT_USER_ROLE,
+                payload: val
+            });
+            props.navigation.goBack()
+        } else {
+            props.SetUserRoleAction(val, uid);
+        }
     }
     return (
 
@@ -44,27 +54,22 @@ function DecisionScreen(props: any) {
                         <Text style={styles.textSubheader}>Choose your role</Text>
                         <Text style={styles.text}>No worries - you can switch your role at any time!</Text>
                         <View style={styles.tiles}>
-                            {
-                                userUID === '' || getUserUID === '' ?
-                                    <ActivityIndicator size={35} color={GigColors.Blue} />
-                                    :
-                                    <>
-                                        <TouchableOpacity style={[styles.tile, { backgroundColor: GigColors.Mustard }]} onPress={() => selectRole('producer')}>
-                                            <Text style={styles.tileTitle}>Producer</Text>
-                                            <Text style={styles.tileText}>
-                                                Offer your skills and find cool gigs!
-                                                Publish flash sales and build your own gig network!
-                                            </Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={[styles.tile, { backgroundColor: GigColors.Sky }]} onPress={() => selectRole('consumer')}>
-                                            <Text style={styles.tileTitle}>Consumer</Text>
-                                            <Text style={styles.tileText}>
-                                                Find the perfect producer for your needs!
-                                                Post urgent needs and connect with your friends!
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </>
-                            }
+
+                            <TouchableOpacity style={[styles.tile, { backgroundColor: GigColors.Mustard }]} onPress={() => selectRole('producer')}>
+                                <Text style={styles.tileTitle}>Producer</Text>
+                                <Text style={styles.tileText}>
+                                    Offer your skills and find cool gigs!
+                                    Publish flash sales and build your own gig network!
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.tile, { backgroundColor: GigColors.Sky }]} onPress={() => selectRole('consumer')}>
+                                <Text style={styles.tileTitle}>Consumer</Text>
+                                <Text style={styles.tileText}>
+                                    Find the perfect producer for your needs!
+                                    Post urgent needs and connect with your friends!
+                                </Text>
+                            </TouchableOpacity>
+
 
 
                         </View>

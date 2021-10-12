@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { UserSignUp } from '../redux/middlewares/user';
 import { Text, Icon } from 'react-native-elements';
-import { StyleSheet, View, TouchableOpacity, StatusBar, ScrollView, TextInput, Platform, ActivityIndicator, TouchableWithoutFeedback, ViewPropTypes } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, StatusBar, ScrollView, TextInput, Platform, ActivityIndicator, TouchableWithoutFeedback, ViewPropTypes, Dimensions, Pressable } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { GigColors } from '../constants/colors';
 import Feather from 'react-native-vector-icons/Feather';
@@ -15,7 +15,7 @@ function UpdateProfileScreen(props: any) {
 
     const [lastName, setLastName] = useState('');
 
-    const [birthday, setBirthday] = useState(Date.now());
+    
 
     const [nativeLanguage, setNativeLanguage] = useState();
 
@@ -31,11 +31,18 @@ function UpdateProfileScreen(props: any) {
 
     const [show, setShow] = useState(false);
 
-   
+
     const { email, password } = props.route.params;
 
-    const signUpLoader = useSelector((state: any) => state.user.signUpLoader);
 
+    let year = new Date().setFullYear(new Date().getFullYear() - 18);
+    let month = new Date(year).setMonth(11);
+    let date = new Date(month).setDate(31);
+    const [birthday, setBirthday] = useState(date);
+    
+    const signUpLoader = useSelector((state: any) => state.user.signUpLoader);
+    const selectedUserRole = useSelector((state: any) => state.user.selected_user_role);
+    
     const showMode = (currentMode: string) => {
         setShow(true);
         setMode(currentMode);
@@ -86,7 +93,7 @@ function UpdateProfileScreen(props: any) {
             birthday,
             nativeLanguage,
             phoneNumber,
-            role: ''
+            role: selectedUserRole
         }
         props.UserSignUpAction(email, password, user)
 
@@ -98,7 +105,7 @@ function UpdateProfileScreen(props: any) {
             <View style={styles.header}>
                 <Text style={styles.textHeader}>Create Profile</Text>
             </View>
-           
+
             <Animatable.View animation="fadeInUpBig" style={styles.footer}>
                 <ScrollView>
                     <Text style={styles.textFooter}>First Name</Text>
@@ -148,6 +155,7 @@ function UpdateProfileScreen(props: any) {
                             onChange={onChange}
                             mode={mode}
                             display={'spinner'}
+                            maximumDate={new Date(date)}
                         />
                     )}
                     <Text style={[styles.textFooter, { marginTop: 20 }]}>phone number</Text>
@@ -171,6 +179,14 @@ function UpdateProfileScreen(props: any) {
                             onChangeText={nativeLanguageChangeHandler}
                             keyboardType={'default'}
                         />
+                    </View>
+
+                    <Text style={[styles.textFooter, { marginTop: 20 }]}>select role</Text>
+                    <View style={styles.action}>
+                        <Icon name="users" type="feather" color={GigColors.Blue} size={20} />
+                        <Pressable style={styles.textInput} onPress={() => props.navigation.navigate('Decision', { isSignUp: true })}>
+                            <Text style={{ textTransform: 'capitalize' }}>{selectedUserRole || 'Please select'}</Text>
+                        </Pressable>
                     </View>
 
                     <View style={styles.button}>
@@ -225,16 +241,18 @@ const styles = StyleSheet.create({
     },
     action: {
         flexDirection: 'row',
-        marginTop: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
+        paddingBottom: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: Dimensions.get('window').height / 16
     },
     textInput: {
         flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
         color: '#05375a',
+
     },
     button: {
         alignItems: 'center',

@@ -4,6 +4,7 @@ export const InitialState = {
   userType: '',
   uid: '',
   signUpLoader: false,
+  selected_user_role: '',
   async_storage_data: {
     'data': {
       store: {},
@@ -31,6 +32,12 @@ export default (state = InitialState, action: any) => {
       return {
         ...state,
         userType: action.payload
+      };
+
+    case ActionTypes.SELECT_USER_ROLE:
+      return {
+        ...state,
+        selected_user_role: action.payload
       };
 
     case ActionTypes.USER_LOGOUT:
