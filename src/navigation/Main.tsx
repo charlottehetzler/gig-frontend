@@ -15,21 +15,26 @@ import GigsScreen from '../Gigs/Gigs';
 
 
 const MainStackNavigator = createStackNavigator();
-export function MainNavigator() {
+function MainNavigator(props: any) {
+
     return (
         <MainStackNavigator.Navigator>
-            <MainStackNavigator.Screen name="HomeScreen" component={Tabs} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Categories" component={CategoriesScreen} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Skills" component={SkillsScreen} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Gigs" component={GigsScreen} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Producers" component={ProducersScreen} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Network" component={NetworkScreen} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Friends" component={FriendsScreen} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Reviews" component={ReviewsScreen} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }}/>
-            <MainStackNavigator.Screen name="Decision" component={DecisionScreen} options={{ headerShown: false }}/>
+
+            <MainStackNavigator.Screen name="HomeScreen" component={Tabs} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Categories" component={CategoriesScreen} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Skills" component={SkillsScreen} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Gigs" component={GigsScreen} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Producers" component={ProducersScreen} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Network" component={NetworkScreen} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Friends" component={FriendsScreen} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Reviews" component={ReviewsScreen} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Decision" component={DecisionScreen} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+            <MainStackNavigator.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
         </MainStackNavigator.Navigator>
     );
 }
+
+
+export default MainNavigator;

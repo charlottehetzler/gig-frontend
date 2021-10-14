@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
+import store from './src/redux/index'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createStore, combineReducers } from 'redux'
+
 import { Provider, useSelector } from 'react-redux';
-import { userReducer } from './src/redux/reducers/user';
 import { registerRootComponent, AppLoading } from 'expo'
 import * as Font from 'expo-font'
-import { AppNavigator } from './src/navigation/App';
+import  AppNavigator  from './src/navigation/App';
 
-const rootReducer = combineReducers({
-  user: userReducer
-});
 
 
 // const fetchFonts = () => {
@@ -22,9 +19,9 @@ const rootReducer = combineReducers({
 //   });
 // }
 
-const store = createStore(rootReducer);
 
-export default function App () {
+export default function App() {
+
   // const [ fontLoading, setFontLoading ] = useState(false);
   // if (!fontLoading) {
   //   return (
@@ -34,7 +31,7 @@ export default function App () {
 
   const client = new ApolloClient({
     uri: 'http://localhost:3030/graphql',
-    cache: new InMemoryCache(), 
+    cache: new InMemoryCache(),
   });
 
   const Drawer = createDrawerNavigator();
@@ -42,11 +39,11 @@ export default function App () {
   return (
     <ApolloProvider client={client}>
       <Provider store={store}>
-          {/* <Drawer.Navigator initialRouteName="Home" drawerContentOptions={{activeTintColor: GigColors.Black}}>
+        {/* <Drawer.Navigator initialRouteName="Home" drawerContentOptions={{activeTintColor: GigColors.Black}}>
             <Drawer.Screen name="Home" component={MainStackScreen}/> */}
-            {/* <Drawer.Screen name="Logout" component={AuthStackScreen} /> */}
-          {/* </Drawer.Navigator>  */}
-          <AppNavigator/>
+        {/* <Drawer.Screen name="Logout" component={AuthStackScreen} /> */}
+        {/* </Drawer.Navigator>  */}
+        <AppNavigator />
       </Provider>
     </ApolloProvider>
   );

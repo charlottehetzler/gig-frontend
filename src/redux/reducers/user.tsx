@@ -1,53 +1,59 @@
-import {USER_SIGNUP, USER_LOGOUT, USER_UPDATE, AUTHENTICATE, SET_DID_TRY_AL } from '../actions/user'
+import { ActionTypes } from '../actions/user';
 
-export const initialState = {
-  token: null,
-  userId: null,
-  isLoggedIn: false,
-  // firstName: 'Guest',
-  // lastName: 'User',
-  userType: 'consumer',
-  didTryAutoLogin: false
+export const InitialState = {
+  userType: '',
+  uid: '',
+  signUpLoader: false,
+  selected_user_role: '',
+  async_storage_data: {
+    'data': {
+      store: {},
+      isLoggedIn: false
+    }
+  },
 };
-
-export const userReducer = (state = initialState, action) => {
+export default (state = InitialState, action: any) => {
   switch (action.type) {
-    case AUTHENTICATE: {
+    case ActionTypes.USER_SIGN_UP:
       return {
         ...state,
-        isLoggedIn: true, 
-        token: action.token,
-        userId: action.userId,
-        // firstName: action.firstName, 
-        // lastName: action.lastName,
-        userType: action.userType,
-        didTryAutoLogin: true
-      }
-    }
-    case USER_UPDATE: {
-      return {
-        ...state,
-        isLoggedIn: true, 
-        token: action.token,
-        userId: action.userId,
-        // firstName: action.firstName, 
-        // lastName: action.lastName, 
-        userType: action.userType,
-        didTryAutoLogin: true
-      }
-    }
-    case SET_DID_TRY_AL:
-      return {
-        ...state,
-        userType: action.userType,
-        didTryAutoLogin: true
+        signUpLoader: action.payload.signupLoader,
+        uid: action.payload.userUID
       };
-    case USER_LOGOUT: {
+    case ActionTypes.USER_SIGN_IN:
       return {
-        ...initialState,
-        didTryAutoLogin: true
-      }
-    }
-    default: { return state }
+        ...state,
+        signInLoader: action.payload.signinLoader,
+        uid: action.payload.userUID
+      };
+    case ActionTypes.GET_DATA_FROM_ASYNCSTORAGE:
+      const { role } = action.payload?.data?.store;
+      return {
+        ...state,
+        async_storage_data: action.payload,
+        userType: role
+      };
+    case ActionTypes.SET_USER_ROLE:
+      return {
+        ...state,
+        userType: action.payload
+      };
+
+    case ActionTypes.SELECT_USER_ROLE:
+      return {
+        ...state,
+        selected_user_role: action.payload
+      };
+
+    case ActionTypes.USER_LOGOUT:
+      return {
+        ...state,
+        async_storage_data: action.payload,
+        userType: ''
+      };
+
+
+    default:
+      { return state };
   }
-} 
+}
